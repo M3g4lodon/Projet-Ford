@@ -1,4 +1,5 @@
 from datetime import datetime as dt
+import requests
 
 
 # To do
@@ -29,6 +30,8 @@ class User:
     def type(self, value):
         if value in User.TYPES:
             self._type = value
+        elif isinstance(value, str):
+            TypeError("Est attendue une chaine de caractère pour le type.")
         else:
             ValueError("La valeur en entrée n'est pas définie comme type possible.")
 
@@ -40,18 +43,18 @@ class User:
     def itineraries(self, value):
         self._itineraries = value
 
-    def nouvel_itineraire(self, origin, destination, date=None):
-        itineraire = Itineraire(origin, destination, date)
+    def new_itinerary(self, origin, destination, date=None):
+        itineraire = Itinerary(origin, destination, date)
         self.itineraries.append(itineraire)
 
 
-class Itineraire:
+class Itinerary:
     """Désigne un ensemble de routes possibles entre deux points pour un utilisateur"""
 
-    itineraire_id = 1
+    itinerary_id = 1
 
     def __init__(self, origin, destination, date=None):
-        self._id = Itineraire.itineraire_id
+        self._id = Itinerary.itinerary_id
         self._origin = origin
         self._destination = destination
 
@@ -147,46 +150,90 @@ class Route:
     def transport_mode(self, value):
         if value in Route.TRANSPORT_MODES:
             self._transport_mode = value
+        elif not isinstance(value, str):
+            TypeError("Est attendue une chaine de caractère pour le mode de transport.")
         else:
             ValueError("La valeur en entrée n'est pas un type de transport possible.")
 
 
-class Lieu:
+class Place:
     """Désigne un lieu géographique"""
 
-    def __init__(self, adresse=None, lat=None, long=None):
+    __URL_API_GEOCODE = "https://maps.googleapis.com/maps/api/geocode/json?&key=AIzaSyDpVNzFcwgFfPJOK25P9NlMBL-YEe8bSow"
+
+    def __init__(self, address=None, lat=None, long=None):
         # Cas où le lieu est ma spécifié
-        if adresse is None and (lat is None or long is None):
+        if address is None and (lat is None or long is None):
             pass
             # Exception à créer ici
-        self._adresse = adresse
+        self._address = address
         self._lat = lat
         self._lont = long
 
     @property
-    def adresse(self):
-        return self._adresse
+    def address(self):
+        return self._address
 
-    @adresse.setter
-    def adresse(self, value):
-        self._adresse = value
+    @address.setter
+    def address(self, value):
+        self._address = value
 
     @property
     def lat(self):
-        return self.lat
+        return self._lat
+
+    @lat.setter
+    def lat(self, value):
+        if isinstance(value, float):
+            self._lat = value
+        else:
+            TypeError("Un flottant est attendu pour la latitude")
 
     @property
     def long(self):
-        return self.long
+        return self._long
 
-    def lat_long_from_adresse(self):
-        # to do
-        print("à faire")
+    @long.setter
+    def long(self, value):
+        if isinstance(value, float):
+            self._long = value
+        else:
+            TypeError("Un flottant est attendu pour la longitude")
+
+    def lat_long_from_address(self):
+        """Calcule la latitude et la longitude de l'adresse d'origine"""
+        url_request = Place.__URL_API_GEOCODE + "&address=" + self.address
+        raw_data = requests.get(url_request).json()
+        self.lat = raw_data['results'][0]['geometry']['location']['lat']
+        self.long = raw_data['results'][0]['geometry']['location']['lng']
+
+    def __repr__(self):
+        res = ""
+        if self.address is not None:
+            res += "[Place] Address : " + self.address + "\n"
+        if not (self.lat is None or self.long is None):
+            res += "[Place] Latitude : " + str(self.lat) + "\n" + "[Place] Longitude : " + str(self.long)
+        return res
 
 
 if __name__ == "__main__":
     """Script de test de la bonne construction des classes"""
-    Mathieu = User()
-    print("ID de Mathieu : " + str(Mathieu.id))
-    Mathieu.type = "Touriste"
-    print("Type de Mathieu : " + Mathieu.type)
+
+    # Test des utilisateurs
+    mathieu = User()
+    print("ID de Mathieu : " + str(mathieu.id))
+    mathieu.type = "Touriste"
+    print("Type de Mathieu : " + mathieu.type)
+    charles = User()
+    charles.type = "ESCP"
+    print("Type de Charles : " + charles.type)
+    paris = Place(address="Paris")
+    gif = Place(address="Gif")
+    mathieu.new_itinerary(paris, gif)
+
+    # Test des lieux
+    paris = Place(address="Paris")
+    print(paris)
+    print("Pré-demande de coordonnées : " + str(paris))
+    paris.lat_long_from_address()
+    print("Post-demande de coordonnées : " + str(paris))
