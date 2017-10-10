@@ -30,44 +30,51 @@ class Itineraire():
         self.url_full_geocode = Itineraire.URL_API_GEOCODE
 
     def get_distance(self):
+        '''Obtenir la distance en km entre le point A et le point B'''
         self.url_full_direction = self.url_full_direction + "&origin=" + str(self.origin) + "&destination=" + str(self.destination)
         self.url_content_direction = requests.get(self.url_full_direction).text
-        self.time = json.loads(self.url_content_direction)['routes'][0]['legs'][0]['distance']['text']
-        print(self.distance)
+        self.distance = json.loads(self.url_content_direction)['routes'][0]['legs'][0]['distance']['text']
+        return self.distance
 
     def get_time(self):
+        '''Obtenir le temps entre le point A et le point B'''
         self.url_full_direction = self.url_full_direction + "&origin=" + str(self.origin) + "&destination=" + str(self.destination)
         self.url_content_direction = requests.get(self.url_full_direction).text
         self.time = json.loads(self.url_content_direction)['routes'][0]['legs'][0]['duration']['text']
-        print(self.time)
+        return self.time
 
     def transit_mode_options(self, mode):
+        '''permet a l'utilisateur de choisir son mode de transport (voiture, velo, etc.)'''
         self.url_full_direction = self.url_full_direction + "&mode=" + str(mode)
 
 
     def polyline(self):
         a = json.loads(self.url_content_direction)['routes'][0]['overview_polyline']['points']
-        print(a)
+        return a
 
     def position_lat_long_origin(self):
-        self.url_full_geocode = self.url_full_geocode + '&address=' + str(self.origin)
-        self.url_content_geocode = requests.get(self.url_full_geocode).text
-        lat = json.loads(self.url_content_geocode)['results'][0]['geometry']['location']['lat']
-        lng = json.loads(self.url_content_geocode)['results'][0]['geometry']['location']['lng']
-        print("latitutde {} ; longitude {}".format(lat,lng))
+        '''calcul la latitude et la longitude de l'adresse d'origine'''
+        self.url_full_geocode_origin = self.url_full_geocode + '&address=' + str(self.origin)
+        self.url_content_geocode_origin = requests.get(self.url_full_geocode_origin).text
+        lat = json.loads(self.url_content_geocode_origin)['results'][0]['geometry']['location']['lat']
+        lng = json.loads(self.url_content_geocode_origin)['results'][0]['geometry']['location']['lng']
+        # print("latitutde {} ; longitude {}".format(lat,lng))
         return [lat,lng]
 
 
     def position_lat_long_destination(self):
-        self.url_full_geocode = self.url_full_geocode + '&address=' + str(self.destination)
-        self.url_content_geocode = requests.get(self.url_full_geocode).text
-        lat = json.loads(self.url_content_geocode)['results'][0]['geometry']['location']['lat']
-        lng = json.loads(self.url_content_geocode)['results'][0]['geometry']['location']['lng']
+        '''calcul la latitude et la longitude de l'adresse d'arrivée'''
+        self.url_full_geocode_destination = self.url_full_geocode + '&address=' + str(self.destination)
+        self.url_content_geocode_destination = requests.get(self.url_full_geocode_destination).text
+        lat = json.loads(self.url_content_geocode_destination)['results'][0]['geometry']['location']['lat']
+        lng = json.loads(self.url_content_geocode_destination)['results'][0]['geometry']['location']['lng']
         # print("latitutde {} ; longitude {}".format(lat,lng))
         return [lat,lng]
 
 
     def addresse_station_velib_depart(self):
+        '''On souhaite ici obtenir l'adresse de la station velib la plus proche de notre point de depart'''
+
         hits = 0
         i = 1
         depart_geo = Itineraire.position_lat_long_origin(self)
@@ -88,6 +95,7 @@ class Itineraire():
         # nb_velo = results['records'][0]['fields']['available_bikes']
         # distance = results['records'][0]['fields']['dist']
         return ad_station
+
 
     def addresse_station_velib_arrivee(self):
         '''On souhaite ici obtenir l'adresse de la station velib la plus proche de notre point d'arrivee'''
@@ -113,8 +121,9 @@ class Itineraire():
         return ad_station
 
 
+
     def addresse_station_autolib_depart(self):
-        '''On souhaite ici'''
+        '''On souhaite ici obtenir l'adresse de la station autolib la plus proche de notre point de depart'''
         hits = 0
         i = 1
         depart_geo = Itineraire.position_lat_long_origin(self)
@@ -138,7 +147,9 @@ class Itineraire():
 
         return ad_station
 
+
     def addresse_station_autolib_arrivee(self):
+        '''On souhaite ici obtenir l'adresse de la station autolib la plus proche de notre arrivee'''
         hits = 0
         i = 1
         arrivee_geo = Itineraire.position_lat_long_destination(self)
@@ -163,19 +174,47 @@ class Itineraire():
 
         return ad_station
 
-if __name__ == "__main__": 
 
-#Creation d'un objet pour la classe itineraire
-Trajet=Itineraire("Tour Effeil Paris","Le Louvre Paris")
+if __name__ == "__main__" :
 
-Trajet.
-Trajet.addresse_station_velib_depart()
+    #Creation d'un objet Trajet
 
+    Trajet=Itineraire("10 rue saint-didier paris 75116","10 rue oswaldo cruz paris 75016")
 
+    #On verifie le temps entre le point A et le point B
 
+    print(Trajet.get_time())
 
+    # On verifie la distance entre le point A et le point B
 
+    print(Trajet.get_distance())
 
+    # On verifie que l'on peut bien choisir son mode de transport (walking)et obtenir des chiffres (distance/temps) différents que ceux ci-dessus
+
+    Trajet.transit_mode_options("walking")
+    print(Trajet.get_distance())
+    print(Trajet.get_time())
+
+    #On verifie la latitude et la longitude de notre point de depart/d'arrivee
+
+    print(Trajet.position_lat_long_origin())
+    print(Trajet.position_lat_long_destination())
+
+    # On verifie l'adresse de la station autolib la plus proche de notre point de depart
+
+    print(Trajet.addresse_station_autolib_depart())
+
+    # On verifie l'dresse de la station autolib la plus proche de notre destination
+
+    print(Trajet.addresse_station_autolib_arrivee())
+
+    # On verifie l'adresse de la station velib la plus proche de notre point de depart
+
+    print(Trajet.addresse_station_velib_depart())
+
+    # On verifie l'adresse de la station velib la plus proche de notre destination
+
+    print(Trajet.addresse_station_velib_arrivee())
 
 
 
