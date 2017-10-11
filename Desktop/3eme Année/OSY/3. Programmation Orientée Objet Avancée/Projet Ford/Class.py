@@ -9,7 +9,7 @@ class User:
     """Désigne un utilisateur du service, avec son type et son historique des recherches d'itinéraires"""
 
     user_id = 1
-    TYPES = ["Défaut", "PMR", "Touriste", "Cadre"]  # Liste des types d'utilisateur possibles
+    TYPES = ["Défaut", "PMR", "Touriste", "Cadre", "Personnalisé"]  # Liste des types d'utilisateur possibles
 
     def __init__(self):
         self._id = User.user_id
@@ -31,9 +31,9 @@ class User:
         if value in User.TYPES:
             self._type = value
         elif isinstance(value, str):
-            TypeError("Est attendue une chaine de caractère pour le type.")
+            raise TypeError("Est attendue une chaine de caractère pour le type.")
         else:
-            ValueError("La valeur en entrée n'est pas définie comme type possible.")
+            raise ValueError("La valeur en entrée n'est pas définie comme type possible.")
 
     @property
     def itineraries(self):
@@ -151,9 +151,9 @@ class Route:
         if value in Route.TRANSPORT_MODES:
             self._transport_mode = value
         elif not isinstance(value, str):
-            TypeError("Est attendue une chaine de caractère pour le mode de transport.")
+            raise TypeError("Est attendue une chaine de caractère pour le mode de transport.")
         else:
-            ValueError("La valeur en entrée n'est pas un type de transport possible.")
+            raise ValueError("La valeur en entrée n'est pas un type de transport possible.")
 
 
 class Place:
@@ -168,7 +168,7 @@ class Place:
             # Exception à créer ici
         self._address = address
         self._lat = lat
-        self._lont = long
+        self._long = long
 
     @property
     def address(self):
@@ -187,7 +187,7 @@ class Place:
         if isinstance(value, float):
             self._lat = value
         else:
-            TypeError("Un flottant est attendu pour la latitude")
+            raise TypeError("Un flottant est attendu pour la latitude")
 
     @property
     def long(self):
@@ -198,7 +198,7 @@ class Place:
         if isinstance(value, float):
             self._long = value
         else:
-            TypeError("Un flottant est attendu pour la longitude")
+            raise TypeError("Un flottant est attendu pour la longitude")
 
     def lat_long_from_address(self):
         """Calcule la latitude et la longitude de l'adresse d'origine"""
@@ -206,6 +206,12 @@ class Place:
         raw_data = requests.get(url_request).json()
         self.lat = raw_data['results'][0]['geometry']['location']['lat']
         self.long = raw_data['results'][0]['geometry']['location']['lng']
+
+    def address_from_lat_long(self):
+        """calcule l'adresse associé à une latitude et une longitude"""
+        url_request = Place.__URL_API_GEOCODE + "&latlng=" + str(self.lat) + "," + str(self.long)
+        raw_data = requests.get(url_request).json()
+        self.address = raw_data['results'][0]['formatted_address']
 
     def __repr__(self):
         res = ""
@@ -225,7 +231,7 @@ if __name__ == "__main__":
     mathieu.type = "Touriste"
     print("Type de Mathieu : " + mathieu.type)
     charles = User()
-    charles.type = "ESCP"
+    # charles.type = "ESCP"
     print("Type de Charles : " + charles.type)
     paris = Place(address="Paris")
     gif = Place(address="Gif")
@@ -237,3 +243,7 @@ if __name__ == "__main__":
     print("Pré-demande de coordonnées : " + str(paris))
     paris.lat_long_from_address()
     print("Post-demande de coordonnées : " + str(paris))
+    poissonnier = Place(lat=48.896614, long=2.3522219)
+    print(poissonnier)
+    poissonnier.address_from_lat_long()
+    print(poissonnier)
