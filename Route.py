@@ -3,76 +3,59 @@ import requests
 import Leg
 import Place
 
-class Place:
-    """Désigne un lieu géographique"""
+class Route:
+    """Désigne un trajet entre deux points spécifiés dans l'itinéraire"""
 
-    __URL_API_GEOCODE = "https://maps.googleapis.com/maps/api/geocode/json?&key=AIzaSyDpVNzFcwgFfPJOK25P9NlMBL-YEe8bSow"
+    __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib"]  # Liste des modes de transport possibles
+    __route_id = 1
 
-    def __init__(self, address=None, lat=None, long=None):
-        # Cas où le lieu est ma spécifié
-        if address is None and (lat is None or long is None):
-            pass
-            # Exception à créer ici
-        self._address = address
-        self._lat = lat
-        self._long = long
+    def __init__(self, origin, destination, transport_mode, date=None):
+        self._id = Route.__route_id
+        Route.__route_id += 1
 
-    @property
-    def address(self):
-        if self._address is None:
-            self.address_from_lat_long()
-        return self._address
+        self._origin = origin
+        self._destination = destination
+        self._transport_mode = transport_mode
 
-    @address.setter
-    def address(self, value):
-        self._address = value
-
-    @property
-    def lat(self):
-        if self._lat is None:
-            self.lat_long_from_address()
-        return self._lat
-
-    @lat.setter
-    def lat(self, value):
-        if isinstance(value, float):
-            self._lat = value
+        # Par défaut, la date prise pour la recherche d'itinéraire est "Maintenant"
+        if date is None:
+            self._date = dt.now()
         else:
-            raise TypeError("Un flottant est attendu pour la latitude")
+            self._date = date
 
     @property
-    def long(self):
-        if self._long is None:
-            self.lat_long_from_address()
-        return self._long
+    def id(self):
+        return self._id
 
-    @long.setter
-    def long(self, value):
-        if isinstance(value, float):
-            self._long = value
+    @property
+    def origin(self):
+        return self._origin
+
+    @origin.setter
+    def origin(self, value):
+        self._origin = value
+
+    @property
+    def destination(self):
+        return self._destination
+
+    @destination.setter
+    def destination(self, value):
+        self._destination = value
+
+    @property
+    def transport_mode(self):
+        return self._transport_mode
+
+    @transport_mode.setter
+    def transport_mode(self, value):
+        if value in Route.__TRANSPORT_MODES:
+            self._transport_mode = value
+        elif not isinstance(value, str):
+            raise TypeError("Est attendue une chaine de caractère pour le mode de transport.")
         else:
-            raise TypeError("Un flottant est attendu pour la longitude")
+            raise ValueError("La valeur en entrée n'est pas un type de transport possible.")
 
-    def lat_long_from_address(self):
-        """Calcule la latitude et la longitude de l'adresse d'origine"""
-        url_request = Place.__URL_API_GEOCODE + "&address=" + self.address
-        raw_data = requests.get(url_request).json()
-        self.lat = raw_data['results'][0]['geometry']['location']['lat']
-        self.long = raw_data['results'][0]['geometry']['location']['lng']
-
-    def address_from_lat_long(self):
-        """calcule l'adresse associé à une latitude et une longitude"""
-        url_request = Place.__URL_API_GEOCODE + "&latlng=" + str(self.lat) + "," + str(self.long)
-        raw_data = requests.get(url_request).json()
-        self.address = raw_data['results'][0]['formatted_address']
-
-    def __repr__(self):
-        res = ""
-        if self.address is not None:
-            res += "[Place] Address : " + self.address + "\n"
-        if not (self.lat is None or self.long is None):
-            res += "[Place] Latitude : " + str(self.lat) + "\n" + "[Place] Longitude : " + str(self.long)
-        return res
 if __name__ == "__main__":
     """Script de test"""
 
