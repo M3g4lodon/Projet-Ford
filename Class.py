@@ -3,20 +3,22 @@ import requests
 
 
 # To do
-# tests
+# Préférence à rajouter
+# Prise en compte des erreurs dans les requêtes rest
+
 
 class User:
     """Désigne un utilisateur du service, avec son type et son historique des recherches d'itinéraires"""
 
     user_id = 1
-    TYPES = ["Défaut", "PMR", "Touriste", "Cadre"]  # Liste des types d'utilisateur possibles
+    __TYPES = ["Défaut", "PMR", "Touriste", "Cadre", "Personnalisé"]  # Liste des types d'utilisateur possibles
 
     def __init__(self):
         self._id = User.user_id
         User.user_id += 1
 
         self._type = "Défaut"
-        self._itineraries = []
+        self._search_history = []
 
     @property
     def id(self):
@@ -28,33 +30,33 @@ class User:
 
     @type.setter
     def type(self, value):
-        if value in User.TYPES:
+        if value in User.__TYPES:
             self._type = value
         elif isinstance(value, str):
-            TypeError("Est attendue une chaine de caractère pour le type.")
+            raise TypeError("Est attendue une chaine de caractère pour le type.")
         else:
-            ValueError("La valeur en entrée n'est pas définie comme type possible.")
+            raise ValueError("La valeur en entrée n'est pas définie comme type possible.")
 
     @property
-    def itineraries(self):
-        return self._itineraries
+    def search_history(self):
+        return self._search_history
 
-    @itineraries.setter
-    def itineraries(self, value):
-        self._itineraries = value
+    @search_history.setter
+    def search_history(self, value):
+        self._search_history = value
 
     def new_itinerary(self, origin, destination, date=None):
-        itineraire = Itinerary(origin, destination, date)
-        self.itineraries.append(itineraire)
+        itinerary = ItinerarySearch(origin, destination, date)
+        self.search_history.append(itinerary)
 
 
-class Itinerary:
+class ItinerarySearch:
     """Désigne un ensemble de routes possibles entre deux points pour un utilisateur"""
 
-    itinerary_id = 1
+    __itinerary_id = 1
 
     def __init__(self, origin, destination, date=None):
-        self._id = Itinerary.itinerary_id
+        self._id = ItinerarySearch.__itinerary_id
         self._origin = origin
         self._destination = destination
 
@@ -76,7 +78,10 @@ class Itinerary:
 
     @origin.setter
     def origin(self, value):
-        self._origin = value
+        if isinstance(value, Place):
+            self._origin = value
+        else:
+            raise TypeError("La valeur en entrée n'est pas un lieu !")
 
     @property
     def destination(self):
@@ -84,7 +89,10 @@ class Itinerary:
 
     @destination.setter
     def destination(self, value):
-        self._destination = value
+        if isinstance(value, Place):
+            self._destination = value
+        else:
+            raise TypeError("La valeur en entrée n'est pas un lieu !")
 
     @property
     def date(self):
@@ -92,7 +100,10 @@ class Itinerary:
 
     @date.setter
     def date(self, value):
-        self._date = value
+        if isinstance(value, dt):
+            self._date = value
+        else:
+            raise TypeError("La valeur en entrée doit être une date.")
 
     @property
     def routes(self):
@@ -100,22 +111,26 @@ class Itinerary:
 
     @routes.setter
     def routes(self, value):
-        self._routes = value
+        if isinstance(value, Route):
+            self._routes = value
+        else:
+            raise TypeError("La valeur en entrée doit être un trajet (Route).")
 
 
 class Route:
     """Désigne un trajet entre deux points spécifiés dans l'itinéraire"""
 
-    TRANSPORT_MODES = ["walking", "driving"]  # Liste des modes de transport possibles
-    route_id = 1
+    __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib"]  # Liste des modes de transport possibles
+    __route_id = 1
 
     def __init__(self, origin, destination, transport_mode, date=None):
-        self._id = Route.route_id
-        Route.route_id += 1
+        self._id = Route.__route_id
+        Route.__route_id += 1
 
         self._origin = origin
         self._destination = destination
         self._transport_mode = transport_mode
+
         # Par défaut, la date prise pour la recherche d'itinéraire est "Maintenant"
         if date is None:
             self._date = dt.now()
@@ -148,12 +163,16 @@ class Route:
 
     @transport_mode.setter
     def transport_mode(self, value):
-        if value in Route.TRANSPORT_MODES:
+        if value in Route.__TRANSPORT_MODES:
             self._transport_mode = value
         elif not isinstance(value, str):
-            TypeError("Est attendue une chaine de caractère pour le mode de transport.")
+            raise TypeError("Est attendue une chaine de caractère pour le mode de transport.")
         else:
-            ValueError("La valeur en entrée n'est pas un type de transport possible.")
+            raise ValueError("La valeur en entrée n'est pas un type de transport possible.")
+
+
+class Leg:
+    pass
 
 
 class Place:
@@ -168,10 +187,12 @@ class Place:
             # Exception à créer ici
         self._address = address
         self._lat = lat
-        self._lont = long
+        self._long = long
 
     @property
     def address(self):
+        if self._address is None:
+            self.address_from_lat_long()
         return self._address
 
     @address.setter
@@ -180,6 +201,8 @@ class Place:
 
     @property
     def lat(self):
+        if self._lat is None:
+            self.lat_long_from_address()
         return self._lat
 
     @lat.setter
@@ -187,10 +210,12 @@ class Place:
         if isinstance(value, float):
             self._lat = value
         else:
-            TypeError("Un flottant est attendu pour la latitude")
+            raise TypeError("Un flottant est attendu pour la latitude")
 
     @property
     def long(self):
+        if self._long is None:
+            self.lat_long_from_address()
         return self._long
 
     @long.setter
@@ -198,7 +223,7 @@ class Place:
         if isinstance(value, float):
             self._long = value
         else:
-            TypeError("Un flottant est attendu pour la longitude")
+            raise TypeError("Un flottant est attendu pour la longitude")
 
     def lat_long_from_address(self):
         """Calcule la latitude et la longitude de l'adresse d'origine"""
@@ -206,6 +231,12 @@ class Place:
         raw_data = requests.get(url_request).json()
         self.lat = raw_data['results'][0]['geometry']['location']['lat']
         self.long = raw_data['results'][0]['geometry']['location']['lng']
+
+    def address_from_lat_long(self):
+        """calcule l'adresse associé à une latitude et une longitude"""
+        url_request = Place.__URL_API_GEOCODE + "&latlng=" + str(self.lat) + "," + str(self.long)
+        raw_data = requests.get(url_request).json()
+        self.address = raw_data['results'][0]['formatted_address']
 
     def __repr__(self):
         res = ""
@@ -225,11 +256,20 @@ if __name__ == "__main__":
     mathieu.type = "Touriste"
     print("Type de Mathieu : " + mathieu.type)
     charles = User()
-    charles.type = "ESCP"
+    # charles.type = "ESCP"
     print("Type de Charles : " + charles.type)
     paris = Place(address="Paris")
     gif = Place(address="Gif")
     mathieu.new_itinerary(paris, gif)
+
+    # Test de la recherche
+    # To do
+
+    # Test des Routes
+    # To do
+
+    # Test des Legs
+    # To do
 
     # Test des lieux
     paris = Place(address="Paris")
@@ -237,3 +277,7 @@ if __name__ == "__main__":
     print("Pré-demande de coordonnées : " + str(paris))
     paris.lat_long_from_address()
     print("Post-demande de coordonnées : " + str(paris))
+    poissonnier = Place(lat=48.896614, long=2.3522219)
+    print(poissonnier)
+    poissonnier.address_from_lat_long()
+    print(poissonnier)
