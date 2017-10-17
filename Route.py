@@ -6,7 +6,7 @@ import Place
 class Route:
     """Désigne un trajet entre deux points spécifiés dans l'itinéraire"""
 
-    __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib"]  # Liste des modes de transport possibles
+    __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib","transit"]  # Liste des modes de transport possibles
     __route_id = 1
 
     def __init__(self, origin, destination, transport_mode, date=None):
