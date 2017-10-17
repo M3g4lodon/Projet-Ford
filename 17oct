@@ -36,28 +36,35 @@ class Route:
 
         # On determine le nombre de routes de transit proposées par Google Maps
 
-        if self._transport_mode in ["Transit","driving","walking","bicycling"]:
-            liste=[]
+                if self._transport_mode in ["Transit","driving","walking","bicycling"]:
+            liste = []
             url_request = Route.URL_API_DIRECTION + "&origin=" + str(self.origin) + "&destination=" + str(self.destination) + "&mode=" + str(self.transport_mode) +"&alternatives=True"
+            print(url_request)
             raw_data = requests.get(url_request).json()
-            etape = raw_data['routes'][str(self._route_index)]['legs']['0']['steps'] #on récupère les informations concernant les différentes étapes
+            etape = raw_data['routes'][self._route_index]['legs'][0]['steps'] #on récupère les informations concernant les différentes étapes
+            print(etape)
             self._nombre_etape = len(etape)
-#Création d'une liste qui comporte autant de dictionnaires vides que d'étapes (legs) différentes. Ces dictionnaires seront ensuite completés avec des informations clefs (distance, durée, origine intermediaire, distance intermediaire etc.)
-            for i in range(self._nombre_etape):
-                liste[i] = {}
-            for i in range(self._nombre_etape):
-                for k in range(len(liste[i])):
-                    liste[i][str(raw_data[str(k)])]
+            print(len(etape))
 
-
+            for i in range(self._nombre_etape):
+                liste.append({})
+            for k in range(self._nombre_etape):
+                    test = etape[k]
+                    liste[k]['distance'] = test['distance']['text']
+                    liste[k]['destination_intermediaire'] = test['end_location']
+                    liste[k]['instructions'] = test['html_instructions']
+                    liste[k]['mode de transport'] = test['travel_mode']
+            self.information_legs = liste #cette liste contient toutes les étapes et les informations utiles (encore à définir)
 
         else:
             raise TypeError("transport mode not defined, no available routes were found")
 
-        for i in range(len(Route.dict)):
-            self._destination_intermediaire.append(self,Route.dict[str(i)])
-        for valeur in Route.dict.keys():
-            self._transport_mode_intermediaire.append(valeur)
+       # for i in range(len(Route.dict)):
+         #   self._destination_intermediaire.append(self,Route.dict[str(i)])
+       # for valeur in Route.dict.keys():
+          #  self._transport_mode_intermediaire.append(valeur)
+
+
 
 
 
