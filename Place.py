@@ -5,19 +5,19 @@ class Place:
 
     __URL_API_GEOCODE = "https://maps.googleapis.com/maps/api/geocode/json?&key=AIzaSyDpVNzFcwgFfPJOK25P9NlMBL-YEe8bSow"
 
-    def __init__(self, address=None, lat=None, long=None):
+    def __init__(self, address=None, lat=None, lng=None):
         # Cas où le lieu est ma spécifié
-        if address is None and (lat is None or long is None):
+        if address is None and (lat is None or lng is None):
             pass
             # Exception à créer ici
         self._address = address
         self._lat = lat
-        self._long = long
+        self._lng = lng
 
     @property
     def address(self):
         if self._address is None:
-            self.address_from_lat_long()
+            self.address_from_lat_lng()
         return self._address
 
     @address.setter
@@ -27,7 +27,7 @@ class Place:
     @property
     def lat(self):
         if self._lat is None:
-            self.lat_long_from_address()
+            self.lat_lng_from_address()
         return self._lat
 
     @lat.setter
@@ -38,28 +38,28 @@ class Place:
             raise TypeError("Un flottant est attendu pour la latitude")
 
     @property
-    def long(self):
-        if self._long is None:
-            self.lat_long_from_address()
-        return self._long
+    def lng(self):
+        if self._lng is None:
+            self.lat_lng_from_address()
+        return self._lng
 
-    @long.setter
-    def long(self, value):
+    @lng.setter
+    def lng(self, value):
         if isinstance(value, float):
-            self._long = value
+            self._lng = value
         else:
             raise TypeError("Un flottant est attendu pour la longitude")
 
-    def lat_long_from_address(self):
+    def lat_lng_from_address(self):
         """Calcule la latitude et la longitude de l'adresse d'origine"""
         url_request = Place.__URL_API_GEOCODE + "&address=" + self.address
         raw_data = requests.get(url_request).json()
         self.lat = raw_data['results'][0]['geometry']['location']['lat']
-        self.long = raw_data['results'][0]['geometry']['location']['lng']
+        self.lng = raw_data['results'][0]['geometry']['location']['lng']
 
-    def address_from_lat_long(self):
+    def address_from_lat_lng(self):
         """calcule l'adresse associé à une latitude et une longitude"""
-        url_request = Place.__URL_API_GEOCODE + "&latlng=" + str(self.lat) + "," + str(self.long)
+        url_request = Place.__URL_API_GEOCODE + "&latlng=" + str(self.lat) + "," + str(self.lng)
         raw_data = requests.get(url_request).json()
         self.address = raw_data['results'][0]['formatted_address']
 
@@ -67,8 +67,8 @@ class Place:
         res = ""
         if self.address is not None:
             res += "[Place] Address : " + self.address + "\n"
-        if not (self.lat is None or self.long is None):
-            res += "[Place] Latitude : " + str(self.lat) + "\n" + "[Place] Longitude : " + str(self.long)
+        if not (self.lat is None or self.lng is None):
+            res += "[Place] Latitude : " + str(self.lat) + "\n" + "[Place] Longitude : " + str(self.lng)
         return res
     
     def __str__(self):
@@ -81,9 +81,9 @@ if __name__ == "__main__":
     paris = Place(address="Paris")
     print(paris)
     print("Pré-demande de coordonnées : " + str(paris))
-    paris.lat_long_from_address()
+    paris.lat_lng_from_address()
     print("Post-demande de coordonnées : " + str(paris))
-    poissonnier = Place(lat=48.896614, long=2.3522219)
+    poissonnier = Place(lat=48.896614, lng=2.3522219)
     print(poissonnier)
-    poissonnier.address_from_lat_long()
+    poissonnier.address_from_lat_lng()
     print(poissonnier)
