@@ -5,25 +5,29 @@ import requests
 class Transit(Itinerary):
 
 
-    URL_API_DIRECTION_Transit = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9-XjaEAdwtPw6RG0QWV65dbywe0&mode=transit&alternatives=true'
+    __URL_API_DIRECTION_Transit = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9-XjaEAdwtPw6RG0QWV65dbywe0&mode=transit&alternatives=true'
 
-    def __init__(self, origin, destination, transit_mode, transit_mode_type="", date=None):
+    def __init__(self, origin, destination, transit_mode, transit_mode_type, date=None):
 
-        Itinerary.__init__(self, origin, destination, transit_mode, date)
-        self.transit_mode = transit_mode
-        self._transit_mode = transit_mode_type
+        Itinerary.__init__(self, origin, destination, transit_mode, transit_mode_type, date)
+        
 
 
         if self._transport_mode == "transit":
             information_legs = []
 
 
-            url_request = Transport.URL_API_DIRECTION_Transit + "&origin=" + str(self._origin) + "&destination=" + str(self._destination) + "&transit_mode=" + str(self._transit_mode_type)
+            url_request = Transit.__URL_API_DIRECTION_Transit + "&origin=" + str(self._origin) + "&destination=" + str(self._destination) + "&transit_mode=" + str(self._transit_mode_type)
             raw_data = requests.get(url_request).json()
             etapes = raw_data['routes'][self._route_index]['legs'][0]['steps'] #on récupère les informations concernant les différentes étapes du premier voyage proposé (celui qui correpond au plus rapide d'ailleurs...)
 
             self._steps_number = len(etapes)
 
+            transit_time = 0
+            transit_distance = 0
+            walking_time = 0
+            walking_distance = 0
+            polyline=[]
 
          
                 
@@ -32,11 +36,14 @@ class Transit(Itinerary):
                     etape = etapes[step_number]
                     information_legs[step_number]['mode_de_transport'] = etape['travel_mode']
                     information_legs[step_number]['distance'] = etape['distance']['text']
+                    walking_distance += etape['distance']['text']
                     #a = Place(lat = etape['end_location']['lat']), lng = etape['end_location']['lng']))
                     information_legs[step_number]['destination_intermediaire'] = etape['end_location'] #j'essaie de transformer les positions Long,Lat en adresse ! A FAIRE
                     information_legs[step_number]['time'] = etape['duration']['text']
-                    b = Place(lat = etape['start_location']['lat'], lng = etape['start_location']['lng'])
+                    walking_time += etape['duration']['text']
+                    #b = Place(lat = etape['start_location']['lat'], lng = etape['start_location']['lng'])
                     information_legs[step_number]['depart_intermediaire'] = etape['start_location'] # lat,long en adresse
+                    polyline.append(etape['polyline']['text'])
 
                     if information_legs[step_number]['mode_de_transport']=="TRANSIT":
                         information_legs[step_number]['arrival_stop'] = etape['transit_details']['arrival_stop']['name']
@@ -44,11 +51,16 @@ class Transit(Itinerary):
                         information_legs[step_number]['transit_mode'] = etape['transit_details']['line']['vehicle']['type']
                         information_legs[step_number]['line'] = etape['transit_details']['line']['short_name']
                         information_legs[step_number]['number_stops'] = etape['transit_details']['num_stops']
+                        polyline.append(etape['polyline']['text'])
+                        transit_time += etape['transit_details']['duration']['text']
+                        transit_distance += etape['transit_details']['distance']['text']
 
                     else:
-                        information_legs[k]['instructions'] = etape['html_instructions']
+                        information_legs[step_number]['instructions'] = etape['html_instructions']
             self._information_legs = information_legs #cette liste contient toutes les étapes et les informations utiles (encore à définir)
-
+            self.distance = walking_distance + transit_distance
+            self.time = walking_time + transit_time
+            self.polyline = polyline
         else:
             raise TypeError("transport mode not defined, no available routes were found")
 
@@ -59,11 +71,22 @@ class Transit(Itinerary):
     # less_walking indicates that the calculated route should prefer limited amounts of walking.
     # fewer_transfers indicates that the calculated route should prefer a limited number of transfers.
 
-    def get_legs(self):
+    @distance.getter
+    def distance(self):
+        return self.distance
+    
+    @time.getter
+    def time(self):
+        return self.time
+
+    def polyline(self):
+        return self.polyline
+
+    def get_legs_information(self):
 
         '''On va avoir accès à toutes les informations '''
 
-        k = 0
+        
         print("Your itinerary will take place in  {} step(s) :".format(len(self._information_legs)))
 
         #use enumerate
@@ -82,6 +105,4 @@ if __name__ == "__main__":
     """Script de test de la bonne construction des classes"""
 
     #Test des différentes portions d'une voyage en transport de commun
-    voyage = Transport("10 rue oswaldo cruz paris 75016", "Favella Chic Paris","Transit","bus")
-
-    voyage.get_legs()
+   
