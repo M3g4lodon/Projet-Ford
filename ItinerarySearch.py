@@ -1,7 +1,7 @@
 from datetime import datetime as dt
 import requests
 import Place
-import Route
+import Itinerary
 
 class ItinerarySearch:
     """Choisit les différentes options d'itinéraires à partir des préférences Utilisateurs"""
