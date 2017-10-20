@@ -48,6 +48,6 @@ if __name__ == "__main__":
     """Script de test de la bonne construction des classes"""
 
     # Test des différentes portions d'une voyage en transport de commun
-    voyage = Walking("10 rue oswaldo cruz paris 75016", "Favella Chic Paris", "walking")
+    voyage = walking("10 rue oswaldo cruz paris 75016", "Favella Chic Paris", "walking")
 
 
