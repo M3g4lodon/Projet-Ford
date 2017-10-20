@@ -4,7 +4,7 @@ import Place
 import Route
 
 class ItinerarySearch:
-    """Désigne un ensemble de routes possibles entre deux points pour un utilisateur"""
+    """Choisit les différentes options d'itinéraires à partir des préférences Utilisateurs"""
 
     __itinerary_id = 1
 
