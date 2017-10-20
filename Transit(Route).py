@@ -7,18 +7,18 @@ class Transit(Route):
 
     URL_API_DIRECTION_Transit = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9-XjaEAdwtPw6RG0QWV65dbywe0&mode=transit&alternatives=true'
 
-    def __init__(self, origin, destination, transport_mode, transit_mode="", date=None):
+    def __init__(self, origin, destination, transit_mode, transit_mode_type="", date=None):
 
-        Route.__init__(self, origin, destination, transport_mode, date)
-        self._transport_mode = transport_mode
-        self._transit_mode = transit_mode
+        Route.__init__(self, origin, destination, transit_mode, date)
+        self.transit_mode = transit_mode
+        self._transit_mode = transit_mode_type
 
 
         if self._transport_mode == "transit":
             information_legs = []
 
 
-            url_request = Transport.URL_API_DIRECTION_Transit + "&origin=" + str(self._origin) + "&destination=" + str(self._destination) + "&transit_mode=" + str(self._transit_mode)
+            url_request = Transport.URL_API_DIRECTION_Transit + "&origin=" + str(self._origin) + "&destination=" + str(self._destination) + "&transit_mode=" + str(self._transit_mode_type)
             raw_data = requests.get(url_request).json()
             etapes = raw_data['routes'][self._route_index]['legs'][0]['steps'] #on récupère les informations concernant les différentes étapes du premier voyage proposé (celui qui correpond au plus rapide d'ailleurs...)
 
