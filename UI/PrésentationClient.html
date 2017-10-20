@@ -15,23 +15,47 @@
 	</head>
 
 	<body>
-		<h1> Carte de Paris </h1>
-		<form class="form-inline">
+		<h1> Projet Ford </h1>
+		<h2> Authentification</h2>
+		<form class="form-inline" id ="Authentification">
 	  		<div class="form-group">
-		    <label for="FamilyName">Nom:</label>
-		    <input type="text" class="form-control" id="FamilyName">
-		  </div>
-		  <div class="form-group">
-		    <label for="FirstName">Password:</label>
-		    <input type="text" class="form-control" id="FirstName">
-		  </div>
-
-		  <div class="checkbox">
-		    <label><input type="checkbox"> Remember me</label>
-		  </div>
-		  <button type="submit" class="btn btn-default">Submit</button>
+		    	<label for="FamilyName">Nom:</label>
+		    	<input type="text" class="form-control" id="FamilyName">
+		  	</div>
+			<div class="form-group">
+				<label for="FirstName">Prénom:</label>
+				<input type="text" class="form-control" id="FirstName">
+			</div>
+		  	<button type="submit" class="btn btn-default">Envoyer</button>
 		</form> 
 
+		<h2>Critères de recherche</h2>
+		<form class="form-inline" id="Preferences">
+		  <div class="checkbox">
+		    <label><input type="checkbox">PMR</label>
+		  </div>
+		  <div class="checkbox">
+		    <label><input type="checkbox">Tourisme</label>
+		  </div>
+		  <div class="checkbox">
+		    <label><input type="checkbox">Avec Valise</label>
+		  </div>
+		  <div class="checkbox">
+		    <label><input type="checkbox">Pressé</label>
+		  </div>
+		</form> 
+
+		<h2>Recherche d'itinéraires</h2>
+		<form class="form-inline" id="ItinerarySearch">
+			<div class="form-group">
+				<label for="origin">Départ : </label>
+				<input type="text" class="form-control" id="origin">
+			</div>
+			<div class="form-group">
+				<label for="destination">Arrivée : </label>
+				<input type="text" class="form-control" id="destination">
+			</div>
+		</form> 
 		<div id="map">
 
 		</div>
