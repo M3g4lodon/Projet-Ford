@@ -70,7 +70,9 @@ class Place:
         if not (self.lat is None or self.long is None):
             res += "[Place] Latitude : " + str(self.lat) + "\n" + "[Place] Longitude : " + str(self.long)
         return res
-
+    
+    def __str__(self):
+        return self.address
 
 if __name__ == "__main__":
     """Script de test de la bonne construction des classes"""
