@@ -1,15 +1,15 @@
-import Route
+import Itinerary
 import requests
 
 
-class Transit(Route):
+class Transit(Itinerary):
 
 
     URL_API_DIRECTION_Transit = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9-XjaEAdwtPw6RG0QWV65dbywe0&mode=transit&alternatives=true'
 
     def __init__(self, origin, destination, transit_mode, transit_mode_type="", date=None):
 
-        Route.__init__(self, origin, destination, transit_mode, date)
+        Itinerary.__init__(self, origin, destination, transit_mode, date)
         self.transit_mode = transit_mode
         self._transit_mode = transit_mode_type
 
