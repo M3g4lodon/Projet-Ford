@@ -3,8 +3,8 @@ import requests
 import Leg
 import Place
 
-class Route:
-    """Désigne un trajet entre deux points spécifiés dans l'itinéraire"""
+class Itinerary:
+    """Désigne un trajet entre deux points spécifiés dans la recherche d'itinéraires"""
 
     __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib","transit"]  # Liste des modes de transport possibles
     __route_id = 1
