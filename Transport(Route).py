@@ -7,53 +7,47 @@ class Transport(Route):
 
     URL_API_DIRECTION_Transit = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9-XjaEAdwtPw6RG0QWV65dbywe0&mode=transit&alternatives=true'
 
-    def __init__(self, origin, destination, transport_mode, transit_mode=None, date=None):
+    def __init__(self, origin, destination, transport_mode, transit_mode="", date=None):
 
         Route.__init__(self, origin, destination, transport_mode, date)
         self._transport_mode = transport_mode
+        self._transit_mode = transit_mode
 
 
-        if transit_mode is None:
-            self._transit_mode = ''
-        else:
-            self._transit_mode = transit_mode
-
-
-        if self._transport_mode in ["transit","Transit"]:
-            liste = []
+        if self._transport_mode == "transit":
+            information_legs = []
 
 
             url_request = Transport.URL_API_DIRECTION_Transit + "&origin=" + str(self._origin) + "&destination=" + str(self._destination) + "&transit_mode=" + str(self._transit_mode)
-            print(url_request)
             raw_data = requests.get(url_request).json()
-            etape = raw_data['routes'][self._route_index]['legs'][0]['steps'] #on récupère les informations concernant les différentes étapes du premier voyage proposé (celui qui correpond au plus rapide d'ailleurs...)
+            etapes = raw_data['routes'][self._route_index]['legs'][0]['steps'] #on récupère les informations concernant les différentes étapes du premier voyage proposé (celui qui correpond au plus rapide d'ailleurs...)
 
-            self._nombre_etape = len(etape)
+            self._steps_number = len(etapes)
 
 
-            for i in range(self._nombre_etape):
-                liste.append({})
-            for k in range(self._nombre_etape):
-                    test = etape[k]
-                    liste[k]['mode_de_transport'] = test['travel_mode']
-                    liste[k]['distance'] = test['distance']['text']
-                    # a = Place(float(test['end_location']['lat']), float(test['end_location']['lng']))
-                    #print(test['end_location']['lat'])
-                    liste[k]['destination_intermediaire'] = test['end_location'] #j'essaie de transformer les positions Long,Lat en adresse ! A FAIRE
-                    liste[k]['time'] = test['duration']['text']
-                    #b = Place(test['start_location']['lat'], test['start_location']['lng'])
-                    liste[k]['depart_intermediaire'] = test['start_location'] # lat,long en adresse
+         
+                
+            for step_number in range(self._steps_number):
+                    information_legs.append({})
+                    etape = etapes[step_number]
+                    information_legs[step_number]['mode_de_transport'] = etape['travel_mode']
+                    information_legs[step_number]['distance'] = etape['distance']['text']
+                    #a = Place(lat = etape['end_location']['lat']), lng = etape['end_location']['lng']))
+                    information_legs[step_number]['destination_intermediaire'] = etape['end_location'] #j'essaie de transformer les positions Long,Lat en adresse ! A FAIRE
+                    information_legs[step_number]['time'] = etape['duration']['text']
+                    b = Place(lat = etape['start_location']['lat'], lng = etape['start_location']['lng'])
+                    information_legs[step_number]['depart_intermediaire'] = etape['start_location'] # lat,long en adresse
 
-                    if liste[k]['mode_de_transport']=="TRANSIT":
-                        liste[k]['arrival_stop'] = test['transit_details']['arrival_stop']['name']
-                        liste[k]['departure_stop']  = test['transit_details']['departure_stop']['name']
-                        liste[k]['transit_mode'] = test['transit_details']['line']['vehicle']['type']
-                        liste[k]['line'] = test['transit_details']['line']['short_name']
-                        liste[k]['number_stops'] = test['transit_details']['num_stops']
+                    if information_legs[step_number]['mode_de_transport']=="TRANSIT":
+                        information_legs[step_number]['arrival_stop'] = etape['transit_details']['arrival_stop']['name']
+                        information_legs[step_number]['departure_stop']  = etape['transit_details']['departure_stop']['name']
+                        information_legs[step_number]['transit_mode'] = etape['transit_details']['line']['vehicle']['type']
+                        information_legs[step_number]['line'] = etape['transit_details']['line']['short_name']
+                        information_legs[step_number]['number_stops'] = etape['transit_details']['num_stops']
 
                     else:
-                        liste[k]['instructions'] = test['html_instructions']
-            self._information_legs = liste #cette liste contient toutes les étapes et les informations utiles (encore à définir)
+                        information_legs[k]['instructions'] = etape['html_instructions']
+            self._information_legs = information_legs #cette liste contient toutes les étapes et les informations utiles (encore à définir)
 
         else:
             raise TypeError("transport mode not defined, no available routes were found")
@@ -72,22 +66,22 @@ class Transport(Route):
         k = 0
         print("Your itinerary will take place in  {} step(s) :".format(len(self._information_legs)))
 
-        for i in range(len(self._information_legs)):
-            k +=1
-            tampon = self._information_legs[i]
-            if tampon['mode_de_transport'] == "TRANSIT" :
-                print("Portion number {} : You will be taking the {} line number {} at station {} and arriving at {} after a duration of {} and {} stops.".format(k, tampon[
-                    'transit_mode'], tampon['line'], tampon['departure_stop'], tampon['arrival_stop'], tampon['time'], tampon['number_stops']))
+        #use enumerate
+        for leg_index, leg  in enumerate(self._information_legs):
+            
+            if leg['mode_de_transport'] == "TRANSIT" :
+                print("Portion number {} : You will be taking the {} line number {} at station {} and arriving at {} after a duration of {} and {} stops.".format(leg_index, leg[
+                    'transit_mode'], leg['line'], leg['departure_stop'], leg['arrival_stop'], leg['time'], leg['number_stops']))
             else:
 
-                print("Portion number {} : You will be {} for a duration of {} and a distance of {}; Please {}.".format(k, tampon['mode_de_transport'], tampon['time'], tampon['distance'], tampon['instructions']))
+                print("Portion number {} : You will be {} for a duration of {} and a distance of {}; Please {}.".format(leg_index, leg['mode_de_transport'], leg['time'], leg['distance'], leg['instructions']))
 
 
 
 if __name__ == "__main__":
     """Script de test de la bonne construction des classes"""
 
-#Test des différentes portions d'une voyage en transport de commun
-voyage = Transport("10 rue oswaldo cruz paris 75016", "Favella Chic Paris","Transit","bus")
+    #Test des différentes portions d'une voyage en transport de commun
+    voyage = Transport("10 rue oswaldo cruz paris 75016", "Favella Chic Paris","Transit","bus")
 
-voyage.get_legs()
+    voyage.get_legs()
