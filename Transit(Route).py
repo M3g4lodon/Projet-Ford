@@ -2,7 +2,7 @@ import Route
 import requests
 
 
-class Transport(Route):
+class Transit(Route):
 
 
     URL_API_DIRECTION_Transit = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9-XjaEAdwtPw6RG0QWV65dbywe0&mode=transit&alternatives=true'
