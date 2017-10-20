@@ -1,24 +1,44 @@
 #Paris WOEID code is 615702 (documentation de l'API: https://developer.yahoo.com/weather/documentation.html)
 
 import requests
+import datetime
+from user_v2 import User
 
-#temperature actuelle et visibilité
-url="https://query.yahooapis.com/v1/public/yql"
-param="q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20%3D%20615702%20and%20u%3D'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys"
+def meteo_jour(utilisateur):
+    #5 days forecast incl. temperature, weather,...
+    url="https://query.yahooapis.com/v1/public/yql"
+    param="q=select%20*%20from%20weather.forecast%20where%20woeid%20%3D615702%20and%20u%3D'c'&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback="
 
+    resp = requests.get(url,param)
+    r=resp.json()
 
-#5 days forecast incl. temperature, humidity...
-#url="https://query.yahooapis.com/v1/public/yql"
-#param="q=select%20*%20from%20weather.forecast%20where%20woeid%20%3D615702%20and%20u%3D'c'&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback="
+    for i in range (0,4):
+        if date == datetime.date.today() + datetime.timedelta(days=i):
+            forecast=r['query']['results']['channel']['item']['forecast'][i]
+            #print(forecast)
 
-resp = requests.get(url,param)
-r=resp.json()
+            code=int(forecast['code'])
+            texte=forecast['text']
+            max=forecast['high']
+            min=forecast['low']
+            info="Le temps sera: {}, la température comprise entre {} et {}°C.".format(texte,min, max)
 
-code=r['query']['results']['channel']['item']['condition']['code']
-temperature=r['query']['results']['channel']['item']['condition']['temp']
-temps=r['query']['results']['channel']['item']['condition']['text']
+            if 19 <= code<= 34 or code==36:
+                resultat="Tous les moyens sont bons ! "+info
+            else:
+                resultat="\nUtilisez les moyens de transport couverts. "+info
+                pref=list(utilisateur.preferences) # preferences de l'objet de classe utilisateur -> a modifier par rapport a la fct
+                if 'velib' in pref:
+                    pref.remove('velib')
+                if 'walking' in pref:
+                    pref.remove('walking')
+                utilisateur.preferences=pref
 
-if code not in [19-34,36]:
-    print("temps pourri, utilisez les transports couverts")
+            return print(resultat)
 
-print("il fait {}, et le temps est {}".format(temperature,temps))
+if __name__=="__main__":
+
+    date = datetime.date.today()+ datetime.timedelta(days=3)
+    charles = User("Touriste", "non")
+    meteo_jour(charles)
+    print(charles.preferences)

@@ -6,16 +6,16 @@ import Place
 class Itinerary:
     """Désigne un trajet entre deux points spécifiés dans la recherche d'itinéraires"""
 
-    __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib","transit"]  # Liste des modes de transport possibles
+    __TRANSIT_MODES = ["walking", "driving", "velib", "autolib","transit"]  # Liste des modes de transport possibles
     __route_id = 1
 
-    def __init__(self, origin, destination, transport_mode, date=None):
+    def __init__(self, origin, destination, transit_mode, date=None):
         self._id = Route.__route_id
         Route.__route_id += 1
 
         self._origin = origin
         self._destination = destination
-        self._transport_mode = transport_mode
+        self._transit_mode = transit_mode
 
         # Par défaut, la date prise pour la recherche d'itinéraire est "Maintenant"
         if date is None:
@@ -44,13 +44,13 @@ class Itinerary:
         self._destination = value
 
     @property
-    def transport_mode(self):
-        return self._transport_mode
+    def transit_mode(self):
+        return self._transit_mode
 
-    @transport_mode.setter
-    def transport_mode(self, value):
-        if value in Route.__TRANSPORT_MODES:
-            self._transport_mode = value
+    @transit_mode.setter
+    def transit_mode(self, value):
+        if value in Route.__TRANSIT_MODES:
+            self._transit_mode = value
         elif not isinstance(value, str):
             raise TypeError("Est attendue une chaine de caractère pour le mode de transport.")
         else:
