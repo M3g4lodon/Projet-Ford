@@ -90,7 +90,7 @@ class Autolib(Itinerary):
                 else:
                     stations_destination.append({})
                     stations_destination[number_station]['Station Number'] = number_station
-                    stations_destination[number_station]['adress_station'] = 
+                    stations_destination[number_station]['adress_station'] = \
                     results['records'][number_station]['fields']['address'] + "Paris"
                     stations_destination[number_station]['nb_auto'] = results['records'][number_station]['fields'][
                         'cars']
