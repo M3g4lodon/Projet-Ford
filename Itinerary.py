@@ -1,15 +1,15 @@
-from datetime import datetime as dt
-import requests
-import Place
+from datetime import datetime
+from Place import Place
+
 
 class Itinerary:
     """Désigne un trajet entre deux points spécifiés dans la recherche d'itinéraires"""
 
-    __TRANSIT_MODES = ["walking", "driving", "velib", "autolib","transit"]
+    __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib", "transit"]
     __TRANSIT_MODE_TYPES = ["rail", "bus", "tramway"]  # Liste des modes de transport possibles
     __route_id = 1
 
-    def __init__(self, origin, destination, transit_mode, transit_mode_type, date=None):
+    def __init__(self, origin, destination, transport_mode, transit_mode_type, date=None):
 
         self._id = Itinerary.__route_id
         Itinerary.__route_id += 1
@@ -17,22 +17,35 @@ class Itinerary:
         if isinstance(origin, Place):
             self._origin = origin
         else:
-            TypeError("L'origine doit être un objet Place")
+            raise TypeError("L'origine doit être un objet Place")
 
         if isinstance(destination, Place):
             self._destination = destination
         else:
-            TypeError("La destination doit être un objet Place")
+            raise TypeError("La destination doit être un objet Place")
 
-        self._transit_mode = transit_mode
-        self._transit_mode_type = transit_mode_type
+        if transport_mode in Itinerary.__TRANSPORT_MODES:
+            self._tranport_mode = transport_mode
+        elif isinstance(transport_mode,str):
+            raise ValueError("La valeur du mode de transport doit faire partie de la liste des valeurs possibles")
+        else:
+            raise TypeError("La valeur d'un mode de transport doit être une chaine de caractères parmi la liste des modes de transport possible.")
+
+        if transit_mode_type in Itinerary.__TRANSIT_MODE_TYPES:
+            self._transit_mode_type = transit_mode_type
+        elif isinstance(transit_mode_type,str):
+            raise ValueError("La valeur du type de transport en commun doit faire partie de la liste des valeurs possibles")
+        else:
+            raise TypeError("La valeur d'un type de transport en commun doit être une chaine de caractères parmi la liste des valeurs possible.")
+
 
         # Par défaut, la date prise pour la recherche d'itinéraire est "Maintenant"
         if date is None:
-            self._date = dt.now()
-        else:
+            self._date = datetime.now()
+        elif isinstance(date,datetime):
             self._date = date
-
+        else:
+            raise TypeError("La valeur attendue de la date doit être de type datetime.")
     @property
     def id(self):
         return self._id
@@ -43,7 +56,10 @@ class Itinerary:
 
     @origin.setter
     def origin(self, value):
-        self._origin = value
+        if isinstance(value, Place):
+            self._origin = value
+        else:
+            raise TypeError("Une variable de type Place est attendue pour désigner l'origine.")
 
     @property
     def destination(self):
@@ -51,38 +67,55 @@ class Itinerary:
 
     @destination.setter
     def destination(self, value):
-        self._destination = value
+        if isinstance(value, Place):
+            self._destination = value
+        else:
+            raise TypeError("Une variable de type Place est attendue pour désigner la destination.")
 
     @property
-    def transit_mode(self):
-        return self._transit_mode
+    def transport_mode(self):
+        return self._tranport_mode
+
+    @transport_mode.setter
+    def transport_mode(self, value):
+        if value in Itinerary.__TRANSPORT_MODES:
+            self._tranport_mode = value
+        elif not isinstance(value, str):
+            raise TypeError("Est attendue une chaine de caractère pour le mode de transport.")
+        else:
+            raise ValueError("La valeur en entrée n'est pas un type de transport possible.")
 
     @property
     def transit_mode_type(self):
         return self._transit_mode_type
 
     @transit_mode_type.setter
-    def transit_mode_type(self,value):
+    def transit_mode_type(self, value):
         if value in Itinerary.__TRANSIT_MODE_TYPES:
             self.transit_mode_type = value
-        elif not isinstance(value, str):    
+        elif not isinstance(value, str):
             raise TypeError("Est attendue une chaine de caractère pour le type de mode de transport en commun.")
         else:
             raise ValueError("La valeur en entrée n'est pas un type de transport en commun possible.")
 
+    @property
+    def date(self):
+        return self._date
 
-    @transit_mode.setter
-    def transit_mode(self, value):
-        if value in Itinerary.__TRANSIT_MODES:
-            self._transit_mode = value
-        elif not isinstance(value, str):
-            raise TypeError("Est attendue une chaine de caractère pour le mode de transport.")
+    @date.setter
+    def date(self, value):
+        if isinstance(value,datetime):
+            self._date = value
         else:
-            raise ValueError("La valeur en entrée n'est pas un type de transport possible.")
+            raise TypeError("Une variable de type datetime est attendue pour désigner la date de la recherche.")
 
+    def __str__(self):
+        return "Itinéraire de {} à {}, en utilisant le modes de transport suivant {}, le {}.".format(self.origin,self.destination,self.transport_mode,self.date)
 if __name__ == "__main__":
     """Script de test"""
 
-    # Test des Routes
-    # To do
-
+    # Test des itinéraires
+    org=Place(address="Opéra,Paris")
+    des=Place(address="Bastille,Paris")
+    AtoB=Itinerary(org,des,"walking","bus")
+    print(AtoB)
