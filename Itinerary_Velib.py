@@ -158,3 +158,17 @@ class Velib(Itinerary):
                 self._address_station_destination = self._station_destination[value]['address_station']
             else:
                 TypeError("Please enter the Station Number associated to a Velib Station")
+
+
+if __name__"__main__":
+
+    # Test des différentes portions d'une voyage en Velib
+    org = Place(address="10 rue oswaldo cruz paris 75016")
+    des = Place(address="Favella Chic Paris")
+    AtoB = Bicycling(org, des, "velib")
+    print(repr(AtoB))
+
+    org = Place(address="Montmartre, Paris")
+    des = Place(address="Cité Universitaire, Paris")
+    CtoD = Bicycling(org, des, "velib")
+    print(repr(CtoD))

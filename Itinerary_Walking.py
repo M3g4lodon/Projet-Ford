@@ -6,7 +6,7 @@ import math
 
 class Walking(Itinerary):
     __URL_API_DIRECTION = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9' \
-                        '-XjaEAdwtPw6RG0QWV65dbywe0&mode=walking&alternatives=true '
+                          '-XjaEAdwtPw6RG0QWV65dbywe0&mode=walking&alternatives=true '
 
     def __init__(self, origin, destination, transport_mode, date=None, transit_mode_type=None, itinerary_index=0):
 
@@ -67,22 +67,18 @@ class Walking(Itinerary):
         return self._walking_distance
 
     @property
-    def bicycling_duration(self):
-        return self._bicycling_duration
-
-    @property
-    def bicycling_distance(self):
-        return self._bicycling_distance
-
-    @property
     def total_polyline(self):
         return self._total_polyline
 
+    @property
+    def information_legs(self):
+        return self._information_legs
+
     def __repr__(self):
         res = ""
-        res += "Your itinerary will take place in  {} step(s) :".format(len(self._information_legs))
+        res += "Your itinerary will take place in  {} step(s) :".format(len(self.information_legs))
 
-        for leg_index, leg in enumerate(self._information_legs):
+        for leg_index, leg in enumerate(self.information_legs):
             res += "\n"
             res += "Portion " + str(leg_index)
             res += ": You will be " + leg['transport_mode']

@@ -6,7 +6,7 @@ import math
 
 class Driving(Itinerary):
     __URL_API_DIRECTION = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9' \
-                                  '-XjaEAdwtPw6RG0QWV65dbywe0&mode=driving&alternatives=true '
+                          '-XjaEAdwtPw6RG0QWV65dbywe0&mode=driving&alternatives=true '
 
     def __init__(self, origin, destination, transport_mode, date=None, transit_mode_type=None, itinerary_index=0):
         Itinerary.__init__(self, origin, destination, transport_mode, date, transit_mode_type, itinerary_index)
@@ -81,12 +81,15 @@ class Driving(Itinerary):
     def total_polyline(self):
         return self._total_polyline
 
+    @property
+    def information_legs(self):
+        return self._information_legs
+
     def __repr__(self):
         res = ""
-        res += "Your itinerary will take place in  {} step(s) :".format(len(self._information_legs))
+        res += "Your itinerary will take place in  {} step(s) :".format(len(self.information_legs))
 
-        for leg_index, leg in enumerate(self._information_legs):
-
+        for leg_index, leg in enumerate(self.information_legs):
             res += "\n"
             res += "Portion " + str(leg_index)
             res += ": You will be " + leg['transport_mode']
@@ -100,6 +103,7 @@ class Driving(Itinerary):
         res += "\n"
 
         return res
+
 
 if __name__ == "__main__":
     """Script de test de la bonne construction des classes"""

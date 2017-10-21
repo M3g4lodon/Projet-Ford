@@ -82,11 +82,15 @@ class Bicycling(Itinerary):
     def total_polyline(self):
         return self._total_polyline
 
+    @property
+    def information_legs(self):
+        return self._information_legs
+
     def __repr__(self):
         res = ""
-        res += "Your itinerary will take place in  {} step(s) :".format(len(self._information_legs))
+        res += "Your itinerary will take place in  {} step(s) :".format(len(self.information_legs))
 
-        for leg_index, leg in enumerate(self._information_legs):
+        for leg_index, leg in enumerate(self.information_legs):
             res += "\n"
             res += "Portion " + str(leg_index)
             res += ": You will be " + leg['transport_mode']

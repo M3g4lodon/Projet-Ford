@@ -1,38 +1,27 @@
 from Itinerary import Itinerary
+from Itinerary_Walking import Walking
+from Itinerary_Bicycling import Bicycling
+from Itinerary_Driving import Driving
+from Itinerary_Transit import Transit
 from Place import Place
 import requests
 import math
 
 class Autolib(Itinerary):
-    __URL_API_DIRECTION = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9-XjaEAdwtPw6RG0QWV65dbywe0&mode=transit&alternatives=true'
+    __URL_API_DIRECTION = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9' \
+                          '-XjaEAdwtPw6RG0QWV65dbywe0&mode=transit&alternatives=true '
     __URL_AUTOLIB = 'https://opendata.paris.fr/api/records/1.0/search/'
 
     def __init__(self, origin, destination, transport_mode, date=None, transit_mode_type=None, itinerary_index=0):
-        super().__init__(self, origin, destination, transport_mode, date, transit_mode_type, itinerary_index)
-
-        if self.transit_mode_type is not "autolib":
-            ValueError("cette classe ne prend en compte que les trajets en autolib")
-
-        if isinstance(origin, Place):
-            self._origin_lng = self._origin.lng()
-            self._origin_lat = self._origin.lat()
-        else:
-            TypeError("L'origine doit être un objet Place")
-
-        if isinstance(destination, Place):
-            self._destination_lat = self.destination.lat()
-            self._destination_lng = self.desination.lng()
-        else:
-            TypeError("La destination doit être un objet Place")
+        Itinerary.__init__(self, origin, destination, transport_mode, date, transit_mode_type, itinerary_index)
 
         number_hits = 0
 
         # Station autolib d'origine
-
         while number_hits == 0:
             stations_origin = []
-            parameters = "dataset=autolib-disponibilite-temps-reel&q=status%3Dok+AND+cars%3E0&geofilter.distance=" + "%2C".join(
-                self._origin_lat, self._origin_lng, 1000)
+            parameters = "dataset=autolib-disponibilite-temps-reel&q=status%3Dok+AND+cars%3E0&geofilter.distance=" \
+                         + "%2C".join([str(origin.lat), str(origin.lng), "1000"])
             r = requests.get(Autolib.__URL_AUTOLIB, parameters)
             results = r.json()
             number_hits = results['nhits']
@@ -43,7 +32,7 @@ class Autolib(Itinerary):
                 else:
                     self._address_station_origin = results['records'][number_station]['fields'][
                                                        'address'] + "Paris"  # Je me limite au cas où la station autolib se trouve à Paris et on sélectionne la première uniquement
-                    self._nb_auto_origin = results['records'][number_station]['fields']['cars']
+                    self._nb_cars_origin = results['records'][number_station]['fields']['cars']
                     break
             for number_station in range(number_hits):
 
@@ -68,7 +57,7 @@ class Autolib(Itinerary):
 
         self._distance = self._distance_walking + self._distance_driving
 
-        '''Attributs Temps - à pied - en voiture - et au total'''        
+        '''Attributs Temps - à pied - en voiture - et au total'''
 
         self._time_driving = Driving(origin=self._origin, destination=self._address_station_origin).duration(
             self)
@@ -76,12 +65,12 @@ class Autolib(Itinerary):
             self)
         self._time = self._time_driving + self._time_walking
 
-        #station autolib à l'arrivée
+        # station autolib à l'arrivée
 
         while number_hits == 0:
             stations_destination = []
             parameters = "dataset=autolib-disponibilite-temps-reel&q=status%3Dok+AND+cars%3E0&geofilter.distance=" + "%2C".join(
-                self._destination_lat, self._destination_lng, 1000)
+                [destination.lat, destination.lng, "1000"])
             r = requests.get(Autolib.__URL_AUTOLIB, parameters)
             results = r.json()
             number_hits = results['nhits']
@@ -96,13 +85,14 @@ class Autolib(Itinerary):
                     break
             for number_station in range(number_hits):
 
-                if results['records'][number_station]['fields']['cars'] == 0: #faut changer ce paramètre, il faudrait voir si on a accès au nombre de bornes libres
+                if results['records'][number_station]['fields'][
+                    'cars'] == 0:  # faut changer ce paramètre, il faudrait voir si on a accès au nombre de bornes libres
                     pass
                 else:
                     stations_destination.append({})
                     stations_destination[number_station]['Station Number'] = number_station
                     stations_destination[number_station]['adress_station'] = \
-                    results['records'][number_station]['fields']['address'] + "Paris"
+                        results['records'][number_station]['fields']['address'] + "Paris"
                     stations_destination[number_station]['nb_auto'] = results['records'][number_station]['fields'][
                         'cars']
 
@@ -114,7 +104,7 @@ class Autolib(Itinerary):
 
         @property
         def nb_auto_origin(self):
-            return self._nb_auto_origin
+            return self._nb_cars_origin
 
         @property
         def address_station_destination(self):
@@ -128,11 +118,7 @@ class Autolib(Itinerary):
             return self._time
 
         def distance(self):
-            return self._distance    
-
-
-
-
+            return self._distance
 
         def get_all_other_origin_autolib_station(self):
             '''Afficher toutes les stations autolib de départ'''
@@ -157,3 +143,16 @@ class Autolib(Itinerary):
                 self._address_station_destination = self._station_destination[value]['address_station']
             else:
                 TypeError("Please enter the Station Number associated to a Autolib Station")
+
+
+if __name__ == "__main__":
+    # Test des différentes portions d'une voyage en Autolib
+    org = Place(address="10 rue oswaldo cruz paris 75016")
+    des = Place(address="Favella Chic Paris")
+    AtoB = Autolib(org, des, "autolib")
+    print(repr(AtoB))
+
+    org = Place(address="Montmartre, Paris")
+    des = Place(address="Cité Universitaire, Paris")
+    CtoD = Autolib(org, des, "autolib")
+    print(repr(CtoD))
