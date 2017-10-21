@@ -24,7 +24,7 @@ class Transit(Itinerary):
             # (celui qui correpond au plus rapide d'ailleurs...)
             steps = raw_data['routes'][self.itinerary_index]['legs'][0]['steps']
 
-            self._total_duration = raw_data['routes'][self.itinerary_index]['legs'][0]['distance']['value']
+            self._total_duration = raw_data['routes'][self.itinerary_index]['legs'][0]['duration']['value']
             self._total_polyline = raw_data['routes'][self.itinerary_index]['overview_polyline']['points']
 
             self._walking_distance = 0

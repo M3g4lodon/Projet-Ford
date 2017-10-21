@@ -1,6 +1,7 @@
 from Itinerary import Itinerary
-import Place
-
+from Place import Place
+import requests
+import math
 
 class Velib(Itinerary):
     __URL_API_DIRECTION = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9-XjaEAdwtPw6RG0QWV65dbywe0&mode=transit&alternatives=true'

@@ -1,6 +1,7 @@
 from Itinerary import Itinerary
-import Place
-
+from Place import Place
+import requests
+import math
 
 class Autolib(Itinerary):
     __URL_API_DIRECTION = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9-XjaEAdwtPw6RG0QWV65dbywe0&mode=transit&alternatives=true'
@@ -9,7 +10,7 @@ class Autolib(Itinerary):
     def __init__(self, origin, destination, transport_mode, date=None, transit_mode_type=None, itinerary_index=0):
         super().__init__(self, origin, destination, transport_mode, date, transit_mode_type, itinerary_index)
 
-        if self.transit_mode_type not "autolib":
+        if self.transit_mode_type is not "autolib":
             ValueError("cette classe ne prend en compte que les trajets en autolib")
 
         if isinstance(origin, Place):
