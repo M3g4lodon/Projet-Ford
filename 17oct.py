@@ -1,6 +1,5 @@
 from datetime import datetime as dt
 import requests
-import Leg
 import Place
 
 class Route:

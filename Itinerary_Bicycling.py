@@ -6,9 +6,9 @@ class Bicycling(Itinerary):
 
     __URL_API_DIRECTION_Transit = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9-XjaEAdwtPw6RG0QWV65dbywe0&mode=bicycling&alternatives=true'
 
-    def __init__(self, origin, destination, transit_mode, date=None, route_index=None):
+    def __init__(self, origin, destination, transport_mode, date=None, transit_mode_type=None, itinerary_index=0):
 
-        Itinerary.__init__(self, origin, destination, transit_mode, date, route_index)
+        Itinerary.__init__(self, origin, destination, transport_mode, date, transit_mode_type, itinerary_index)
         
         
 
