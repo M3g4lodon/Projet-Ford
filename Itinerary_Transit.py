@@ -138,3 +138,8 @@ if __name__ == "__main__":
     des = Place(address="Cité Universitaire, Paris")
     CtoD = Transit(org, des, "transit", transit_mode_type="bus")
     print(repr(CtoD))
+
+    org = Place(address="10 rue oswaldo cruz paris 75016")
+    des = Place(address="2 Avenue Mozart 75016 Paris")
+    CtoD = Transit(org, des, "transit", transit_mode_type="bus|rail")
+    print(repr(CtoD))

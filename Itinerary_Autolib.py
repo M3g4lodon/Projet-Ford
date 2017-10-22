@@ -1,11 +1,11 @@
 from Itinerary import Itinerary
 from Itinerary_Walking import Walking
-from Itinerary_Bicycling import Bicycling
 from Itinerary_Driving import Driving
 from Itinerary_Transit import Transit
 from Place import Place
 import requests
 import math
+
 
 class Autolib(Itinerary):
     __URL_API_DIRECTION = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9' \
@@ -15,85 +15,71 @@ class Autolib(Itinerary):
     def __init__(self, origin, destination, transport_mode, date=None, transit_mode_type=None, itinerary_index=0):
         Itinerary.__init__(self, origin, destination, transport_mode, date, transit_mode_type, itinerary_index)
 
-        number_hits = 0
-
         # Station autolib d'origine
-        while number_hits == 0:
-            stations_origin = []
+        stop = True
+        search_size = 1
+        while stop:
             parameters = "dataset=autolib-disponibilite-temps-reel&q=status%3Dok+AND+cars%3E0&geofilter.distance=" \
-                         + "%2C".join([str(origin.lat), str(origin.lng), "1000"])
+                         + "%2C".join([str(origin.lat), str(origin.lng), str(search_size * 1000)])
             r = requests.get(Autolib.__URL_AUTOLIB, parameters)
-            results = r.json()
-            number_hits = results['nhits']
-
-            for number_station in range(number_hits):
-                if results['records'][number_station]['fields']['cars'] == 0:
+            raw_data = r.json()
+            search_size += 1
+            stations_origin = []
+            possible_stations = raw_data['records']
+            for possible_station in possible_stations:
+                if possible_station['fields']['cars'] == 0:
                     pass
                 else:
-                    self._address_station_origin = results['records'][number_station]['fields'][
-                                                       'address'] + "Paris"  # Je me limite au cas où la station autolib se trouve à Paris et on sélectionne la première uniquement
-                    self._nb_cars_origin = results['records'][number_station]['fields']['cars']
-                    break
-            for number_station in range(number_hits):
-
-                if results['records'][number_station]['fields']['cars'] == 0:
-                    pass
-                else:
+                    stop = False
                     stations_origin.append({})
-                    stations_origin[number_station]['Station Number'] = number_station
-                    stations_origin[number_station]['adress_station'] = results['records'][number_station]['fields'][
-                                                                            'address'] + "Paris"
-                    stations_origin[number_station]['nb_auto'] = results['records'][number_station]['fields']['cars']
+                    stations_origin[-1]['station_address'] = Place(address=(possible_station['fields']['address']
+                                                                            + " "
+                                                                            + possible_station['fields']['postal_code']
+                                                                            + " Paris"))
+                    stations_origin[-1]['nb_auto'] = possible_station['fields']['cars']
 
-            self._stations_origin = stations_origin
+        fastest_path_origin = Walking(origin, stations_origin[0]['station_address'], "walking")
+        for station in stations_origin:
+            walk = Walking(origin, station['station_address'], "walking")
+            if walk.total_duration < fastest_path_origin.total_duration:
+                fastest_path_origin = walk
+            transit = Transit(origin, station['station_address'], "transit",transit_mode_type="bus|rail")
 
-        '''Attributs Distance - à pied - en voiture - et au total'''
-
-        self._distance_driving = Driving(origin=self._address_station_origin,
-                                         destination=self._address_station_destination).distance(self)
-
-        self._distance_walking = Walking(origin=self._origin, destination=self._address_station_origin).distance(
-            self) + Walking(origin=self._destination, destination=self._address_station_destination).distance(self)
-
-        self._distance = self._distance_walking + self._distance_driving
-
-        '''Attributs Temps - à pied - en voiture - et au total'''
-
-        self._time_driving = Driving(origin=self._origin, destination=self._address_station_origin).duration(
-            self)
-        self._time_walking = Walking(origin=self._origin, destination=self._address_station_origin).duration(
-            self)
-        self._time = self._time_driving + self._time_walking
+            if transit.total_duration < fastest_path_origin.total_duration:
+                fastest_path_origin = transit
+        print(fastest_path_origin)
 
         # station autolib à l'arrivée
+        stop = True
+        search_size = 1
+        while stop:
 
-        while number_hits == 0:
-            stations_destination = []
-            parameters = "dataset=autolib-disponibilite-temps-reel&q=status%3Dok+AND+cars%3E0&geofilter.distance=" + "%2C".join(
-                [destination.lat, destination.lng, "1000"])
+            parameters = "dataset=autolib-disponibilite-temps-reel&q=status%3Dok+AND+cars%3E0&geofilter.distance=" \
+                         + "%2C".join([destination.lat, destination.lng, str(search_size * 1000)])
             r = requests.get(Autolib.__URL_AUTOLIB, parameters)
-            results = r.json()
-            number_hits = results['nhits']
+            raw_data = r.json()
+            number_hits = raw_data['nhits']
 
-            for number_station in range(number_hits):
-                if results['records'][number_station]['fields']['cars'] == 0:
+            stations_destination = []
+            for station_index in range(number_hits):
+                if raw_data['records'][station_index]['fields']['cars'] == 0:
                     pass
                 else:
-                    self._address_station_destination = results['records'][number_station]['fields'][
-                                                            'address'] + "Paris"  # Je me limite au cas où la station autolib se trouve à Paris et on sélectionne la première uniquement
-                    self._nb_auto_destination = results['records'][number_station]['fields']['cars']
+                    self._address_station_destination = raw_data['records'][station_index]['fields'][
+                                                            'address'] + " Paris"  # Je me limite au cas où la station autolib se trouve à Paris et on sélectionne la première uniquement
+                    self._nb_auto_destination = raw_data['records'][station_index]['fields']['cars']
                     break
-            for number_station in range(number_hits):
+            for station_index in range(number_hits):
 
-                if results['records'][number_station]['fields'][
+                if raw_data['records'][station_index]['fields'][
                     'cars'] == 0:  # faut changer ce paramètre, il faudrait voir si on a accès au nombre de bornes libres
                     pass
                 else:
                     stations_destination.append({})
-                    stations_destination[number_station]['Station Number'] = number_station
-                    stations_destination[number_station]['adress_station'] = \
-                        results['records'][number_station]['fields']['address'] + "Paris"
-                    stations_destination[number_station]['nb_auto'] = results['records'][number_station]['fields'][
+                    stations_destination[station_index]['Station Number'] = station_index
+                    stations_destination[station_index]['adress_station'] = \
+                        raw_data['records'][station_index]['fields']['address'] + "Paris"
+                    stations_destination[station_index]['nb_auto'] = raw_data['records'][station_index]['fields'][
                         'cars']
 
             self._stations_destination = stations_destination

@@ -2,11 +2,24 @@ from datetime import datetime
 from Place import Place
 
 
+# TODO rajouter les autres attributs présents dans les sous-classes
+# TODO créer l'addition d'itinéraire
+# TODO Gestion des erreurs en cas d'échec des API
+
 class Itinerary:
     """Désigne un trajet entre deux points spécifiés dans la recherche d'itinéraires"""
 
-    __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib", "transit","bicycling"]
-    __TRANSIT_MODE_TYPES = ["rail", "bus", "tramway"]  # Liste des modes de transport possibles
+    __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib", "transit", "bicycling"]
+
+    __TRANSIT_MODE_TYPES = ["bus","subway","train","tram","rail","bus|rail"]
+    # Liste des modes de transport possibles
+    # bus       : bus
+    # subway    : subway
+    # train     : train
+    # tram      : tramway and light subway
+    # rail      : subway+train+tram (could be written as subway|train|tram)
+    # bus|rail  : all transit mode types !
+
     __route_id = 1
 
     def __init__(self, origin, destination, transport_mode, date=None, transit_mode_type=None, itinerary_index=0):
