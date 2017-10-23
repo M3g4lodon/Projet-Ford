@@ -28,8 +28,7 @@ class Walking(Itinerary):
 
             self.walking_distance = 0
             self.walking_duration = 0
-            self.walking_distance = 0
-            self.walking_duration = 0
+           
 
             self.information_legs = []  # Notre liste stockant nos étapes de trajet
 
