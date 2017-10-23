@@ -14,6 +14,7 @@ class Velib(Itinerary):
     __COMMUTING_DURATION = 60  # La durée de correspondance
 
     def __init__(self, origin, destination, date=None, transit_mode_type=None, itinerary_index=0):
+        
         Itinerary.__init__(self, origin, destination, date, transit_mode_type, itinerary_index)
         self.transport_mode = "velib"
 
@@ -44,8 +45,8 @@ class Velib(Itinerary):
             if walk.total_duration < fastest_path_origin.total_duration:
                 fastest_path_origin = walk
 
-        transit = Transit(origin, station['station_address'], transit_mode_type="bus|rail", date=self.date)
-        if transit.total_duration < fastest_path_origin.total_duration:
+            transit = Transit(origin, station['station_address'], transit_mode_type="bus|rail", date=self.date)
+            if transit.total_duration < fastest_path_origin.total_duration:
             fastest_path_origin = transit
 
 
@@ -71,16 +72,16 @@ class Velib(Itinerary):
 
                     stations_destination[-1]['empty_slots'] = empty_slots
 
-                    fastest_path_destination = Walking(stations_destination[0]['station_address'], destination)
-                    for station in stations_destination:
-                        walk = Walking(station['station_address'], destination)
-                    if walk.total_duration < fastest_path_destination.total_duration:
-                        fastest_path_destination = walk
+        fastest_path_destination = Walking(stations_destination[0]['station_address'], destination)
+        for station in stations_destination:
+            walk = Walking(station['station_address'], destination)
+            if walk.total_duration < fastest_path_destination.total_duration:
+                fastest_path_destination = walk
 
-                    transit = Transit(station['station_address'], destination, transit_mode_type="bus|rail")
-                    if transit.total_duration < fastest_path_destination.total_duration:
-                        fastest_path_destination = transit
-                print(repr(fastest_path_destination))
+            transit = Transit(station['station_address'], destination, transit_mode_type="bus|rail")
+            if transit.total_duration < fastest_path_destination.total_duration:
+                fastest_path_destination = transit
+        print(repr(fastest_path_destination))
 
         # trajet en velib
 
@@ -95,6 +96,7 @@ class Velib(Itinerary):
                     fastest_path_destination = Transit(fastest_path_destination.origin, destination, date=start_date_last_leg)
 
         # Itineraire total = fastest_path_origin + velib + fastest_path_destination
+    
         self.total_duration = fastest_path_origin.total_duration \
                              + velib.total_duration \
                              + fastest_path_destination.total_duration
