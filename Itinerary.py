@@ -1,6 +1,7 @@
-from datetime import datetime
-from Place import Place
 import math
+from datetime import datetime
+
+from Place import Place
 
 
 # TODO créer l'addition d'itinéraire ?
@@ -72,8 +73,6 @@ class Itinerary:
         self._bicycling_distance = 0
         self._driving_duration = 0
         self._driving_distance = 0
-        self._autolib_distance = 0
-        self._autolib_duration = 0
         self._transit_duration = 0
         self._information_legs = []
         self._total_polyline = ""
@@ -215,17 +214,6 @@ class Itinerary:
     def transit_duration(self, value):
         if isinstance(value, int):
             self._transit_duration = value
-        else:
-            raise TypeError("Une durée s'exprime en entier (Nombre de secondes)")
-
-    @property
-    def autolib_duration(self):
-        return self._autolib_duration
-
-    @autolib_duration.setter
-    def autolib_duration(self, value):
-        if isinstance(value, int):
-            self._autolib_duration = value
         else:
             raise TypeError("Une durée s'exprime en entier (Nombre de secondes)")
 

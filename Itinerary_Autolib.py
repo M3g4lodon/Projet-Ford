@@ -1,11 +1,12 @@
+from datetime import timedelta
+
+import requests
+
 from Itinerary import Itinerary
-from Itinerary import QueryLimit
-from Itinerary_Walking import Walking
 from Itinerary_Driving import Driving
 from Itinerary_Transit import Transit
+from Itinerary_Walking import Walking
 from Place import Place
-from datetime import timedelta
-import requests
 
 
 class Autolib(Itinerary):
@@ -111,8 +112,8 @@ class Autolib(Itinerary):
         self.transit_duration = fastest_path_origin.transit_duration \
                                 + autolib.transit_duration \
                                 + fastest_path_destination.transit_duration
-        self.autolib_duration = autolib.driving_duration
-        self.autolib_distance = autolib.driving_distance
+        self.driving_duration = autolib.driving_duration
+        self.driving_distance = autolib.driving_distance
         self.total_polyline = fastest_path_origin.total_polyline \
                               + "\\" + autolib.total_polyline \
                               + "\\" + fastest_path_destination.total_polyline
