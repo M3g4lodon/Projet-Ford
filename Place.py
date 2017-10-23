@@ -54,12 +54,12 @@ class Place:
         """Calcule la latitude et la longitude de l'adresse d'origine"""
         url_request = Place.__URL_API_GEOCODE + "&address=" + self.address
         raw_data = requests.get(url_request).json()
-        self._lat = raw_data['results'][0]['geometry']['location']['lat']
-        self._lng = raw_data['results'][0]['geometry']['location']['lng']
+        self.lat = raw_data['results'][0]['geometry']['location']['lat']
+        self.lng = raw_data['results'][0]['geometry']['location']['lng']
 
     def address_from_lat_lng(self):
         """calcule l'adresse associé à une latitude et une longitude"""
-        url_request = Place.__URL_API_GEOCODE + "&latlng=" + str(self.lat) + "," + str(self._lng)
+        url_request = Place.__URL_API_GEOCODE + "&latlng=" + str(self.lat) + "," + str(self.lng)
         raw_data = requests.get(url_request).json()
         self.address = raw_data['results'][0]['formatted_address']
 
@@ -67,8 +67,8 @@ class Place:
         res = ""
         if self.address is not None:
             res += "[Place] Address : " + self.address + "\n"
-        if not (self.lat is None or self._lng is None):
-            res += "[Place] Latitude : " + str(self.lat) + "\n" + "[Place] Longitude : " + str(self._lng)
+        if not (self.lat is None or self.lng is None):
+            res += "[Place] Latitude : " + str(self.lat) + "\n" + "[Place] Longitude : " + str(self.lng)
         return res
     
     def __str__(self):
