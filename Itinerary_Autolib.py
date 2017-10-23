@@ -86,7 +86,7 @@ class Autolib(Itinerary):
             transit = Transit(station['station_address'], destination, transit_mode_type="bus|rail")
             if transit.total_duration < fastest_path_destination.total_duration:
                 fastest_path_destination = transit
-        print(repr(fastest_path_destination))
+
         # trajet en autolib
         start_date_autolib = self.date + timedelta(0, fastest_path_origin.total_duration + Autolib.__COMMUTING_DURATION)
         autolib = Driving(fastest_path_destination.origin, destination, date=start_date_autolib)
@@ -116,10 +116,9 @@ class Autolib(Itinerary):
         self.total_polyline = fastest_path_origin.total_polyline \
                               + "\\" + autolib.total_polyline \
                               + "\\" + fastest_path_destination.total_polyline
-        self.information_legs = fastest_path_origin.total_duration \
-                                + autolib.total_duration \
-                                + fastest_path_destination.total_duration
-        print(self.information_legs)
+        self.information_legs = fastest_path_origin.information_legs \
+                                + autolib.information_legs \
+                                + fastest_path_destination.information_legs
 
 
 if __name__ == "__main__":
