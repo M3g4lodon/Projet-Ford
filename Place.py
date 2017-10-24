@@ -1,5 +1,8 @@
 import requests
 
+
+# TO DO trouver une solution au bug décrit en test (format adresse particulier des appels API du vélib)
+
 class Place:
     """Désigne un lieu géographique"""
 
@@ -70,9 +73,10 @@ class Place:
         if not (self.lat is None or self.lng is None):
             res += "[Place] Latitude : " + str(self.lat) + "\n" + "[Place] Longitude : " + str(self.lng)
         return res
-    
+
     def __str__(self):
         return self.address
+
 
 if __name__ == "__main__":
     """Script de test de la bonne construction des classes"""
@@ -87,3 +91,7 @@ if __name__ == "__main__":
     print(poissonnier)
     poissonnier.address_from_lat_lng()
     print(poissonnier)
+
+    # Bug sur Velib
+    station_velib = Place(address="FACE 112 BOULEVARD DE ROCHECHOUART - 75018 PARIS")
+    print(station_velib.address)
