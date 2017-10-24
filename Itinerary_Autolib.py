@@ -10,9 +10,8 @@ from Place import Place
 
 
 class Autolib(Itinerary):
-    __URL_API_DIRECTION = 'https://maps.googleapis.com/maps/api/directions/json?&key=AIzaSyATrZmC9' \
-                          '-XjaEAdwtPw6RG0QWV65dbywe0&mode=transit&alternatives=true '
     __URL_AUTOLIB = 'https://opendata.paris.fr/api/records/1.0/search/'
+    __PARAMETERS = "dataset=autolib-disponibilite-temps-reel&q=status%3Dok+AND+cars%3E0"
     __COMMUTING_DURATION = 60  # La durée de correspondance
 
     def __init__(self, origin, destination, date=None, transit_mode_type=None, itinerary_index=0):
@@ -23,8 +22,8 @@ class Autolib(Itinerary):
         stop = True
         search_size = 1
         while stop:
-            parameters = "dataset=autolib-disponibilite-temps-reel&q=status%3Dok+AND+cars%3E0&geofilter.distance=" \
-                         + "%2C".join([str(origin.lat), str(origin.lng), str(search_size * 1000)])
+            parameters = Autolib.__PARAMETERS + "&geofilter.distance=" + "%2C".join(
+                [str(destination.lat), str(destination.lng), str(search_size * 1000)])
             r = requests.get(Autolib.__URL_AUTOLIB, parameters)
             raw_data = r.json()
             search_size += 1
@@ -57,8 +56,8 @@ class Autolib(Itinerary):
         stop = True
         search_size = 1
         while stop:
-            parameters = "dataset=autolib-disponibilite-temps-reel&q=status%3Dok+AND+cars%3E0&geofilter.distance=" \
-                         + "%2C".join([str(destination.lat), str(destination.lng), str(search_size * 1000)])
+            parameters = Autolib.__PARAMETERS + "&geofilter.distance=" + "%2C".join(
+                [str(destination.lat), str(destination.lng), str(search_size * 1000)])
             r = requests.get(Autolib.__URL_AUTOLIB, parameters)
             raw_data = r.json()
             search_size += 1
