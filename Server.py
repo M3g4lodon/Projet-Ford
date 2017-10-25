@@ -1,7 +1,8 @@
-from flask import Flask, request, jsonify
-import requests as re
-from threading import Thread
 import json
+from threading import Thread
+
+import requests as re
+from flask import Flask, request, jsonify
 
 """
 @app.route('/articles')
@@ -25,10 +26,7 @@ def api_authentification():
     return jsonify({"id": user_id})
 
 
-@app.route('/itinerary',)
-
-
-methods = ['GET'])
+@app.route('/itinerary', methods=['GET'])
 def api_itinerary_search():
     if all([x in request.args for x in ['user_id', 'origin', 'destination', 'luggage']]):
         for user in Users:

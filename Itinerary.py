@@ -4,9 +4,8 @@ from datetime import datetime
 from Place import Place
 
 
-# TODO créer l'addition d'itinéraire ?
 # TODO Gestion des erreurs en cas d'échec des API (status_code !=200)
-# TODO tester l'ordre de préférence sur toutes les sous-classes (itinerary_index)
+# TODO Prise en compte de l'ordre de préférence sur Autolib/velib (itinerary_index)
 # TODO Méthodes de conversion sec(int) --> h:m:s (str) et m(int) --> km (str)
 
 class Itinerary:
@@ -104,12 +103,12 @@ class Itinerary:
 
     @property
     def transport_mode(self):
-        return self._tranport_mode
+        return self._transport_mode
 
     @transport_mode.setter
     def transport_mode(self, value):
         if value in Itinerary.__TRANSPORT_MODES:
-            self._tranport_mode = value
+            self._transport_mode = value
         elif not isinstance(value, str):
             raise TypeError("Est attendue une chaine de caractère pour le mode de transport.")
         else:
