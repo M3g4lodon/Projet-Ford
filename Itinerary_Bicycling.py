@@ -1,7 +1,8 @@
+import requests
+
 from Itinerary import Itinerary
 from Itinerary import QueryLimit
 from Place import Place
-import requests
 
 
 class Bicycling(Itinerary):
@@ -13,11 +14,9 @@ class Bicycling(Itinerary):
         Itinerary.__init__(self, origin, destination, date, transit_mode_type, itinerary_index)
         self.transport_mode = "bicycling"
 
-        url_request = Bicycling.__URL_API_DIRECTION \
-                      + "&origin=" \
-                      + str(self.origin) \
-                      + "&destination=" \
-                      + str(self.destination)
+        url_request = Bicycling.__URL_API_DIRECTION
+        url_request += "&origin=" + str(self.origin.lat) + "," + str(self.origin.lng)
+        url_request += "&destination=" + str(self.destination.lat) + "," + str(self.destination.lng)
 
         raw_data = requests.get(url_request).json()
         if raw_data['status'] == "OVER_QUERY_LIMIT":

@@ -38,8 +38,9 @@ class Velib(Itinerary):
                 else:
                     stop = False
                     stations_origin.append({})
-                    stations_origin[-1]['station_address'] = Place(address=possible_station['fields'][
-                        'address'])  # velib semble donner la ville et le code postal directement
+                    stations_origin[-1]['station_address'] = Place(address=possible_station['fields']['address'],
+                                                                   lat=possible_station['fields']['position'][0],
+                                                                   lng=possible_station['fields']['position'][1])
                     stations_origin[-1]['nb_bike'] = available_bike
 
         fastest_path_origin = Walking(origin, stations_origin[0]['station_address'], date=self.date)
@@ -70,7 +71,9 @@ class Velib(Itinerary):
                 else:
                     stop = False
                     stations_destination.append({})
-                    stations_destination[-1]['station_address'] = Place(address=possible_station['fields']['address'])
+                    stations_destination[-1]['station_address'] = Place(address=possible_station['fields']['address'],
+                                                                        lat=possible_station['fields']['position'][0],
+                                                                        lng=possible_station['fields']['position'][1])
 
                     stations_destination[-1]['empty_slots'] = empty_slots
 

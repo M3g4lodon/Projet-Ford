@@ -91,7 +91,3 @@ if __name__ == "__main__":
     print(poissonnier)
     poissonnier.address_from_lat_lng()
     print(poissonnier)
-
-    # Bug sur Velib
-    station_velib = Place(address="FACE 112 BOULEVARD DE ROCHECHOUART - 75018 PARIS")
-    print(station_velib.address)

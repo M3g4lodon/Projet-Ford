@@ -1,7 +1,8 @@
+import requests
+
 from Itinerary import Itinerary
 from Itinerary import QueryLimit
 from Place import Place
-import requests
 
 
 class Walking(Itinerary):
@@ -13,9 +14,9 @@ class Walking(Itinerary):
         Itinerary.__init__(self, origin, destination, date, transit_mode_type, itinerary_index)
         self.transport_mode = "walking"
 
-        url_request = "{0}&origin={1}&destination={2}".format(Walking.__URL_API_DIRECTION, str(self.origin),
-                                                              str(self.destination))
-
+        url_request = Walking.__URL_API_DIRECTION
+        url_request += "&origin=" + str(self.origin.lat) + "," + str(self.origin.lng)
+        url_request += "&destination=" + str(self.destination.lat) + "," + str(self.destination.lng)
         raw_data = requests.get(url_request).json()
         if raw_data['status'] == "OVER_QUERY_LIMIT":
             raise QueryLimit("Can't retieve any data from API (Walking)")
@@ -28,7 +29,6 @@ class Walking(Itinerary):
 
             self.walking_distance = 0
             self.walking_duration = 0
-           
 
             self.information_legs = []  # Notre liste stockant nos étapes de trajet
 

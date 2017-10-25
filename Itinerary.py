@@ -8,7 +8,6 @@ from Place import Place
 # TODO Gestion des erreurs en cas d'échec des API (status_code !=200)
 # TODO tester l'ordre de préférence sur toutes les sous-classes (itinerary_index)
 # TODO Méthodes de conversion sec(int) --> h:m:s (str) et m(int) --> km (str)
-# TODO mettre tous les accesseurs et mutateurs dans Itinerary
 
 class Itinerary:
     """Désigne un trajet entre deux points spécifiés dans la recherche d'itinéraires"""
@@ -216,17 +215,6 @@ class Itinerary:
             self._transit_duration = value
         else:
             raise TypeError("Une durée s'exprime en entier (Nombre de secondes)")
-
-    @property
-    def autolib_distance(self):
-        return self._autolib_distance
-
-    @autolib_distance.setter
-    def autolib_distance(self, value):
-        if isinstance(value, int):
-            self._autolib_distance = value
-        else:
-            raise TypeError("Une distance s'exprime en entier (Nombre de mètres)")
 
     @property
     def driving_duration(self):

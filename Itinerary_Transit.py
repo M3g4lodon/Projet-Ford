@@ -1,7 +1,8 @@
+import requests
+
 from Itinerary import Itinerary
 from Itinerary import QueryLimit
 from Place import Place
-import requests
 
 
 class Transit(Itinerary):
@@ -13,17 +14,18 @@ class Transit(Itinerary):
     def __init__(self, origin, destination, date=None, transit_mode_type=None, itinerary_index=0):
         Itinerary.__init__(self, origin, destination, date, transit_mode_type, itinerary_index)
         self.transport_mode = "transit"
+        if self.transit_mode_type is None:
+            self.transit_mode_type = "bus|rail"
 
-        url_request = "{0}&origin={1}&destination={2}&transit_mode={3}".format(Transit.__URL_API_DIRECTION_TRANSIT,
-                                                                               str(self.origin),
-                                                                               str(self.destination),
-                                                                               str(self.transit_mode_type))
+        url_request = Transit.__URL_API_DIRECTION_TRANSIT
+        url_request += "&origin=" + str(self.origin.lat) + "," + str(self.origin.lng)
+        url_request += "&destination=" + str(self.destination.lat) + "," + str(self.destination.lng)
+        url_request += "&transit_mode=" + str(self.transit_mode_type)
+
         raw_data = requests.get(url_request).json()
         if raw_data['status'] == "OVER_QUERY_LIMIT":
             raise QueryLimit("Can't retieve any data from API (Walking)")
         else:
-            # on récupère les informations concernant les différentes étapes du premier voyage proposé
-            # (celui qui correpond au plus rapide d'ailleurs...)
             steps = raw_data['routes'][self.itinerary_index]['legs'][0]['steps']
 
             self.total_duration = raw_data['routes'][self.itinerary_index]['legs'][0]['duration']['value']

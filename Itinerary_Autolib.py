@@ -39,7 +39,9 @@ class Autolib(Itinerary):
                     stations_origin[-1]['station_address'] = Place(address=(possible_station['fields']['address']
                                                                             + " "
                                                                             + possible_station['fields']['postal_code']
-                                                                            + " Paris"))
+                                                                            + " Paris"),
+                                                                   lat=possible_station['fields']['geo_point'][0],
+                                                                   lng=possible_station['fields']['geo_point'][1])
                     stations_origin[-1]['nb_auto'] = available_car
 
         fastest_path_origin = Walking(origin, stations_origin[0]['station_address'], date=self.date)
@@ -74,7 +76,9 @@ class Autolib(Itinerary):
                                                                                  + " "
                                                                                  + possible_station['fields'][
                                                                                      'postal_code']
-                                                                                 + " Paris"))
+                                                                                 + " Paris"),
+                                                                        lat=possible_station['fields']['geo_point'][0],
+                                                                        lng=possible_station['fields']['geo_point'][1])
                     stations_destination[-1]['empty_slots'] = empty_slots
 
         fastest_path_destination = Walking(stations_destination[0]['station_address'], destination)
