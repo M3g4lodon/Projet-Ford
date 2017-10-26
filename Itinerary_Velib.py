@@ -4,7 +4,6 @@ import requests
 
 from Itinerary import Itinerary
 from Itinerary_Bicycling import Bicycling
-from Itinerary_Transit import Transit
 from Itinerary_Walking import Walking
 from Place import Place
 
@@ -25,7 +24,7 @@ class Velib(Itinerary):
         search_size = 1
         while stop:
             parameters = Velib.__PARAMETERS + "&geofilter.distance=" + "%2C".join(
-                [str(origin.lat), str(origin.lng), str(search_size * 1000)])
+                [str(self.origin.lat), str(self.origin.lng), str(search_size * 100)])
             r = requests.get(Velib.__URL_VELIB, parameters)
             raw_data = r.json()
             search_size += 1
@@ -54,7 +53,7 @@ class Velib(Itinerary):
         search_size = 1
         while stop:
             parameters = Velib.__PARAMETERS + "&geofilter.distance=" + "%2C".join(
-                [str(origin.lat), str(origin.lng), str(search_size * 1000)])
+                [str(self.destination.lat), str(self.destination.lng), str(search_size * 1000)])
             r = requests.get(Velib.__URL_VELIB, parameters)
             raw_data = r.json()
             search_size += 1
@@ -82,14 +81,11 @@ class Velib(Itinerary):
         # trajet en velib
 
         start_date_velib = self.date + timedelta(0, fastest_path_origin.total_duration + Velib.__COMMUTING_DURATION)
-        velib = Bicycling(fastest_path_destination.origin, destination, date=start_date_velib)
+        velib = Bicycling(fastest_path_origin.destination, fastest_path_destination.origin, date=start_date_velib)
 
         # Prise en compte du temps pour la dernière étape (station d'arrivée velib à destination)
         start_date_last_leg = start_date_velib + timedelta(0, velib.total_duration + Velib.__COMMUTING_DURATION)
-        if isinstance(fastest_path_destination, Walking):
-            fastest_path_destination = Walking(origin, fastest_path_origin.destination, date=start_date_last_leg)
-        else:
-            fastest_path_destination = Transit(fastest_path_destination.origin, destination, date=start_date_last_leg)
+        fastest_path_destination = Walking(fastest_path_destination.origin, self.destination, date=start_date_last_leg)
 
         # Itineraire total = fastest_path_origin + velib + fastest_path_destination
 

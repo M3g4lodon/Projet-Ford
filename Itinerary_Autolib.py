@@ -4,7 +4,6 @@ import requests
 
 from Itinerary import Itinerary
 from Itinerary_Driving import Driving
-from Itinerary_Transit import Transit
 from Itinerary_Walking import Walking
 from Place import Place
 
@@ -23,7 +22,7 @@ class Autolib(Itinerary):
         search_size = 1
         while stop:
             parameters = Autolib.__PARAMETERS + "&geofilter.distance=" + "%2C".join(
-                [str(destination.lat), str(destination.lng), str(search_size * 1000)])
+                [str(self.origin.lat), str(self.origin.lng), str(search_size * 100)])
             r = requests.get(Autolib.__URL_AUTOLIB, parameters)
             raw_data = r.json()
             search_size += 1
@@ -44,9 +43,9 @@ class Autolib(Itinerary):
                                                                    lng=possible_station['fields']['geo_point'][1])
                     stations_origin[-1]['nb_auto'] = available_car
 
-        fastest_path_origin = Walking(origin, stations_origin[0]['station_address'], date=self.date)
+        fastest_path_origin = Walking(self.origin, stations_origin[0]['station_address'], date=self.date)
         for station in stations_origin:
-            walk = Walking(origin, station['station_address'], date=self.date)
+            walk = Walking(self.origin, station['station_address'], date=self.date)
             if walk.total_duration < fastest_path_origin.total_duration:
                 fastest_path_origin = walk
 
@@ -56,7 +55,7 @@ class Autolib(Itinerary):
         search_size = 1
         while stop:
             parameters = Autolib.__PARAMETERS + "&geofilter.distance=" + "%2C".join(
-                [str(destination.lat), str(destination.lng), str(search_size * 1000)])
+                [str(self.destination.lat), str(self.destination.lng), str(search_size * 100)])
             r = requests.get(Autolib.__URL_AUTOLIB, parameters)
             raw_data = r.json()
             search_size += 1
@@ -78,23 +77,21 @@ class Autolib(Itinerary):
                                                                         lng=possible_station['fields']['geo_point'][1])
                     stations_destination[-1]['empty_slots'] = empty_slots
 
-        fastest_path_destination = Walking(stations_destination[0]['station_address'], destination)
+        fastest_path_destination = Walking(stations_destination[0]['station_address'], self.destination)
         for station in stations_destination:
-            walk = Walking(station['station_address'], destination)
+            walk = Walking(station['station_address'], self.destination)
             if walk.total_duration < fastest_path_destination.total_duration:
                 fastest_path_destination = walk
 
 
         # trajet en autolib
         start_date_autolib = self.date + timedelta(0, fastest_path_origin.total_duration + Autolib.__COMMUTING_DURATION)
-        autolib = Driving(fastest_path_destination.origin, destination, date=start_date_autolib)
+        autolib = Driving(fastest_path_origin.destination, fastest_path_destination.origin, date=start_date_autolib)
 
         # Prise en compte du temps pour la dernière étape (station d'arrivée Autolib à destination)
         start_date_last_leg = start_date_autolib + timedelta(0, autolib.total_duration + Autolib.__COMMUTING_DURATION)
-        if isinstance(fastest_path_destination, Walking):
-            fastest_path_destination = Walking(origin, fastest_path_origin.destination, date=start_date_last_leg)
-        else:
-            fastest_path_destination = Transit(fastest_path_destination.origin, destination, date=start_date_last_leg)
+        fastest_path_destination = Walking(fastest_path_destination.origin, self.destination, date=start_date_last_leg)
+
 
         # Itineraire total = fastest_path_origin + autolib + fastest_path_destination
         self.total_duration = fastest_path_origin.total_duration \
@@ -124,6 +121,7 @@ if __name__ == "__main__":
     org = Place(address="10 rue oswaldo cruz paris 75016")
     des = Place(address="Favella Chic Paris")
     AtoB = Autolib(org, des)
+    print(AtoB.total_polyline.replace("\\", "\\\\"))
     print(repr(AtoB))
 
     org = Place(address="Montmartre, Paris")
