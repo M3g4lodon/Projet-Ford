@@ -4,7 +4,6 @@ from datetime import datetime
 from Place import Place
 
 
-# TODO Gestion des erreurs en cas d'échec des API (status_code !=200)
 # TODO Prise en compte de l'ordre de préférence sur Autolib/velib (itinerary_index)
 # TODO Méthodes de conversion sec(int) --> h:m:s (str) et m(int) --> km (str)
 
@@ -294,6 +293,11 @@ class Itinerary:
 
 class QueryLimit(Exception):
     """Error raised when the query limit is reached"""
+    pass
+
+
+class BadRequest(Exception):
+    """The request is not working properly."""
     pass
 
 

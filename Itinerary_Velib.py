@@ -2,6 +2,7 @@ from datetime import timedelta
 
 import requests
 
+from Itinerary import BadRequest
 from Itinerary import Itinerary
 from Itinerary_Bicycling import Bicycling
 from Itinerary_Walking import Walking
@@ -26,21 +27,24 @@ class Velib(Itinerary):
             parameters = Velib.__PARAMETERS + "&geofilter.distance=" + "%2C".join(
                 [str(self.origin.lat), str(self.origin.lng), str(search_size * 100)])
             r = requests.get(Velib.__URL_VELIB, parameters)
-            raw_data = r.json()
-            search_size += 1
-            stations_origin = []
-            possible_stations = raw_data['records']
-            for possible_station in possible_stations:
-                available_bike = possible_station['fields']['available_bikes']
-                if available_bike == 0:
-                    pass
-                else:
-                    stop = False
-                    stations_origin.append({})
-                    stations_origin[-1]['station_address'] = Place(address=possible_station['fields']['address'],
-                                                                   lat=possible_station['fields']['position'][0],
-                                                                   lng=possible_station['fields']['position'][1])
-                    stations_origin[-1]['nb_bike'] = available_bike
+            if r.status_code != 200:
+                raise BadRequest(r.status_code)
+            else:
+                raw_data = r.json()
+                search_size += 1
+                stations_origin = []
+                possible_stations = raw_data['records']
+                for possible_station in possible_stations:
+                    available_bike = possible_station['fields']['available_bikes']
+                    if available_bike == 0:
+                        pass
+                    else:
+                        stop = False
+                        stations_origin.append({})
+                        stations_origin[-1]['station_address'] = Place(address=possible_station['fields']['address'],
+                                                                       lat=possible_station['fields']['position'][0],
+                                                                       lng=possible_station['fields']['position'][1])
+                        stations_origin[-1]['nb_bike'] = available_bike
 
         fastest_path_origin = Walking(origin, stations_origin[0]['station_address'], date=self.date)
         for station in stations_origin:
@@ -55,22 +59,26 @@ class Velib(Itinerary):
             parameters = Velib.__PARAMETERS + "&geofilter.distance=" + "%2C".join(
                 [str(self.destination.lat), str(self.destination.lng), str(search_size * 1000)])
             r = requests.get(Velib.__URL_VELIB, parameters)
-            raw_data = r.json()
-            search_size += 1
-            stations_destination = []
-            possible_stations = raw_data['records']
-            for possible_station in possible_stations:
-                empty_slots = possible_station['fields']['available_bike_stands']
-                if empty_slots == 0:
-                    pass
-                else:
-                    stop = False
-                    stations_destination.append({})
-                    stations_destination[-1]['station_address'] = Place(address=possible_station['fields']['address'],
-                                                                        lat=possible_station['fields']['position'][0],
-                                                                        lng=possible_station['fields']['position'][1])
+            if r.status_code != 200:
+                raise BadRequest(r.status_code)
+            else:
+                raw_data = r.json()
+                search_size += 1
+                stations_destination = []
+                possible_stations = raw_data['records']
+                for possible_station in possible_stations:
+                    empty_slots = possible_station['fields']['available_bike_stands']
+                    if empty_slots == 0:
+                        pass
+                    else:
+                        stop = False
+                        stations_destination.append({})
+                        stations_destination[-1]['station_address'] = Place(
+                            address=possible_station['fields']['address'],
+                            lat=possible_station['fields']['position'][0],
+                            lng=possible_station['fields']['position'][1])
 
-                    stations_destination[-1]['empty_slots'] = empty_slots
+                        stations_destination[-1]['empty_slots'] = empty_slots
 
         fastest_path_destination = Walking(stations_destination[0]['station_address'], destination)
         for station in stations_destination:

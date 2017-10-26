@@ -20,7 +20,7 @@ function initMap() {
 		map: map
 	});
 
-	var polyline_encoded="yhhiHyefM\\Nb@q@jBeE|@_@Ig@v@gABb@pBe@fHaCrOiFrIuClBo@`@_@HIf@qAt@_Ct@iElBqKP_@VY\\Qr@OnAA|CHrCJr@CVINKR]Tw@PwAd@_FD@Sg@LBNcAfB{It@iECC";
+	var polyline_encoded="sieiHyezLqBKa@iD}@oH_@_CQw@_@GPUBYSkBEQBo@@s@@oAASKo@s@iC[kA[eAs@iCe@cBq@cCm@wDMq@yAwJcFmTuA_G]yB]iAQ[FWk@mAgBcDw@{ACMBm@?e@[}AKs@E]GIMWQYE?MHQgAY\\qCkPMm@IEIKKWAa@DYBG@A}@{BmByE_GuN{DsJ]u@eAkCeDmIaGqNgAoDYk@mAyDeBgFcC_Is@gCm@wCg@eCWyBeAaL_CeVu@{G?g@^{Gj@iJHaBVeC|@iMTcDt@gKR_DN_BNe@CKAM@UBIFo@XuFLcCt@gKt@{Jn@eJReBDaAJy@\\yDz@gJ`Dk]hB_Ob@gDjAoI|AcL\\}BV{BtAcQnA_ODs@La@p@uAf@cA\\wlgiH_plMf@_AHa@Re@v@cBVm@Zu@B_@CMIOa@m@_@i@CK@Wl@gF`AuIj@gFgKpH{AnAe@X`@jB\\sieiHyezLqBKa@iD}@oH_@_CQw@_@GPUBYSkBEQBo@@s@@oAASKo@s@iC[kA[eAs@iCe@cBq@cCm@wDMq@yAwJcFmTuA_G]yB]iAQ[FWk@mAgBcDw@{ACMBm@?e@[}AKs@E]GIMWQYE?MHQgAY\\qCkPMm@IEIKKWAa@DYBG@A}@{BmByE_GuN{DsJ]u@eAkCeDmIaGqNgAoDYk@mAyDeBgFcC_Is@gCm@wCg@eCWyBeAaL_CeVu@{G?g@^{Gj@iJHaBVeC|@iMTcDt@gKR_DN_BNe@CKAM@UBIFo@XuFLcCt@gKt@{Jn@eJReBDaAJy@";
 	var polyline_decoded=google.maps.geometry.encoding.decodePath(polyline_encoded);
 	var itinerary= new google.maps.Polyline({
 		path:polyline_decoded,

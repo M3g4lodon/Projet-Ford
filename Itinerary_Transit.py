@@ -1,5 +1,6 @@
 import requests
 
+from Itinerary import BadRequest
 from Itinerary import Itinerary
 from Itinerary import QueryLimit
 from Place import Place
@@ -22,49 +23,53 @@ class Transit(Itinerary):
         url_request += "&destination=" + str(self.destination.lat) + "," + str(self.destination.lng)
         url_request += "&transit_mode=" + str(self.transit_mode_type)
 
-        raw_data = requests.get(url_request).json()
-        if raw_data['status'] == "OVER_QUERY_LIMIT":
-            raise QueryLimit("Can't retieve any data from API (Walking)")
+        r = requests.get(url_request)
+        if r.status_code != 200:
+            raise BadRequest
         else:
-            steps = raw_data['routes'][self.itinerary_index]['legs'][0]['steps']
+            raw_data = r.json()
+            if raw_data['status'] == "OVER_QUERY_LIMIT":
+                raise QueryLimit("Can't retieve any data from API (Walking)")
+            else:
+                steps = raw_data['routes'][self.itinerary_index]['legs'][0]['steps']
 
-            self.total_duration = raw_data['routes'][self.itinerary_index]['legs'][0]['duration']['value']
-            self.total_polyline = raw_data['routes'][self.itinerary_index]['overview_polyline']['points']
+                self.total_duration = raw_data['routes'][self.itinerary_index]['legs'][0]['duration']['value']
+                self.total_polyline = raw_data['routes'][self.itinerary_index]['overview_polyline']['points']
 
-            self.walking_distance = 0
-            self.walking_duration = 0
-            self.transit_duration = 0
+                self.walking_distance = 0
+                self.walking_duration = 0
+                self.transit_duration = 0
 
-            self.information_legs = []
-            # Parcours des étapes trouvées de notre trajet pour remplir notre liste de stockage self.information_legs
-            for step_number, step in enumerate(steps):
-                self.information_legs.append({})
-                self.information_legs[step_number]['transport_mode'] = step['travel_mode']
-                self.information_legs[step_number]['distance'] = step['distance']['value']
-                self.walking_distance += step['distance']['value']
-                self.information_legs[step_number]['interim_destination'] = Place(lat=step['end_location']['lat'],
-                                                                                  lng=step['end_location']['lng'])
-                self.information_legs[step_number]['duration'] = step['duration']['value']
-                self.walking_duration += step['duration']['value']
-                self.information_legs[step_number]['interim_start'] = Place(lat=step['start_location']['lat'],
-                                                                            lng=step['start_location']['lng'])
-                if self.information_legs[step_number]['transport_mode'] == "TRANSIT":
-                    self.information_legs[step_number]['arrival_stop'] = step['transit_details']['arrival_stop'][
-                        'name']
-                    self.information_legs[step_number]['departure_stop'] = step['transit_details']['departure_stop'][
-                        'name']
-                    self.information_legs[step_number]['transit_mode'] = step['transit_details']['line']['vehicle'][
-                        'type']
-                    if 'short_name' in step['transit_details']['line'].keys():
-                        self.information_legs[step_number]['line'] = step['transit_details']['line']['short_name']
-                    else:
-                        self.information_legs[step_number]['line'] = step['transit_details']['line']['name']
-                    self.information_legs[step_number]['number_stops'] = step['transit_details']['num_stops']
+                self.information_legs = []
+                # Parcours des étapes trouvées de notre trajet
+                # pour remplir notre liste de stockage self.information_legs
+                for step_number, step in enumerate(steps):
+                    self.information_legs.append({})
+                    self.information_legs[step_number]['transport_mode'] = step['travel_mode']
+                    self.information_legs[step_number]['distance'] = step['distance']['value']
+                    self.information_legs[step_number]['interim_destination'] = Place(lat=step['end_location']['lat'],
+                                                                                      lng=step['end_location']['lng'])
                     self.information_legs[step_number]['duration'] = step['duration']['value']
-                    self.transit_duration += step['duration']['value']
-
-                else:
+                    self.information_legs[step_number]['interim_start'] = Place(lat=step['start_location']['lat'],
+                                                                                lng=step['start_location']['lng'])
                     self.information_legs[step_number]['instructions'] = step['html_instructions']
+                    if self.information_legs[step_number]['transport_mode'] == "TRANSIT":
+                        self.information_legs[step_number]['arrival_stop'] = step['transit_details']['arrival_stop'][
+                            'name']
+                        self.information_legs[step_number]['departure_stop'] = \
+                            step['transit_details']['departure_stop']['name']
+                        self.information_legs[step_number]['transit_mode'] = step['transit_details']['line']['vehicle'][
+                            'type']
+                        if 'short_name' in step['transit_details']['line'].keys():
+                            self.information_legs[step_number]['line'] = step['transit_details']['line']['short_name']
+                        else:
+                            self.information_legs[step_number]['line'] = step['transit_details']['line']['name']
+                        self.information_legs[step_number]['number_stops'] = step['transit_details']['num_stops']
+                        self.information_legs[step_number]['duration'] = step['duration']['value']
+                        self.transit_duration += step['duration']['value']
+                    if self.information_legs[step_number]['transport_mode'] == "WALKING":
+                        self.walking_distance += step['distance']['value']
+                        self.walking_duration += step['duration']['value']
 
 
 if __name__ == "__main__":
