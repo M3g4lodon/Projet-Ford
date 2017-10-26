@@ -272,12 +272,17 @@ class Itinerary:
         for leg_index, leg in enumerate(self.information_legs):
             res += "\n"
             res += "Portion " + str(leg_index)
-            res += ": You will be " + leg['transport_mode']
+            if leg['transport_mode'] != 'TRANSIT':
+                res += ": You will be " + leg['transport_mode']
+            else:
+                res += ": You will be taking the " + leg['instructions'] + " on line " + leg['line']
             res += " for a duration of " + str(math.floor(leg['duration'] / 60 + 1)) + " min"
             if leg['transport_mode'] != 'TRANSIT':
-                res += " and a distance of " + str(math.floor(leg['distance'] / 100 + 1) / 10) + " km"
-            if 'instructions' in leg.keys():
-                res += " ; Please " + leg['instructions']
+                res += " - " + leg['instructions']
+                res += " for a distance of " + str(math.floor(leg['distance'] / 100 + 1) / 10) + " km"
+            if leg['transport_mode'] == 'TRANSIT':
+                res += " - You will depart from " + leg['departure_stop'] + " and arrive at " + leg['arrival_stop']
+
 
         res += "\nIt will take " + str(math.floor(self.total_duration / 60 + 1))
         res += " min, " + str(math.floor(self.walking_duration / 60 + 1)) + " min walking ("
