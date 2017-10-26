@@ -50,9 +50,6 @@ class Autolib(Itinerary):
             if walk.total_duration < fastest_path_origin.total_duration:
                 fastest_path_origin = walk
 
-            transit = Transit(origin, station['station_address'], transit_mode_type="bus|rail", date=self.date)
-            if transit.total_duration < fastest_path_origin.total_duration:
-                fastest_path_origin = transit
 
         # station autolib à l'arrivée
         stop = True
@@ -87,9 +84,6 @@ class Autolib(Itinerary):
             if walk.total_duration < fastest_path_destination.total_duration:
                 fastest_path_destination = walk
 
-            transit = Transit(station['station_address'], destination, transit_mode_type="bus|rail")
-            if transit.total_duration < fastest_path_destination.total_duration:
-                fastest_path_destination = transit
 
         # trajet en autolib
         start_date_autolib = self.date + timedelta(0, fastest_path_origin.total_duration + Autolib.__COMMUTING_DURATION)

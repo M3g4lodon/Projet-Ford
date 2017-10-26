@@ -49,10 +49,6 @@ class Velib(Itinerary):
             if walk.total_duration < fastest_path_origin.total_duration:
                 fastest_path_origin = walk
 
-            transit = Transit(origin, station['station_address'], transit_mode_type="bus|rail", date=self.date)
-            if transit.total_duration < fastest_path_origin.total_duration:
-                fastest_path_origin = transit
-
         # station velib à l'arrivée
         stop = True
         search_size = 1
@@ -82,11 +78,6 @@ class Velib(Itinerary):
             walk = Walking(station['station_address'], destination)
             if walk.total_duration < fastest_path_destination.total_duration:
                 fastest_path_destination = walk
-
-            transit = Transit(station['station_address'], destination, transit_mode_type="bus|rail")
-            if transit.total_duration < fastest_path_destination.total_duration:
-                fastest_path_destination = transit
-        print(repr(fastest_path_destination))
 
         # trajet en velib
 
@@ -127,9 +118,7 @@ class Velib(Itinerary):
 if __name__ == "__main__":
     # Test des différentes portions d'une voyage en velib
 
-
     org = Place(address="Montmartre, Paris")
     des = Place(address="Cité Universitaire, Paris")
     CtoD = Velib(org, des)
-    print(CtoD.information_legs)
     print(repr(CtoD))
