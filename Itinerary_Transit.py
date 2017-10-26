@@ -23,6 +23,7 @@ class Transit(Itinerary):
         url_request += "&transit_mode=" + str(self.transit_mode_type)
 
         raw_data = requests.get(url_request).json()
+
         if raw_data['status'] == "OVER_QUERY_LIMIT":
             raise QueryLimit("Can't retieve any data from API (Walking)")
         else:
@@ -48,6 +49,8 @@ class Transit(Itinerary):
                 self.walking_duration += step['duration']['value']
                 self.information_legs[step_number]['interim_start'] = Place(lat=step['start_location']['lat'],
                                                                             lng=step['start_location']['lng'])
+                self.information_legs[step_number]['instructions'] = step['html_instructions']
+
                 if self.information_legs[step_number]['transport_mode'] == "TRANSIT":
                     self.information_legs[step_number]['arrival_stop'] = step['transit_details']['arrival_stop'][
                         'name']
@@ -62,9 +65,9 @@ class Transit(Itinerary):
                     self.information_legs[step_number]['number_stops'] = step['transit_details']['num_stops']
                     self.information_legs[step_number]['duration'] = step['duration']['value']
                     self.transit_duration += step['duration']['value']
+                self.information_legs[step_number]['instructions'] = step['html_instructions']
 
-                else:
-                    self.information_legs[step_number]['instructions'] = step['html_instructions']
+
 
 
 if __name__ == "__main__":
@@ -75,7 +78,7 @@ if __name__ == "__main__":
     des = Place(address="La Muette, Paris")
     AtoB = Transit(org, des, transit_mode_type="bus")
     print(repr(AtoB))
-
+'''
     org = Place(address="Montmartre, Paris")
     des = Place(address="Cité Universitaire, Paris")
     CtoD = Transit(org, des, transit_mode_type="bus")
@@ -85,3 +88,4 @@ if __name__ == "__main__":
     des = Place(address="2 Avenue Mozart 75016 Paris")
     EtoF = Transit(org, des, transit_mode_type="bus|rail")
     print(repr(EtoF))
+'''
