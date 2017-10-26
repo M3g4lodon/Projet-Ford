@@ -25,7 +25,7 @@ class Transit(Itinerary):
 
         r = requests.get(url_request)
         if r.status_code != 200:
-            raise BadRequest
+            raise BadRequest(r.status_code)
         else:
             raw_data = r.json()
             if raw_data['status'] == "OVER_QUERY_LIMIT":
