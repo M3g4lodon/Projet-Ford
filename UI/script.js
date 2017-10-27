@@ -78,6 +78,7 @@ function initMap() {
 	});
 	console.log(map)
 
+/*
 	var marker_origin = new google.maps.Marker({
 		position: origin, //to do
 		map: map
@@ -88,6 +89,7 @@ function initMap() {
 		position: destination, //to do
 		map: map
 	});
+*/
 
 	var polyline_encoded="yhhiHyefM\\Nb@q@jBeE|@_@Ig@v@gABb@pBe@fHaCrOiFrIuClBo@`@_@HIf@qAt@_Ct@iElBqKP_@VY\\Qr@OnAA|CHrCJr@CVINKR]Tw@PwAd@_FD@Sg@LBNcAfB{It@iECC";
 	var polyline_decoded=google.maps.geometry.encoding.decodePath(polyline_encoded);
