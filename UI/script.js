@@ -1,5 +1,74 @@
 "use script";
 
+/*
+$("#connecter").click(function(){
+    $.post(--URL de la fonction pour enregistrer un utilisateur--,
+    {
+        Name: $('#Name').val(),
+        FirstName: $('#FirstName').val()
+    },
+    --call-back function?--
+}); 
+*/
+
+
+
+function TypeUtilisateur() {
+	$(".dropdown-menu li a").click(function(){
+	  var selText = $(this).text()
+	  $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+	  preferences.type=selText
+	  console.log("type set to: "+preferences.type)
+	});
+}
+
+var preferences={
+	type: "Défaut",
+	P_Permis: "false",
+	P_Meteo: "true",
+	P_Charge:"false"
+}
+
+$(function() {
+		$('#P_Permis').change(function() {
+		var state=$(this).prop('checked')
+		preferences.P_Permis=state
+		console.log("permis set to: "+state)
+		})
+})
+$(function() {
+		$('#P_Meteo').change(function() {
+		var state=$(this).prop('checked')
+		preferences.P_Meteo=state
+		console.log("meteo set to: "+state)
+		})
+})
+$(function() {
+		$('#P_Charge').change(function() {
+		var state=$(this).prop('checked')
+		preferences.P_Charge=state
+		console.log("charge set to: "+state)
+		})
+})
+
+
+var itineraire={
+	origine: "",
+	destination: ""
+}
+
+function GetItineraires(){
+	itineraire.origine = $('#origine').val();
+	itineraire.destination = $('#destination').val();
+	console.log("origine set to: " + itineraire.origine)
+	console.log("destination set to: " + itineraire.destination)
+
+	$("#intro_itineraire"
+		).html("Basé sur vos préférences, nous avons calculé 3 trajets afin de vous rendre à "+ itineraire.destination)
+
+}
+
+
 function initMap() {
 	var origin = {lat: 48.8566, lng: 2.3522};
 	var destination ={lat: 48.8566, lng: 2.3522};
@@ -33,12 +102,6 @@ function initMap() {
 }
 
 
-function f() {
-	$(".dropdown-menu li a").click(function(){
-	  var selText = $(this).text();
-	  console.log(selText)
-	  $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
-	});
-}
 
-$(document).ready(f);
+
+$(document).ready(TypeUtilisateur)
