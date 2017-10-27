@@ -26,7 +26,7 @@
 	</head>
 
 	<body>
-		<nav class="navbar navbar-inverse">
+		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<div class="container-fluid">
     			<div class="navbar-header">
       				<a class="navbar-brand" href="#">Projet Ford</a>
@@ -48,7 +48,7 @@
 				<div class="col-sm-3 col-md-3 col-lg-3 sidenav" id="menu">			
 					<h2>Paramètres</h2>
 
-					<h2>Utilisateur</h2>
+					<h3>Utilisateur</h3>
 					<form id ="Authentification">
 				  		<div class="form-group">
 					    	<label for="Name">Nom:</label>
@@ -85,21 +85,21 @@
 
 					<div class="checkbox">
 					  	<label>
-					    <input data-toggle="toggle" type="checkbox" id="P_Permis">
+					    <input data-toggle="toggle" data-on="Oui" data-off="Non" type="checkbox" id="P_Permis">
 					    Avez-vous le permis ?
 					  	</label>
 					</div>
 
 					<div class="checkbox">
 					  	<label>
-					    <input data-toggle="toggle" type="checkbox" id="P_Meteo">
+					    <input data-toggle="toggle" data-on="Oui" data-off="Non" type="checkbox" id="P_Meteo">
 					    Prendre en compte la météo ?
 					  	</label>
 					</div>
 
 					<div class="checkbox">
 					  	<label>
-					    <input data-toggle="toggle" type="checkbox" id="P_Charge">
+					    <input data-toggle="toggle" data-on="Oui" data-off="Non" type="checkbox" id="P_Charge">
 					    Chargé ajourd'hui ?
 					  	</label>
 					</div>
@@ -108,8 +108,9 @@
 			
 				<div class="col-sm-9 col-md-9 col-lg-9 main" id="core">
 
+
 					<h2>Recherche d'itinéraires</h2>
-					<p>Météo aujourd'hui: <span id="meteo"></span></p>												
+					<h3>Météo aujourd'hui: <span id="meteo"></span></h3>												
 
 					<form class="form-horizontal">
 						<div class="form-group">
