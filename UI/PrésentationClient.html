@@ -34,7 +34,7 @@
     			<div class="collapse navbar-collapse" id="myNavbar">
     			<ul class="nav navbar-nav">
         			<li class="active"><a href="#">Home</a></li>
-        			<li><a href="#">Contact</a></li>
+        			<li><a href="mailto:charles.jacquet@student.ecp.fr" target="_top">Contact</a></li>
       			</ul>
     			</div>
   			</div>
@@ -58,7 +58,7 @@
 							<label for="FirstName">Prénom:</label>
 							<input type="text" class="form-control" id="FirstName">
 						</div>
-					  	<button type="submit" class="btn btn-default">Coucou</button>
+					  	<button type="submit" class="btn btn-default" id="connecter" >Se connecter</button>
 					</form>
 
 					<!--  https://www.w3schools.com/bootstrap/bootstrap_dropdowns.asp -->
@@ -85,21 +85,21 @@
 
 					<div class="checkbox">
 					  	<label>
-					    <input data-toggle="toggle" type="checkbox" id="PPermis">
+					    <input data-toggle="toggle" type="checkbox" id="P_Permis">
 					    Avez-vous le permis ?
 					  	</label>
 					</div>
 
 					<div class="checkbox">
 					  	<label>
-					    <input data-toggle="toggle" type="checkbox" id="PMeteo">
+					    <input data-toggle="toggle" type="checkbox" id="P_Meteo">
 					    Prendre en compte la météo ?
 					  	</label>
 					</div>
 
 					<div class="checkbox">
 					  	<label>
-					    <input data-toggle="toggle" type="checkbox" id="PCharge">
+					    <input data-toggle="toggle" type="checkbox" id="P_Charge">
 					    Chargé ajourd'hui ?
 					  	</label>
 					</div>
@@ -115,18 +115,18 @@
 						<div class="form-group">
 						    <label class="control-label col-sm-1" for="origine">Départ</label>
 						    <div class="col-sm-11">
-						      <input type="origine" class="form-control" id="origine" placeholder="Enter origine">
+						      <input type="origine" class="form-control" id="origine" placeholder="D'où venez-vous ?">
 						    </div>
 						</div>
 						<div class="form-group">
 						    <label class="control-label col-sm-1" for="destination">Arrivée</label>
 						    <div class="col-sm-11">
-						      <input type="destination" class="form-control" id="destination" placeholder="Enter destination">
+						      <input type="destination" class="form-control" id="destination" placeholder="Où allez-vous ?">
 						    </div>
 						</div>
 						<div class="form-group">
 						    <div class="col-sm-offset-1 col-sm-11">
-						      <button type="Rechercher" class="btn btn-default">Rechercher</button>
+						      <button type="Rechercher" class="btn btn-default" onclick=GetItineraires()>Rechercher</button>
 						    </div>
 						</div>
 					</form> 
@@ -134,7 +134,29 @@
 					<div id="map">Carte</div>
 
 					<div id="trajets_proposes">
+					<h2>Iténéraires que nous vous proposons</h2>
+					<p><span id="intro_itineraire"></span></p>
 
+						<ul class="nav nav-tabs">
+					    	<li class="active"><a data-toggle="tab" href="#trajet1">Trajet 1</a></li>
+					    	<li><a data-toggle="tab" href="#trajet2">Trajet 2</a></li>
+					    	<li><a data-toggle="tab" href="#trajet3">Trajet 3</a></li>
+					  	</ul>
+
+					<div class="tab-content">
+					    <div id="trajet1" class="tab-pane fade in active">
+					      <h3>Trajet 1: <span></span></h3>
+					      <p>Voila le trajet que nous vous proposons</p>
+					    </div>
+					    <div id="trajet2" class="tab-pane fade">
+					      <h3>Trajet 2: <span></span></h3>
+					      <p>Voila le trajet que nous vous proposons</p>
+					    </div>
+					    <div id="trajet3" class="tab-pane fade">
+					      <h3>Trajet 3: <span></span></h3>
+					      <p>Voila le trajet que nous vous proposons</p>
+					    </div>
+					</div>
 					</div>
 				</div>	
 
@@ -142,7 +164,7 @@
 		</div>
 
 		<footer class="container-fluid text-center">
-			<p>Groupe n°5 geniuses - Pierre Monsel, Mathieu Seris, Charles Jacquet</p>
+			<p>Groupe n°5 - Pierre Monsel, Mathieu Seris, Charles Jacquet</p>
 		</footer>
 
 		
