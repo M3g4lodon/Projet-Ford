@@ -13,16 +13,15 @@ html, body {
   border-radius: 0;
 }
 
-/* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-    
-/* Set gray background color and 100% height */
 .sidenav {
+  margin-top:50px;
   background-color:rgb(40, 62, 74);
   color: white;
   height: 100%;
 }
 
 .main {
+  margin-top:50px;
   background-color:rgb(245, 245, 244);
   height: 100%;
 }
