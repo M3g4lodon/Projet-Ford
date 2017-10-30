@@ -1,4 +1,3 @@
-
 import math
 from datetime import datetime
 
@@ -6,7 +5,7 @@ from Place import Place
 
 
 # TODO Prise en compte de l'ordre de préférence sur Autolib/velib (itinerary_index)
-# TODO Méthodes de conversion sec(int) --> h:m:s (str) et m(int) --> km (str)
+# TODO Méthodes de conversion sec(int) --> h:m (str) et m(int) --> km (str)
 # TODO Préférences
 # TODO intégration de la météo
 # Routine de test d'itinéraire à Paris
@@ -52,7 +51,7 @@ class Itinerary:
         else:
             raise TypeError("La valeur attendue de la date doit être de type datetime.")
 
-        if transit_mode_type in Itinerary.__TRANSIT_MODE_TYPES or transit_mode_type is None  or Itinerary.__UBER_MODE_TYPES:
+        if transit_mode_type in Itinerary.__TRANSIT_MODE_TYPES or transit_mode_type is None or Itinerary.__UBER_MODE_TYPES:
             self._transit_mode_type = transit_mode_type
         elif isinstance(transit_mode_type, str):
             raise ValueError(
@@ -79,7 +78,7 @@ class Itinerary:
         self._transit_duration = 0
         self._information_legs = []
         self._total_polyline = ""
-        self.price = 0 
+        self._price = None
 
     @property
     def id(self):
@@ -265,6 +264,14 @@ class Itinerary:
         else:
             raise TypeError("Une distance s'exprime en entier (Nombre de mètres)")
 
+    @property
+    def price(self):
+        return self._price
+
+    @price.setter
+    def price(self, value):
+        self._price = value
+
     def __str__(self):
         res = "Itinéraire de {} à {}, ".format(self.origin, self.destination)
         res += " en utilisant le mode de transport suivant : {}, le{}.".format(self._transport_mode, self.date)
@@ -300,7 +307,7 @@ class Itinerary:
         """Convert a number of second in a formatted string"""
         m, s = divmod(nb_second, 60)
         h, s = divmod(m, 60)
-        return (str(h) + "h" + str())
+        return str(h) + "h" + str()
 
 
 class QueryLimit(Exception):
