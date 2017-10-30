@@ -6,6 +6,9 @@ from Place import Place
 
 # TODO Prise en compte de l'ordre de préférence sur Autolib/velib (itinerary_index)
 # TODO Méthodes de conversion sec(int) --> h:m:s (str) et m(int) --> km (str)
+# TODO Préférences
+# TODO intégration de la météo
+# Routine de test d'itinéraire à Paris
 
 class Itinerary:
     """Désigne un trajet entre deux points spécifiés dans la recherche d'itinéraires"""
@@ -263,7 +266,6 @@ class Itinerary:
         res += " en utilisant le mode de transport suivant : {}, le{}.".format(self._transport_mode, self.date)
         return res
 
-    # TODO indiquer le type de transit (bus, train, tram, subway) dans le repr
     def __repr__(self):
         res = ""
         res += "Your itinerary will take place in  {} step(s) :".format(len(self.information_legs))
@@ -282,13 +284,19 @@ class Itinerary:
             if leg['transport_mode'] == 'TRANSIT':
                 res += " - You will depart from " + leg['departure_stop'] + " and arrive at " + leg['arrival_stop']
 
-
         res += "\nIt will take " + str(math.floor(self.total_duration / 60 + 1))
         res += " min, " + str(math.floor(self.walking_duration / 60 + 1)) + " min walking ("
         res += str(math.floor(self.walking_distance / 100 + 1) / 10) + " km)."
         res += "\n"
 
         return res
+
+    @staticmethod
+    def sec_formatted(nb_second):
+        """Convert a number of second in a formatted string"""
+        m, s = divmod(nb_second, 60)
+        h, s = divmod(m, 60)
+        return (str(h) + "h" + str())
 
 
 class QueryLimit(Exception):
