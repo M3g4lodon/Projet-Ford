@@ -1,5 +1,74 @@
 "use script";
 
+/*
+$("#connecter").click(function(){
+    $.post(--URL de la fonction pour enregistrer un utilisateur--,
+    {
+        Name: $('#Name').val(),
+        FirstName: $('#FirstName').val()
+    },
+    --call-back function?--
+}); 
+*/
+
+
+
+function TypeUtilisateur() {
+	$(".dropdown-menu li a").click(function(){
+	  var selText = $(this).text()
+	  $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+	  preferences.type=selText
+	  console.log("type set to: "+preferences.type)
+	});
+}
+
+var preferences={
+	type: "Défaut",
+	P_Permis: "false",
+	P_Meteo: "true",
+	P_Charge:"false"
+}
+
+$(function() {
+		$('#P_Permis').change(function() {
+		var state=$(this).prop('checked')
+		preferences.P_Permis=state
+		console.log("permis set to: "+state)
+		})
+})
+$(function() {
+		$('#P_Meteo').change(function() {
+		var state=$(this).prop('checked')
+		preferences.P_Meteo=state
+		console.log("meteo set to: "+state)
+		})
+})
+$(function() {
+		$('#P_Charge').change(function() {
+		var state=$(this).prop('checked')
+		preferences.P_Charge=state
+		console.log("charge set to: "+state)
+		})
+})
+
+
+var itineraire={
+	origine: "",
+	destination: ""
+}
+
+function GetItineraires(){
+	itineraire.origine = $('#origine').val();
+	itineraire.destination = $('#destination').val();
+	console.log("origine set to: " + itineraire.origine)
+	console.log("destination set to: " + itineraire.destination)
+
+	$("#intro_itineraire"
+		).html("Basé sur vos préférences, nous avons calculé 3 trajets afin de vous rendre à "+ itineraire.destination)
+
+}
+
+
 function initMap() {
 	var origin = {lat: 48.8566, lng: 2.3522};
 	var destination ={lat: 48.8566, lng: 2.3522};
@@ -9,6 +78,7 @@ function initMap() {
 	});
 	console.log(map)
 
+/*
 	var marker_origin = new google.maps.Marker({
 		position: origin, //to do
 		map: map
@@ -19,8 +89,9 @@ function initMap() {
 		position: destination, //to do
 		map: map
 	});
+*/
 
-	var polyline_encoded="sieiHyezLqBKa@iD}@oH_@_CQw@_@GPUBYSkBEQBo@@s@@oAASKo@s@iC[kA[eAs@iCe@cBq@cCm@wDMq@yAwJcFmTuA_G]yB]iAQ[FWk@mAgBcDw@{ACMBm@?e@[}AKs@E]GIMWQYE?MHQgAY\\qCkPMm@IEIKKWAa@DYBG@A}@{BmByE_GuN{DsJ]u@eAkCeDmIaGqNgAoDYk@mAyDeBgFcC_Is@gCm@wCg@eCWyBeAaL_CeVu@{G?g@^{Gj@iJHaBVeC|@iMTcDt@gKR_DN_BNe@CKAM@UBIFo@XuFLcCt@gKt@{Jn@eJReBDaAJy@\\yDz@gJ`Dk]hB_Ob@gDjAoI|AcL\\}BV{BtAcQnA_ODs@La@p@uAf@cA\\wlgiH_plMf@_AHa@Re@v@cBVm@Zu@B_@CMIOa@m@_@i@CK@Wl@gF`AuIj@gFgKpH{AnAe@X`@jB\\sieiHyezLqBKa@iD}@oH_@_CQw@_@GPUBYSkBEQBo@@s@@oAASKo@s@iC[kA[eAs@iCe@cBq@cCm@wDMq@yAwJcFmTuA_G]yB]iAQ[FWk@mAgBcDw@{ACMBm@?e@[}AKs@E]GIMWQYE?MHQgAY\\qCkPMm@IEIKKWAa@DYBG@A}@{BmByE_GuN{DsJ]u@eAkCeDmIaGqNgAoDYk@mAyDeBgFcC_Is@gCm@wCg@eCWyBeAaL_CeVu@{G?g@^{Gj@iJHaBVeC|@iMTcDt@gKR_DN_BNe@CKAM@UBIFo@XuFLcCt@gKt@{Jn@eJReBDaAJy@";
+	var polyline_encoded="yhhiHyefM\\Nb@q@jBeE|@_@Ig@v@gABb@pBe@fHaCrOiFrIuClBo@`@_@HIf@qAt@_Ct@iElBqKP_@VY\\Qr@OnAA|CHrCJr@CVINKR]Tw@PwAd@_FD@Sg@LBNcAfB{It@iECC";
 	var polyline_decoded=google.maps.geometry.encoding.decodePath(polyline_encoded);
 	var itinerary= new google.maps.Polyline({
 		path:polyline_decoded,
@@ -31,3 +102,8 @@ function initMap() {
 	});
 	itinerary.setMap(map)
 }
+
+
+
+
+$(document).ready(TypeUtilisateur)

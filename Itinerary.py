@@ -1,3 +1,4 @@
+
 import math
 from datetime import datetime
 
@@ -24,6 +25,8 @@ class Itinerary:
     # rail      : subway+train+tram (could be written as subway|train|tram)
     # bus|rail  : all transit mode types !
 
+    __UBER_MODE_TYPES = ["uberx", "uberpool", "uberberline", "ubergreen", "ubervan", "access"]
+
     __route_id = 1
 
     def __init__(self, origin, destination, date=None, transit_mode_type=None, itinerary_index=0):
@@ -49,7 +52,7 @@ class Itinerary:
         else:
             raise TypeError("La valeur attendue de la date doit être de type datetime.")
 
-        if transit_mode_type in Itinerary.__TRANSIT_MODE_TYPES or transit_mode_type is None:
+        if transit_mode_type in Itinerary.__TRANSIT_MODE_TYPES or transit_mode_type is None  or Itinerary.__UBER_MODE_TYPES:
             self._transit_mode_type = transit_mode_type
         elif isinstance(transit_mode_type, str):
             raise ValueError(
@@ -76,6 +79,7 @@ class Itinerary:
         self._transit_duration = 0
         self._information_legs = []
         self._total_polyline = ""
+        self.price = 0 
 
     @property
     def id(self):
@@ -133,7 +137,7 @@ class Itinerary:
 
     @transit_mode_type.setter
     def transit_mode_type(self, value):
-        if value in Itinerary.__TRANSIT_MODE_TYPES:
+        if value in Itinerary.__TRANSIT_MODE_TYPES or Itinerary.__UBER_MODE_TYPES:
             self._transit_mode_type = value
         elif not isinstance(value, str):
             raise TypeError("Est attendue une chaine de caractère pour le type de mode de transport en commun.")

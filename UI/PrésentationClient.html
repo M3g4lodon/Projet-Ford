@@ -6,59 +6,168 @@
 		<meta charset="utf-8" />
 		<title>Projet Ford</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+  		
+
+  		<!-- Bootstrap librairies, make responsive design, more info at: 
+  		https://www.w3schools.com/bootstrap/bootstrap_get_started.asp -->
   		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  		<!--bootstrap Toggle special librairies, more info at: http://www.bootstraptoggle.com/-->
+  		<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+		<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+
 		<link rel="stylesheet" type="text/css" href="style.css">
 		<script src="script.js"></script>
+		
 		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXcIOAUtqZseekwDlkOC2lndD6nIPsQ68&libraries=geometry&callback=initMap"></script>
 	</head>
 
 	<body>
-		<h1> Projet Ford </h1>
-		<h2> Authentification</h2>
-		<form class="form-inline" id ="Authentification">
-	  		<div class="form-group">
-		    	<label for="FamilyName">Nom:</label>
-		    	<input type="text" class="form-control" id="FamilyName">
-		  	</div>
-			<div class="form-group">
-				<label for="FirstName">Prénom:</label>
-				<input type="text" class="form-control" id="FirstName">
-			</div>
-		  	<button type="submit" class="btn btn-default">Envoyer</button>
-		</form> 
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container-fluid">
+    			<div class="navbar-header">
+      				<a class="navbar-brand" href="#">Projet Ford</a>
+    			</div>
+    			<div class="collapse navbar-collapse" id="myNavbar">
+    			<ul class="nav navbar-nav">
+        			<li class="active"><a href="#">Home</a></li>
+        			<li><a href="mailto:charles.jacquet@student.ecp.fr" target="_top">Contact</a></li>
+      			</ul>
+    			</div>
+  			</div>
+		</nav>
 
-		<h2>Critères de recherche</h2>
-		<form class="form-inline" id="Preferences">
-		  <div class="checkbox">
-		    <label><input type="checkbox">PMR</label>
-		  </div>
-		  <div class="checkbox">
-		    <label><input type="checkbox">Tourisme</label>
-		  </div>
-		  <div class="checkbox">
-		    <label><input type="checkbox">Avec Valise</label>
-		  </div>
-		  <div class="checkbox">
-		    <label><input type="checkbox">Pressé</label>
-		  </div>
-		</form> 
 
-		<h2>Recherche d'itinéraires</h2>
-		<form class="form-inline" id="ItinerarySearch">
-			<div class="form-group">
-				<label for="origin">Départ : </label>
-				<input type="text" class="form-control" id="origin">
-			</div>
-			<div class="form-group">
-				<label for="destination">Arrivée : </label>
-				<input type="text" class="form-control" id="destination">
-			</div>
-		</form> 
-		<div id="map">
+		<div class="container-fluid">
+		
+			<div class="row">
+			
+				<div class="col-sm-3 col-md-3 col-lg-3 sidenav" id="menu">			
+					<h2>Paramètres</h2>
 
+					<h3>Utilisateur</h3>
+					<form id ="Authentification">
+				  		<div class="form-group">
+					    	<label for="Name">Nom:</label>
+					    	<input type="text" class="form-control" id="Name">
+					  	</div>
+						<div class="form-group">
+							<label for="FirstName">Prénom:</label>
+							<input type="text" class="form-control" id="FirstName">
+						</div>
+					  	<button type="submit" class="btn btn-default" id="connecter" >Se connecter</button>
+					</form>
+
+					<!--  https://www.w3schools.com/bootstrap/bootstrap_dropdowns.asp -->
+					
+
+					<h3>Type d'utilisateur</h3>
+					<div class="btn-group">
+						<div class="form-inline" id="dropdown">
+							<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" href="#">Choisissez
+							<span class="caret"></span></button>
+
+							<ul class="dropdown-menu" id="UserType">
+							    <li><a href="#" id='def'>Défaut</a></li>
+							    <li><a href="#">PMR</a></li>
+							    <li><a href="#">Touriste</a></li>
+							    <li><a href="#">Cadre</a></li>
+        						<li class="divider"></li>
+							    <li><a href="#">Personnalisé</a></li>
+							</ul>
+						</div> 
+					</div>
+
+					<h3>Préférences</h3>
+
+					<div class="checkbox">
+					  	<label>
+					    <input data-toggle="toggle" data-on="Oui" data-off="Non" type="checkbox" id="P_Permis">
+					    Avez-vous le permis ?
+					  	</label>
+					</div>
+
+					<div class="checkbox">
+					  	<label>
+					    <input data-toggle="toggle" data-on="Oui" data-off="Non" type="checkbox" id="P_Meteo">
+					    Prendre en compte la météo ?
+					  	</label>
+					</div>
+
+					<div class="checkbox">
+					  	<label>
+					    <input data-toggle="toggle" data-on="Oui" data-off="Non" type="checkbox" id="P_Charge">
+					    Chargé ajourd'hui ?
+					  	</label>
+					</div>
+				</div>
+
+			
+				<div class="col-sm-9 col-md-9 col-lg-9 main" id="core">
+
+
+					<h2>Recherche d'itinéraires</h2>
+					<h3>Météo aujourd'hui: <span id="meteo"></span></h3>												
+
+					<form class="form-horizontal">
+						<div class="form-group">
+						    <label class="control-label col-sm-1" for="origine">Départ</label>
+						    <div class="col-sm-11">
+						      <input type="origine" class="form-control" id="origine" placeholder="D'où venez-vous ?">
+						    </div>
+						</div>
+						<div class="form-group">
+						    <label class="control-label col-sm-1" for="destination">Arrivée</label>
+						    <div class="col-sm-11">
+						      <input type="destination" class="form-control" id="destination" placeholder="Où allez-vous ?">
+						    </div>
+						</div>
+						<div class="form-group">
+						    <div class="col-sm-offset-1 col-sm-11">
+						      <button type="Rechercher" class="btn btn-default" onclick=GetItineraires()>Rechercher</button>
+						    </div>
+						</div>
+					</form> 
+
+					<div id="map">Carte</div>
+
+					<div id="trajets_proposes">
+					<h2>Iténéraires que nous vous proposons</h2>
+					<p><span id="intro_itineraire"></span></p>
+
+						<ul class="nav nav-tabs">
+					    	<li class="active"><a data-toggle="tab" href="#trajet1">Trajet 1</a></li>
+					    	<li><a data-toggle="tab" href="#trajet2">Trajet 2</a></li>
+					    	<li><a data-toggle="tab" href="#trajet3">Trajet 3</a></li>
+					  	</ul>
+
+					<div class="tab-content">
+					    <div id="trajet1" class="tab-pane fade in active">
+					      <h3>Trajet 1: <span></span></h3>
+					      <p>Voila le trajet que nous vous proposons</p>
+					    </div>
+					    <div id="trajet2" class="tab-pane fade">
+					      <h3>Trajet 2: <span></span></h3>
+					      <p>Voila le trajet que nous vous proposons</p>
+					    </div>
+					    <div id="trajet3" class="tab-pane fade">
+					      <h3>Trajet 3: <span></span></h3>
+					      <p>Voila le trajet que nous vous proposons</p>
+					    </div>
+					</div>
+					</div>
+				</div>	
+
+			</div>
 		</div>
 
+		<footer class="container-fluid text-center">
+			<p>Groupe n°5 - Pierre Monsel, Mathieu Seris, Charles Jacquet</p>
+		</footer>
+
+		
 	</body>
 </html>
