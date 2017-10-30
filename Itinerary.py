@@ -1,21 +1,19 @@
+
 import math
 from datetime import datetime
 
 from Place import Place
 
 
-# TODO Gestion des erreurs en cas d'échec des API (status_code !=200)
 # TODO Prise en compte de l'ordre de préférence sur Autolib/velib (itinerary_index)
 # TODO Méthodes de conversion sec(int) --> h:m:s (str) et m(int) --> km (str)
 
 class Itinerary:
     """Désigne un trajet entre deux points spécifiés dans la recherche d'itinéraires"""
 
-    __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib", "transit", "bicycling", "uber"]
+    __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib", "transit", "bicycling"]
 
     __TRANSIT_MODE_TYPES = ["bus", "subway", "train", "tram", "rail", "bus|rail"]
-
-    __UBER_MODE_TYPES = ["uberx", "uberpool", "uberberline", "ubergreen", "ubervan", "access"]
     # Liste des modes de transport possibles
     # bus       : bus
     # subway    : subway
@@ -23,6 +21,8 @@ class Itinerary:
     # tram      : tramway and light subway
     # rail      : subway+train+tram (could be written as subway|train|tram)
     # bus|rail  : all transit mode types !
+
+    __UBER_MODE_TYPES = ["uberx", "uberpool", "uberberline", "ubergreen", "ubervan", "access"]
 
     __route_id = 1
 
@@ -49,14 +49,14 @@ class Itinerary:
         else:
             raise TypeError("La valeur attendue de la date doit être de type datetime.")
 
-        if transit_mode_type in Itinerary.__TRANSIT_MODE_TYPES or transit_mode_type is None or Itinerary.__UBER_MODE_TYPES:
+        if transit_mode_type in Itinerary.__TRANSIT_MODE_TYPES or transit_mode_type is None  or Itinerary.__UBER_MODE_TYPES:
             self._transit_mode_type = transit_mode_type
         elif isinstance(transit_mode_type, str):
             raise ValueError(
-                "La valeur du type de transport en commun ou le choix de l'Uber doit faire partie de la liste des valeurs possibles")
+                "La valeur du type de transport en commun doit faire partie de la liste des valeurs possibles")
         else:
             raise TypeError(
-                "La valeur d'un type de transport en commun ou le choix de l'Uber doit être une chaine de caractères parmi la liste des"
+                "La valeur d'un type de transport en commun doit être une chaine de caractères parmi la liste des "
                 "valeurs possible.")
 
         if isinstance(itinerary_index, int):
@@ -76,7 +76,7 @@ class Itinerary:
         self._transit_duration = 0
         self._information_legs = []
         self._total_polyline = ""
-        self.price = 0
+        self.price = 0 
 
     @property
     def id(self):
@@ -275,12 +275,17 @@ class Itinerary:
         for leg_index, leg in enumerate(self.information_legs):
             res += "\n"
             res += "Portion " + str(leg_index)
-            res += ": You will be " + leg['transport_mode']
+            if leg['transport_mode'] != 'TRANSIT':
+                res += ": You will be " + leg['transport_mode']
+            else:
+                res += ": You will be taking the " + leg['instructions'] + " on line " + leg['line']
             res += " for a duration of " + str(math.floor(leg['duration'] / 60 + 1)) + " min"
             if leg['transport_mode'] != 'TRANSIT':
-                res += " and a distance of " + str(math.floor(leg['distance'] / 100 + 1) / 10) + " km"
-            if 'instructions' in leg.keys():
-                res += " ; Please " + leg['instructions']
+                res += " - " + leg['instructions']
+                res += " for a distance of " + str(math.floor(leg['distance'] / 100 + 1) / 10) + " km"
+            if leg['transport_mode'] == 'TRANSIT':
+                res += " - You will depart from " + leg['departure_stop'] + " and arrive at " + leg['arrival_stop']
+
 
         res += "\nIt will take " + str(math.floor(self.total_duration / 60 + 1))
         res += " min, " + str(math.floor(self.walking_duration / 60 + 1)) + " min walking ("
@@ -292,6 +297,11 @@ class Itinerary:
 
 class QueryLimit(Exception):
     """Error raised when the query limit is reached"""
+    pass
+
+
+class BadRequest(Exception):
+    """The request is not working properly."""
     pass
 
 
