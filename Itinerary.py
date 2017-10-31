@@ -5,10 +5,9 @@ from Place import Place
 
 
 # TODO Prise en compte de l'ordre de préférence sur Autolib/velib (itinerary_index)
-# TODO Méthodes de conversion sec(int) --> h:m (str) et m(int) --> km (str)
 # TODO Préférences
 # TODO intégration de la météo
-# Routine de test d'itinéraire à Paris
+# TODO Routine de test d'itinéraire à Paris
 
 class Itinerary:
     """Désigne un trajet entre deux points spécifiés dans la recherche d'itinéraires"""
@@ -288,26 +287,40 @@ class Itinerary:
                 res += ": You will be " + leg['transport_mode']
             else:
                 res += ": You will be taking the " + leg['instructions'] + " on line " + leg['line']
-            res += " for a duration of " + str(math.floor(leg['duration'] / 60 + 1)) + " min"
+            res += " for a duration of " + Itinerary.time_formatted(leg['duration'])
             if leg['transport_mode'] != 'TRANSIT':
                 res += " - " + leg['instructions']
-                res += " for a distance of " + str(math.floor(leg['distance'] / 100 + 1) / 10) + " km"
+                res += " for a distance of " + Itinerary.dist_formatted(leg['distance'])
             if leg['transport_mode'] == 'TRANSIT':
                 res += " - You will depart from " + leg['departure_stop'] + " and arrive at " + leg['arrival_stop']
 
-        res += "\nIt will take " + str(math.floor(self.total_duration / 60 + 1))
-        res += " min, " + str(math.floor(self.walking_duration / 60 + 1)) + " min walking ("
-        res += str(math.floor(self.walking_distance / 100 + 1) / 10) + " km)."
+        res += "\nIt will take " + Itinerary.time_formatted(self.total_duration) + ", "
+        res += Itinerary.time_formatted(self.walking_duration) + " walking ("
+        res += Itinerary.dist_formatted(self.walking_distance) + ")."
         res += "\n"
 
         return res
 
     @staticmethod
-    def sec_formatted(nb_second):
+    def time_formatted(nb_second):
         """Convert a number of second in a formatted string"""
-        m, s = divmod(nb_second, 60)
-        h, s = divmod(m, 60)
-        return str(h) + "h" + str()
+        if nb_second == 0:
+            return "0 min"
+        else:
+            m, s = divmod(nb_second, 60)
+            h, m = divmod(m, 60)
+            if h == 0:
+                return str(m + 1) + " min"
+            else:
+                return str(h) + " h " + str(m + 1) + " min"
+
+    @staticmethod
+    def dist_formatted(nb_meter):
+        """Convert a number of meters in a formatted string"""
+        if nb_meter == 0:
+            return "0 km"
+        else:
+            return str(math.floor(nb_meter / 100 + 1) / 10) + " km"
 
 
 class QueryLimit(Exception):
