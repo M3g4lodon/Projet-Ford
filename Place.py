@@ -1,8 +1,6 @@
 import requests
 
 
-# TO DO trouver une solution au bug décrit en test (format adresse particulier des appels API du vélib)
-
 class Place:
     """Désigne un lieu géographique"""
 
@@ -11,8 +9,7 @@ class Place:
     def __init__(self, address=None, lat=None, lng=None):
         # Cas où le lieu est ma spécifié
         if address is None and (lat is None or lng is None):
-            pass
-            # Exception à créer ici
+            self._address = "Paris, France"
         self._address = address
         self._lat = lat
         self._lng = lng
