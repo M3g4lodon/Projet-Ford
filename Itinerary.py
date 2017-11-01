@@ -24,7 +24,6 @@ class Itinerary:
     # rail      : subway+train+tram (could be written as subway|train|tram)
     # bus|rail  : all transit mode types !
 
-    __UBER_MODE_TYPES = ["uberx", "uberpool", "uberberline", "ubergreen", "ubervan", "access"]
 
     __route_id = 1
 
@@ -51,7 +50,7 @@ class Itinerary:
         else:
             raise TypeError("La valeur attendue de la date doit être de type datetime.")
 
-        if transit_mode_type in Itinerary.__TRANSIT_MODE_TYPES or transit_mode_type is None or Itinerary.__UBER_MODE_TYPES:
+        if transit_mode_type in Itinerary.__TRANSIT_MODE_TYPES or transit_mode_type is None:
             self._transit_mode_type = transit_mode_type
         elif isinstance(transit_mode_type, str):
             raise ValueError(
@@ -136,12 +135,12 @@ class Itinerary:
 
     @transit_mode_type.setter
     def transit_mode_type(self, value):
-        if value in Itinerary.__TRANSIT_MODE_TYPES or Itinerary.__UBER_MODE_TYPES:
+        if value in Itinerary.__TRANSIT_MODE_TYPES :
             self._transit_mode_type = value
         elif not isinstance(value, str):
-            raise TypeError("Est attendue une chaine de caractère pour le type de mode de transport en commun.")
+            raise TypeError("Est attendue une chaine de caractère pour le type de mode de transport.")
         else:
-            raise ValueError("La valeur en entrée n'est pas un type de transport en commun possible.")
+            raise ValueError("La valeur en entrée n'est pas un type de transport possible.")
 
     @property
     def itinerary_index(self):
