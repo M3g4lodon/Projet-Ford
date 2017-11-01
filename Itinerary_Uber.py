@@ -1,7 +1,3 @@
-# TODO Faire les exceptions et revoir la terminaison des attributs ?
-# TODO Bien faire les distances pour l'affichage
-# TODO Quid de simplifier le code = la distance et el temps devraient etre les memes pour chaque type d'uber
-# TODO Faire des getter et des setters pour notamment: transit_mode_type (changer de type d'uber)
 
 import math
 
@@ -15,19 +11,28 @@ from Place import Place
 class Uber(Itinerary):
     __URL_UBER_PRICE = 'https://api.uber.com/v1.2/estimates/price?'
     __URL_UBER_TIME = 'https://api.uber.com/v1.2/estimates/time?'
+    __UBER_MODE_TYPES = ["uberx", "uberpool", "uberberline", "ubergreen", "ubervan", "access"]
 
-    def __init__(self, origin, destination, date=None, transit_mode_type=None, itinerary_index=0):
+    def __init__(self, origin, destination, date=None, uber_type=None, transit_mode_type=None, itinerary_index=0):
         Itinerary.__init__(self, origin, destination, date, transit_mode_type, itinerary_index)
         self.transit_mode = "uber"
 
-        # j'avais très envie de mettre uberberline par défaut
-        if self.transit_mode_type is None:
-            self.transit_mode_type = "uberx"
+        if uber_type in Uber.__UBER_MODE_TYPES:
+            self._uber_type = uber_type
+        elif isinstance(uber_type, str):
+            raise ValueError(
+                "La valeur du type d'uber doit faire partie de la liste des valeurs possibles")
+        elif uber_type is None:
+            self._uber_type = "uberx"
+        else:
+            raise TypeError(
+                "La valeur d'un type d'uber doit être une chaine de caractères parmi la liste des "
+                "valeurs possible.")
 
         self.information_legs_uber = []
-        self.uber_wait_duration = 0
-        self.uber_travel_duration = 0
-        available_options = []
+        self._uber_wait_duration = 0
+        self._uber_travel_duration = 0
+        self._available_options = []
 
         # Code Spécifique à l'API UBER
         headers = {'Authorization': 'Token 1QTK0iskAoX7vFZ3Ir1j_NdqnADK7zXAF4GcaRLe', 'Accept-Language': 'en_US',
@@ -61,7 +66,7 @@ class Uber(Itinerary):
                 for uber_option, option in enumerate(options_price):
                     self.information_legs_uber.append({})
                     self.information_legs_uber[-1]['uber_name'] = str(option['display_name']).lower()
-                    available_options += str(option['display_name']).lower()
+                    self._available_options.append(str(option['display_name']).lower())
                     self.information_legs_uber[-1]['price'] = option['estimate']
                     self.information_legs_uber[-1]['distance'] = option['distance']
                     self.information_legs_uber[-1]['duration'] = option['duration']
@@ -69,11 +74,11 @@ class Uber(Itinerary):
                     if options_time[uber_option]['display_name'] == option['display_name']:
                         self.information_legs_uber[-1]['wait_time'] = options_time[uber_option]['estimate']
 
-                    if self.information_legs_uber[-1]['uber_name'] == self.transit_mode_type:
+                    if self.information_legs_uber[-1]['uber_name'] == self._uber_type:
                         self.price = self.information_legs_uber[uber_option]['price']
-                        self.uber_wait_duration = self.information_legs_uber[uber_option]['wait_time']
-                        self.uber_travel_duration = self.information_legs_uber[uber_option]['duration']
-                        self.total_duration = self.uber_wait_duration + self.uber_travel_duration
+                        self._uber_wait_duration = self.information_legs_uber[uber_option]['wait_time']
+                        self._uber_travel_duration = self.information_legs_uber[uber_option]['duration']
+                        self.total_duration = self._uber_wait_duration + self._uber_travel_duration
                         self.driving_distance = int(self.information_legs_uber[uber_option][
                                                         'distance'] * 1610)  # l'appli renvoie des miles et non des km
 
@@ -81,7 +86,7 @@ class Uber(Itinerary):
                 for uber_option, option in enumerate(options_time):
                     self.information_legs_uber.append({})
                     self.information_legs_uber[-1]['uber_name'] = str(option['display_name']).lower()
-                    available_options += str(option['display_name']).lower()
+                    self._available_options.append(str(option['display_name']).lower())
                     self.information_legs_uber[-1]['wait_time'] = option['estimate']
 
                     if options_price[uber_option]['display_name'] == option['display_name']:
@@ -89,18 +94,44 @@ class Uber(Itinerary):
                         self.information_legs_uber[-1]['distance'] = options_price[uber_option]['distance']
                         self.information_legs_uber[-1]['duration'] = options_price[uber_option]['duration']
 
-                    if self.information_legs_uber[-1]['uber_name'] == self.transit_mode_type:
+                    if self.information_legs_uber[-1]['uber_name'] == self._uber_type:
                         self.price = self.information_legs_uber[uber_option]['price']
-                        self.uber_wait_duration = self.information_legs_uber[uber_option]['wait_time']
-                        self.uber_travel_duration = self.information_legs_uber[uber_option]['duration']
-                        self.total_duration = self.uber_wait_duration + self.uber_travel_duration
+                        self._uber_wait_duration = self.information_legs_uber[uber_option]['wait_time']
+                        self._uber_travel_duration = self.information_legs_uber[uber_option]['duration']
+                        self.total_duration = self._uber_wait_duration + self._uber_travel_duration
                         self.driving_distance = int(float(self.information_legs_uber[uber_option][
                                                               'distance']) * 1610)
                         # l'appli renvoie des miles et non des km
 
-            if self.transit_mode_type not in available_options:
+            if self._uber_type not in self._available_options:
                 TypeError(
                     "The Uber option you selected isn't available. Please select another option or try again later.")
+
+
+    @property
+    def uber_travel_duration(self):
+        return self._uber_travel_duration
+
+    @property
+    def uber_wait_duration(self):
+        return self._uber_wait_duration
+
+    @property
+    def available_options(self):
+        return self._available_options
+    @property
+    def uber_type(self):
+        return self._uber_type
+
+    @uber_type.setter
+    def uber_type(self, value):
+        if value in Uber.__UBER_MODE_TYPES:
+            self._uber_type = value
+        elif not isinstance(value, str):
+            raise TypeError("Est attendue une chaine de caractère pour le type d'uber.")
+        else:
+            raise ValueError("La valeur en entrée n'est pas un type d'uber.")
+
 
     # J'ai décidé d'override celle de la classe mère, plus facile (on n'utilise pas google maps ici...)
     def __repr__(self):
@@ -108,10 +139,11 @@ class Uber(Itinerary):
         res = ""
         res += "Here is the summary of your Uber Trip:"
         res += "\n"
-        res += "Your uber will be arriving in " + str(math.floor(self.uber_wait_duration / 60 + 1)) + " min."
+        res += "Your uber will be arriving in " + str(math.floor(self._uber_wait_duration / 60 + 1)) + " min."
         res += "\n"
-        res += "Your ride will take you " + str(math.floor(self.uber_travel_duration / 60 + 1)) + " min and " + str(
-            self.driving_distance) + " meters to arrive at destination. "
+        res += "Your ride will take you " + str(math.floor(self._uber_travel_duration / 60 + 1)) + " min and " + str(
+            self.driving_distance//1000) + " km " + str(
+            self.driving_distance%1000) + "m to arrive at destination."
         res += "The fare estimate is " + str(self.price) + "."
 
         return res
@@ -123,5 +155,10 @@ if __name__ == "__main__":
     # Test des itinéraires
     org = Place(address="Porte de Passy")
     des = Place(address="Porte de la Villette")
-    AtoB = Uber(org, des, transit_mode_type="uberx")
+    AtoB = Uber(org, des, uber_type="uberberline")
+
     print(repr(AtoB))
+
+
+
+
