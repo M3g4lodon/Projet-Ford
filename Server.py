@@ -1,40 +1,19 @@
-import json
 from threading import Thread
 
 import requests as re
-from flask import Flask, request, jsonify
-
-"""
-@app.route('/articles')
-def api_articles():
-    return 'List of ' + url_for('api_articles')
-
-@app.route('/articles/<articleid>')
-def api_article(articleid):
-    return 'You are reading ' + articleid
-"""
-
-Users=[]
+from flask import Flask, request
 
 app = Flask(__name__)
 
-@app.route('/auth', methods=['POST'])
-def api_authentification():
-    print(json.dumps(request.json))
-    # user=User()
-    user_id = 17  # à changer
-    return jsonify({"id": user_id})
 
-
-@app.route('/itinerary', methods=['GET'])
+@app.route('/itinerary', methods=['POST'])
 def api_itinerary_search():
-    if all([x in request.args for x in ['user_id', 'origin', 'destination', 'luggage']]):
-        for user in Users:
-            raw_data = request.json
-            if user.id == raw_data['user_id']:
-                origin = Place(raw_data['origin'])
-                destination = Place(raw_data['destination'])
-                user.newItinerarySearch
+    if set(request.args) == set(['origin', 'destination']):
+        raw_data = request.json
+        origin = Place(raw_data['origin'])
+        destination = Place(raw_data['destination'])
+        results = Itinerary.ItinerarySearch(origin, destination, preferences)
+
 
 class Server(Thread):
     """Notre serveur où s'éxécute notre service "comment y aller ?" """
