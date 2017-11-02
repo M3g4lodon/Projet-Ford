@@ -1,4 +1,3 @@
-
 import math
 
 import requests
@@ -29,7 +28,7 @@ class Uber(Itinerary):
                 "La valeur d'un type d'uber doit être une chaine de caractères parmi la liste des "
                 "valeurs possible.")
 
-        self.information_legs_uber = []
+        self._options_uber = []
         self._uber_wait_duration = 0
         self._uber_travel_duration = 0
         self._available_options = []
@@ -64,49 +63,48 @@ class Uber(Itinerary):
             if len(options_price) <= len(options_time):
 
                 for uber_option, option in enumerate(options_price):
-                    self.information_legs_uber.append({})
-                    self.information_legs_uber[-1]['uber_name'] = str(option['display_name']).lower()
+                    self._options_uber.append({})
+                    self._options_uber[-1]['uber_name'] = str(option['display_name']).lower()
                     self._available_options.append(str(option['display_name']).lower())
-                    self.information_legs_uber[-1]['price'] = option['estimate']
-                    self.information_legs_uber[-1]['distance'] = option['distance']
-                    self.information_legs_uber[-1]['duration'] = option['duration']
+                    self._options_uber[-1]['price'] = option['estimate']
+                    self._options_uber[-1]['distance'] = option['distance']
+                    self._options_uber[-1]['duration'] = option['duration']
 
                     if options_time[uber_option]['display_name'] == option['display_name']:
-                        self.information_legs_uber[-1]['wait_time'] = options_time[uber_option]['estimate']
+                        self._options_uber[-1]['wait_time'] = options_time[uber_option]['estimate']
 
-                    if self.information_legs_uber[-1]['uber_name'] == self._uber_type:
-                        self.price = self.information_legs_uber[uber_option]['price']
-                        self._uber_wait_duration = self.information_legs_uber[uber_option]['wait_time']
-                        self._uber_travel_duration = self.information_legs_uber[uber_option]['duration']
+                    if self._options_uber[-1]['uber_name'] == self._uber_type:
+                        self.price = self._options_uber[uber_option]['price']
+                        self._uber_wait_duration = self._options_uber[uber_option]['wait_time']
+                        self._uber_travel_duration = self._options_uber[uber_option]['duration']
                         self.total_duration = self._uber_wait_duration + self._uber_travel_duration
-                        self.driving_distance = int(self.information_legs_uber[uber_option][
+                        self.driving_distance = int(self._options_uber[uber_option][
                                                         'distance'] * 1610)  # l'appli renvoie des miles et non des km
 
             else:
                 for uber_option, option in enumerate(options_time):
-                    self.information_legs_uber.append({})
-                    self.information_legs_uber[-1]['uber_name'] = str(option['display_name']).lower()
+                    self._options_uber.append({})
+                    self._options_uber[-1]['uber_name'] = str(option['display_name']).lower()
                     self._available_options.append(str(option['display_name']).lower())
-                    self.information_legs_uber[-1]['wait_time'] = option['estimate']
+                    self._options_uber[-1]['wait_time'] = option['estimate']
 
                     if options_price[uber_option]['display_name'] == option['display_name']:
-                        self.information_legs_uber[-1]['price'] = options_price[uber_option]['estimate']
-                        self.information_legs_uber[-1]['distance'] = options_price[uber_option]['distance']
-                        self.information_legs_uber[-1]['duration'] = options_price[uber_option]['duration']
+                        self._options_uber[-1]['price'] = options_price[uber_option]['estimate']
+                        self._options_uber[-1]['distance'] = options_price[uber_option]['distance']
+                        self._options_uber[-1]['duration'] = options_price[uber_option]['duration']
 
-                    if self.information_legs_uber[-1]['uber_name'] == self._uber_type:
-                        self.price = self.information_legs_uber[uber_option]['price']
-                        self._uber_wait_duration = self.information_legs_uber[uber_option]['wait_time']
-                        self._uber_travel_duration = self.information_legs_uber[uber_option]['duration']
+                    if self._options_uber[-1]['uber_name'] == self._uber_type:
+                        self.price = self._options_uber[uber_option]['price']
+                        self._uber_wait_duration = self._options_uber[uber_option]['wait_time']
+                        self._uber_travel_duration = self._options_uber[uber_option]['duration']
                         self.total_duration = self._uber_wait_duration + self._uber_travel_duration
-                        self.driving_distance = int(float(self.information_legs_uber[uber_option][
+                        self.driving_distance = int(float(self._options_uber[uber_option][
                                                               'distance']) * 1610)
                         # l'appli renvoie des miles et non des km
 
             if self._uber_type not in self._available_options:
                 TypeError(
                     "The Uber option you selected isn't available. Please select another option or try again later.")
-
 
     @property
     def uber_travel_duration(self):
@@ -119,6 +117,7 @@ class Uber(Itinerary):
     @property
     def available_options(self):
         return self._available_options
+
     @property
     def uber_type(self):
         return self._uber_type
@@ -132,6 +131,9 @@ class Uber(Itinerary):
         else:
             raise ValueError("La valeur en entrée n'est pas un type d'uber.")
 
+    @property
+    def options_uber(self):
+        return self._options_uber
 
     # J'ai décidé d'override celle de la classe mère, plus facile (on n'utilise pas google maps ici...)
     def __repr__(self):
@@ -142,8 +144,8 @@ class Uber(Itinerary):
         res += "Your uber will be arriving in " + str(math.floor(self._uber_wait_duration / 60 + 1)) + " min."
         res += "\n"
         res += "Your ride will take you " + str(math.floor(self._uber_travel_duration / 60 + 1)) + " min and " + str(
-            self.driving_distance//1000) + " km " + str(
-            self.driving_distance%1000) + "m to arrive at destination."
+            self.driving_distance // 1000) + " km " + str(
+            self.driving_distance % 1000) + "m to arrive at destination."
         res += "The fare estimate is " + str(self.price) + "."
 
         return res
@@ -158,7 +160,3 @@ if __name__ == "__main__":
     AtoB = Uber(org, des, uber_type="uberberline")
 
     print(repr(AtoB))
-
-
-
-
