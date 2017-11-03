@@ -1,5 +1,5 @@
 # Entry file to the server
-# To start the server, go in the console, get into the folder where this file is located ("cd C:\Users\Charles\Desktop\Centrale\POOA) and type "python app.py"
+# To start the server, run the program, then open on your browser: http://localhost:5000/
 
 from flask import Flask, render_template, request, jsonify, Response
 app = Flask(__name__)
@@ -10,8 +10,7 @@ def function():
 
 @app.route('/itineraire')
 def itinerary_search():
-    print("bonjour")
-    TypeUser= request.args.get('type',"Défaut")
+    TypeUser= request.args.get('TypeUser','Défaut')
     P_Permis= request.args.get('P_Permis',"false")
     P_Meteo= request.args.get('P_Meteo',"true")
     P_Charge= request.args.get('P_Charge',"false")
