@@ -19,7 +19,8 @@ class Velib(Itinerary):
 
         Itinerary.__init__(self, origin, destination, date, transit_mode_type, itinerary_index)
         self.transport_mode = "velib"
-
+        #prix velib de base - beaucoup de segmentation clients pour les tarifs...
+        self.price = "Pour 1,70€, le ticket 1 jour donne accès pendant 24h au service Vélib' avec les 30 premières minutes offertes à chaque déplacement. Au-delà de la première demi-heure, les tarifs de location s’appliquent"
         # Station velib d'origine
         stop = True
         search_size = 1
