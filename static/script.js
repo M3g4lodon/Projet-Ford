@@ -71,8 +71,10 @@ function GetItineraires(){
             ).html("Basé sur vos préférences, nous avons calculé 3 trajets afin de vous rendre à ")
         	},
         dataType: "json"
-    	})}
+    	}
+    )
 }
+
 
 
 $(document).ready(TypeUtilisateur)
