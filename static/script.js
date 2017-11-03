@@ -10,7 +10,9 @@ $("#connecter").click(function(){
     --call-back function?--
 });
 */
-const ROOT = window.location.href
+
+const ROOT = "http://localhost:5000/" /* idealement on utilise ça: window.location.href, mais ça marche pas */
+
 
 
 function TypeUtilisateur() {
