@@ -57,33 +57,6 @@ var itineraire={
 	destination: ""
 }
 
-// Convertit une chaine de caractères d'une adresse en coordonnées (lat & lng) dans un format que Google Maps comprend
-function ConvertAddressLatLng(address){
-
-    function ExtractAddress(data){
-        var lat, lng;
-        lat = data.results[0].geometry.location.lat;
-        lng = data.results[0].geometry.location.lng;
-        return {lat:lat, lng:lng};
-    }
-
-    function Error(){
-        console.log("Couldn't convert address in lat/lng coord")
-    }
-
-    $.ajax({
-        url:"https://maps.googleapis.com/maps/api/geocode/json",
-        data : {address :address,key:"AIzaSyDpVNzFcwgFfPJOK25P9NlMBL-YEe8bSow"},
-        dataType :"json",
-        type:"GET",
-        success : ExtractAddress,
-        error: Error
-    });
-
-
-}
-
-// Fonction appelée lors de la recherche
 function GetItineraires(){
 	itineraire.origine = $('#origine').val();
 	itineraire.destination = $('#destination').val();
@@ -92,30 +65,22 @@ function GetItineraires(){
 
 	$("#intro_itineraire"
 		).html("Basé sur vos préférences, nous avons calculé 3 trajets afin de vous rendre à "+ itineraire.destination)
-    var suggested_itineraries = SuggestedItineraries(itineraire, preferences)
-    PrintItinerariesOnMap(suggested_itineraries)
+
 }
 
-// Demande les 3 itinéraires suggérés par nos services
-function suggested_itineraries(itineraire, preferences){
-    console.log("Itinerary search")
-}
-
-var map;
-
-// Création de la carte par défaut
-function initMap() {
-	var center ={lat: 48.8566, lng: 2.3522};
-	map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 12,
-		center: center
-	});
-}
-
-// Variables de tests
+// Variables de test
 var suggested_itineraries={
-	origin:"chatelet les halles",
-	destination :"gare de lyon, paris",
+	origin:{
+		address:"chatelet les halles",
+		lat:48.8619,
+		lng:2.3470
+	},
+	destination :{
+		address:"gare de lyon, paris",
+		lat:48.8443,
+		lng:2.3744
+	},
+
 	results:[
 		{
 			polyline_encoded:"yhhiHyefM\\Nb@q@jBeE|@_@Ig@v@gABb@pBe@fHaCrOiFrIuClBo@`@_@HIf@qAt@_Ct@iElBqKP_@VY\\Qr@OnAA|CHrCJr@CVINKR]Tw@PwAd@_FD@Sg@LBNcAfB{It@iECC"
@@ -127,6 +92,18 @@ var suggested_itineraries={
 			polyline_encoded:"yhhiHyefM\\Nb@q@jBeE|@_@Ig@v@gABb@pBe@fHaCrOiFrIuClBo@`@_@HIf@qAt@_Ct@iElBqKP_@VY\\Qr@OnAA|CHrCJr@CVINKR]Tw@PwAd@_FD@Sg@LBNcAfB{It@iECC"
 		}]
 };
+
+
+var map;
+
+// Création de la carte par défaut
+function initMap() {
+	var center ={lat: 48.8566, lng: 2.3522};
+	map = new google.maps.Map(document.getElementById('map'), {
+		zoom: 12,
+		center: center
+	});
+}
 
 // Affiche les 3 itinéraires sur la carte, ainsi que le départ et l'arrivée
 function PrintItinerariesOnMap(suggested_itineraries){
@@ -163,13 +140,14 @@ function PrintItinerariesOnMap(suggested_itineraries){
 		map:map
 	});
 
-	var marker_destination = new google.maps.Marker({
-		position: ConvertAddressLatLng(suggested_itineraries.destination),
-		map: map
-	});
-	
+
 	var marker_origin = new google.maps.Marker({
-		position: ConvertAddressLatLng(suggested_itineraries.origin),
+		position: {lat:suggested_itineraries.origin.lat, lng:suggested_itineraries.origin.lng},
+		map: map,
+	});
+
+	var marker_destination = new google.maps.Marker({
+		position: {lat:suggested_itineraries.destination.lat, lng:suggested_itineraries.destination.lng},
 		map: map
 	});
 
