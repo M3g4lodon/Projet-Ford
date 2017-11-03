@@ -6,10 +6,10 @@ class User:
     """Désigne un utilisateur du service, avec son type et son historique des recherches d'itinéraires"""
 
     __user_id = 1
-    __TYPES = {"Défaut": ["transit", "walking", "velib", "autolib", "driving"],
-               "PMR": ["bus", "walking", "autolib", "driving"],
-               "Touriste": ["bus", "velib", "transit", "walking"],
-               "Cadre": ["driving", "walking"],
+    __TYPES = {"Défaut": ["transit", "walking", "velib", "autolib", "driving", "uber"],
+               "PMR": ["bus", "walking", "autolib", "driving", "uber"],
+               "Touriste": ["bus", "velib", "transit", "walking", "uber"],
+               "Cadre": ["driving", "walking", "uber"],
                "Personnalisé": []}  # Liste des types d'utilisateur possibles
 
     def __init__(self, user_type="Défaut", driving_license=False):
