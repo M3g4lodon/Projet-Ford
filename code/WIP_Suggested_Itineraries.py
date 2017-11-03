@@ -12,17 +12,18 @@ from Itinerary_Velib import Velib
 from Itinerary_Walking import Walking
 from Place import Place
 from User import User
-from meteo_yahoo import meteo_jour
+from WIP_meteo_yahoo import meteo_jour
 
 
 def Suggested_Itineraries(user, itinerary):
+
     if isinstance(user, User):
-        user = user
+        pass
     else:
         raise TypeError("L'utilisateur doit être un objet User")
 
     if isinstance(itinerary, Itinerary):
-        itinerary = itinerary
+        pass
     else:
         raise TypeError("L'origine doit être un objet Place")
 
@@ -86,8 +87,9 @@ def Suggested_Itineraries(user, itinerary):
             suggested_itineraries[option]['wait_time'] = transport_option.uber_wait_duration
             # on utilise le polyline driving ici pour uber
             suggested_itineraries[option]['polyline'] = driving_option.total_polyline
+
     meteo = meteo_jour(user)
-    suggested_itineraries.append(meteo)
+    suggested_itineraries.append({'meteo': meteo})
 
     return print(suggested_itineraries)
 
