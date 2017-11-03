@@ -2,15 +2,25 @@
 
 import requests
 import datetime
-from user_v2 import User
+from User import User
 
-def meteo_jour(utilisateur):
+def meteo_jour(utilisateur,date=None):
     #5 days forecast incl. temperature, weather,...
     url="https://query.yahooapis.com/v1/public/yql"
     param="q=select%20*%20from%20weather.forecast%20where%20woeid%20%3D615702%20and%20u%3D'c'&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback="
 
     resp = requests.get(url,param)
     r=resp.json()
+
+    if isinstance(utilisateur, User):
+        pass
+    else:
+        raise TypeError("L'utilisateur doit être un objet User")
+
+    if date == None:
+        date = datetime.date.today() + datetime.timedelta(days=3)
+    else:  #à modifier pour quand il n'y a pas le bon format!!
+        pass
 
     for i in range (0,4):
         if date == datetime.date.today() + datetime.timedelta(days=i):
@@ -34,7 +44,7 @@ def meteo_jour(utilisateur):
                     pref.remove('walking')
                 utilisateur.preferences=pref
 
-            return print(resultat)
+            return resultat
 
 if __name__=="__main__":
 
