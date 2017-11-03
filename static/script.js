@@ -14,7 +14,6 @@ $("#connecter").click(function(){
 const ROOT = "http://localhost:5000/" /* idealement on utilise ça: window.location.href, mais ça marche pas */
 
 
-console.log("a")
 function TypeUtilisateur() {
 	$(".dropdown-menu li a").click(function(){
 	  var selText = $(this).text()
@@ -23,7 +22,6 @@ function TypeUtilisateur() {
 	  console.log("type set to: "+preferences.type)
 	});
 }
-console.log("b")
 var preferences={
 	type: "Défaut",
 	P_Permis: "false",
@@ -31,7 +29,6 @@ var preferences={
 	P_Charge:"false"
 }
 
-console.log("c")
 $(function() {
 		$('#P_Permis').change(function() {
 		var state=$(this).prop('checked')
@@ -54,7 +51,6 @@ $(function() {
 		})
 })
 
-console.log("d")
 function GetItineraires(){
 	$.ajax({
         url: ROOT + 'itineraire',
@@ -76,7 +72,6 @@ function GetItineraires(){
     )
 }
 
-console.log("e")
 
 $(document).ready(TypeUtilisateur)
 
@@ -105,7 +100,6 @@ var suggested_itineraries={
 		}]
 };
 
-console.log("f")
 var map;
 
 // Création de la carte par défaut
@@ -164,4 +158,3 @@ function PrintItinerariesOnMap(suggested_itineraries){
 	});
 
 }
-console.log("g")
