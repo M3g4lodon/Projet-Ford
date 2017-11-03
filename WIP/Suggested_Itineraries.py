@@ -86,7 +86,7 @@ class Suggested_Itineraries:
             if transport_option is 'uber':
                 self._suggested_itineraries[option]['wait_time'] = transport_option.uber_wait_duration
 
-        print(self._suggested_itineraries)
+        
 
 if __name__ == "__main__":
     """Script de test"""
