@@ -17,6 +17,8 @@ class Autolib(Itinerary):
     def __init__(self, origin, destination, date=None, transit_mode_type=None, itinerary_index=0):
         Itinerary.__init__(self, origin, destination, date, transit_mode_type, itinerary_index)
         self.transport_mode = "autolib"
+        self.price = "Pour 10€/mois vous disposez d’une voiture 24H/7J, et de la location au meilleur prix. + +0,23€/ minute soit 4,66€ pour 20 minutes d’utilisation. Voir site pour détails sur d'autres abonnements"
+
 
         # Station autolib d'origine
         stop = True
