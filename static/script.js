@@ -72,6 +72,7 @@ function GetItineraires(){
         	},
         dataType: "json"
     	})}
+}
 
 
 $(document).ready(TypeUtilisateur)
