@@ -73,7 +73,7 @@ class Suggested_Itineraries:
                                                              'lat': self._itinerary.destination.lat,
                                                              'lng': self._itinerary.destination.lng}
             self._suggested_itineraries[option]['duration'] = transport_option.total_duration
-            self._suggested_itineraries[option]['polyline'] = transit_option.total_polyline
+            self._suggested_itineraries[option]['polyline'] = transport_option.total_polyline
             self._suggested_itineraries[option]['instructions'] = repr(transport_option)
 
             if transport_option is 'driving':
@@ -85,7 +85,8 @@ class Suggested_Itineraries:
 
             if transport_option is 'uber':
                 self._suggested_itineraries[option]['wait_time'] = transport_option.uber_wait_duration
-
+                #on utilise le polyline driving ici pour uber
+                self._suggested_itineraries[option]['polyline'] = driving_option.total_polyline
         
 
 if __name__ == "__main__":
