@@ -10,8 +10,7 @@ $("#connecter").click(function(){
     --call-back function?--
 }); 
 */
-
-
+const ROOT = window.location.href
 
 function TypeUtilisateur() {
 	$(".dropdown-menu li a").click(function(){
@@ -58,15 +57,25 @@ var itineraire={
 }
 
 function GetItineraires(){
-	itineraire.origine = $('#origine').val();
-	itineraire.destination = $('#destination').val();
-	console.log("origine set to: " + itineraire.origine)
-	console.log("destination set to: " + itineraire.destination)
+	console.log(preferences.type)
+	$.ajax({
+        url: ROOT + 'itineraire',
+        data: {
+            TypeUser: preferences.type,
+            P_Permis: preferences.P_Permis,
+            P_Meteo: preferences.P_Meteo,
+            P_Charge: preferences.P_Charge,
+            origine: $('#origine').val(),
+            destination: $('#destination').val()
+        },
+        success: function (data) {
+            console.log(data);
+            $("#intro_itineraire"
+            ).html("Basé sur vos préférences, nous avons calculé 3 trajets afin de vous rendre à ")
+        	},
+        dataType: "json"
+    	})}
 
-	$("#intro_itineraire"
-		).html("Basé sur vos préférences, nous avons calculé 3 trajets afin de vous rendre à "+ itineraire.destination)
-
-}
 
 // Variables de test
 var suggested_itineraries={
@@ -154,4 +163,4 @@ function PrintItinerariesOnMap(suggested_itineraries){
 }
 
 
-$(document).ready(TypeUtilisateur)
+$(document).ready(TypeUtilisateur,GetItineraires)
