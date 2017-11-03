@@ -8,9 +8,10 @@ $("#connecter").click(function(){
         FirstName: $('#FirstName').val()
     },
     --call-back function?--
-}); 
+});
 */
 const ROOT = window.location.href
+
 
 function TypeUtilisateur() {
 	$(".dropdown-menu li a").click(function(){
@@ -51,13 +52,7 @@ $(function() {
 })
 
 
-var itineraire={
-	origine: "",
-	destination: ""
-}
-
 function GetItineraires(){
-	console.log(preferences.type)
 	$.ajax({
         url: ROOT + 'itineraire',
         data: {
@@ -76,6 +71,9 @@ function GetItineraires(){
         dataType: "json"
     	})}
 
+
+$(document).ready(TypeUtilisateur)
+$(window).load(GetItineraires)
 
 // Variables de test
 var suggested_itineraries={
@@ -161,6 +159,3 @@ function PrintItinerariesOnMap(suggested_itineraries){
 	});
 
 }
-
-
-$(document).ready(TypeUtilisateur,GetItineraires)
