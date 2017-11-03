@@ -31,7 +31,7 @@ class Suggested_Itineraries:
         self._suggested_itineraries = []
         self._number_of_option = 0
 
-        for itinerary_options, option in enumerate(self._user.preferences):
+        for option in self._user.preferences:
 
             # dans nos autres codes, on se limite à 3 propositions de trajet... Je prends tout ici, mettre un while <3 si besoin
             if option == 'transit':
@@ -61,20 +61,20 @@ class Suggested_Itineraries:
                 bicycling_option = Bicycling(origin=self._itinerary.origin, destination=self._itinerary.destination)
                 self._suggested_options.append(['bicycling', bicycling_option])
 
-        for option, transport_option_info in enumerate(self._suggested_options):
+        for option_nb, transport_option_info in enumerate(self._suggested_options):
             transport_nom = transport_option_info[0]
             transport_option = transport_option_info[1]
             self._suggested_itineraries.append({})
-            self._suggested_itineraries[option]['transport_type'] = transport_nom
-            self._suggested_itineraries[option]['origin'] = {'address': self._itinerary.origin.address,
+            self._suggested_itineraries[option_nb]['transport_type'] = transport_nom
+            self._suggested_itineraries[option_nb]['origin'] = {'address': self._itinerary.origin.address,
                                                              'lat': self._itinerary.origin.lat,
                                                              'lng': self._itinerary.origin.lng}
-            self._suggested_itineraries[option]['destination'] = {'address': self._itinerary.destination.address,
+            self._suggested_itineraries[option_nb]['destination'] = {'address': self._itinerary.destination.address,
                                                                   'lat': self._itinerary.destination.lat,
                                                                   'lng': self._itinerary.destination.lng}
-            self._suggested_itineraries[option]['duration'] = transport_option.total_duration
-            self._suggested_itineraries[option]['polyline'] = transport_option.total_polyline
-            self._suggested_itineraries[option]['instructions'] = repr(transport_option)
+            self._suggested_itineraries[option_nb]['duration'] = transport_option.total_duration
+            self._suggested_itineraries[option_nb]['polyline'] = transport_option.total_polyline
+            self._suggested_itineraries[option_nb]['instructions'] = repr(transport_option)
 
             if transport_option is 'driving':
                 self._suggested_itineraries[option]['distance'] = transport_option.driving_distance
