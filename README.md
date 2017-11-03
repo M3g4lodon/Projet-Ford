@@ -1,5 +1,15 @@
 # Projet-Ford
 
+NB: nouvelle structure
+-static: ensemble des javascripts, css
+-templates: page Home.html
+-code: code fini à inclure dans le pacakge final
+-app.py: serveur qui a besoin d'etre tout seul
+-README: explications
+
+-WIP: fichiers codes à trier ou en travaux 
+
+
 ## Présentation
 ### Problème posé
 ### Notre vision
