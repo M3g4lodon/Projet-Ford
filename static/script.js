@@ -73,7 +73,7 @@ function GetItineraires(){
 }
 
 
-$(document).ready(TypeUtilisateur)
+
 
 // Variables de test
 var suggested_itineraries={
@@ -113,7 +113,7 @@ function initMap() {
 
 // Affiche les 3 itinéraires sur la carte, ainsi que le départ et l'arrivée
 function PrintItinerariesOnMap(suggested_itineraries){
-    var polyline_encoded_1 = suggested_itineraries.results[0].polyline_encoded
+  var polyline_encoded_1 = suggested_itineraries.results[0].polyline_encoded
 	var polyline_decoded_1=google.maps.geometry.encoding.decodePath(polyline_encoded_1);
 	var itinerary_1= new google.maps.Polyline({
 		path:polyline_decoded_1,
@@ -124,7 +124,7 @@ function PrintItinerariesOnMap(suggested_itineraries){
 		map:map
 	});
 
-    var polyline_encoded_2 = suggested_itineraries.results[1].polyline_encoded
+  var polyline_encoded_2 = suggested_itineraries.results[1].polyline_encoded
 	var polyline_decoded_2=google.maps.geometry.encoding.decodePath(polyline_encoded_2);
 	var itinerary_2= new google.maps.Polyline({
 		path:polyline_decoded_2,
@@ -135,7 +135,7 @@ function PrintItinerariesOnMap(suggested_itineraries){
 		map:map
 	});
 
-    var polyline_encoded_3 = suggested_itineraries.results[2].polyline_encoded
+  var polyline_encoded_3 = suggested_itineraries.results[2].polyline_encoded
 	var polyline_decoded_3=google.maps.geometry.encoding.decodePath(polyline_encoded_3);
 	var itinerary_3= new google.maps.Polyline({
 		path:polyline_decoded_3,
@@ -157,4 +157,12 @@ function PrintItinerariesOnMap(suggested_itineraries){
 		map: map
 	});
 
+	var newCenter={
+		lat : (suggested_itineraries.origin.lat+suggested_itineraries.destination.lat)/2,
+		lng:(suggested_itineraries.origin.lng+suggested_itineraries.destination.lng)/2
+	};
+
+	map.setCenter(newCenter);
 }
+
+$(document).ready(TypeUtilisateur);
