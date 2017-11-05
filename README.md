@@ -10,7 +10,7 @@ Navigateur possible pour l'interface Graphique : Mozilla Firefox 56
 ## Démarrage
 Lancer app.py 
 
-Puis rendez vous sur http://127.0.0.1:5000/ avec notre navigateur préféré
+Puis rendez vous sur http://127.0.0.1:5000/ avec votre navigateur préféré
 
 NB: nouvelle structure
 - static: ensemble des javascripts, css  
