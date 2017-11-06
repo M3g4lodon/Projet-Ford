@@ -92,7 +92,7 @@ def Suggested_Itineraries(user, itinerary):
             suggested_itineraries[option]['polyline'] = driving_option.total_polyline
 
     weather = user.preferences_with_weather(datetime.date.today())
-    suggested_itineraries.append({'weather': weather[0]})
+    suggested_itineraries.append({'weather': weather})
 
     return suggested_itineraries
 
