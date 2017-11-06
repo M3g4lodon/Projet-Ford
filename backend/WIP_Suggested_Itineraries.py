@@ -92,7 +92,7 @@ def Suggested_Itineraries(user, itinerary):
             suggested_itineraries[option]['polyline'] = driving_option.total_polyline
 
     weather = user.preferences_with_weather(datetime.date.today())
-    suggested_itineraries.append({'weather': weather})
+    suggested_itineraries.append({'weather': weather[0]})
 
     return suggested_itineraries
 
@@ -102,5 +102,5 @@ if __name__ == "__main__":
     origin = Place("10 rue oswaldo cruz paris")
     destination = Place("La villette paris")
     iti = Itinerary(origin=origin, destination=destination)
-    pierre = User()
+    pierre = User('Touriste',True,True,True)
     Suggested_Itineraries(pierre, iti)
