@@ -29,7 +29,7 @@ class Itinerary:
         self._id = Itinerary.__route_id
         Itinerary.__route_id += 1
 
-        #Vérification que les points de départ et d'arrivée sont des objets accetapbles.
+        # Vérification que les points de départ et d'arrivée sont des objets accetapbles.
         if isinstance(origin, Place):
             self._origin = origin
         else:
@@ -78,7 +78,6 @@ class Itinerary:
         self._total_polyline = ""
         self._price = None
 
-
     #
     @property
     def id(self):
@@ -105,7 +104,6 @@ class Itinerary:
             self._destination = value
         else:
             raise TypeError("The destination variable should be an object from the class Place.")
-
 
     @property
     def transport_mode(self):
@@ -137,7 +135,7 @@ class Itinerary:
 
     @transit_mode_type.setter
     def transit_mode_type(self, value):
-        if value in Itinerary.__TRANSIT_MODE_TYPES :
+        if value in Itinerary.__TRANSIT_MODE_TYPES:
             self._transit_mode_type = value
         elif not isinstance(value, str):
             raise TypeError("Was expecting a chain of characters for the transport mode type.")
