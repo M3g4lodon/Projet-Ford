@@ -32,16 +32,17 @@ class Test(TestCase):
     """Teste toutes les fonction du projet Ford"""
 
     def test_place(self):
-        somewhere = Place(address="1 rue Joliot Curie, 91190 Gif-sur-Yvette")
-        self.assertEqual(somewhere.address, "1 rue Joliot Curie, 91190 Gif-sur-Yvette")
-        self.assertEqual(somewhere.lng, 2.1632833)
-        self.assertEqual(somewhere.lat, 48.7100841)
+        somewhere = Place(address="3 rue Rivoli")
+        self.assertEqual(somewhere.address, "3 rue Rivoli Paris")
+        self.assertAlmostEqual(somewhere.lat, 48.8555654)
+        self.assertAlmostEqual(somewhere.lng, 2.3589835)
+
 
     def test_itinerary_date(self):
         origin = random_place_in_paris()
         destination = random_place_in_paris()
         itinerary = Itinerary(origin=origin, destination=destination, date=datetime.now() + timedelta(days=1))
-        self.assertEqual(itinerary.date.date(), datetime.now() + timedelta(days=1))
+        self.assertAlmostEqual(itinerary.date, datetime.now() + timedelta(days=1))
         itinerary1 = Itinerary(origin=origin, destination=destination)
         self.assertAlmostEqual(itinerary1.date, datetime.now())
 

@@ -4,7 +4,6 @@
 
 import requests
 
-
 class Place:
     """Specifies a geographical location"""
 
@@ -14,7 +13,7 @@ class Place:
         # Cas où le lieu est ma spécifié
         if address is None and (lat is None or lng is None):
             self._address = "Paris, France"
-        self._address = address
+        self._address = Place.address_in_paris(address)
         self._lat = lat
         self._lng = lng
 
@@ -26,7 +25,7 @@ class Place:
 
     @address.setter
     def address(self, value):
-        self._address = value
+        self._address = Place.address_in_paris(value)
 
     @property
     def lat(self):
@@ -66,6 +65,15 @@ class Place:
         url_request = Place.__URL_API_GEOCODE + "&latlng=" + str(self.lat) + "," + str(self.lng)
         raw_data = requests.get(url_request).json()
         self.address = raw_data['results'][0]['formatted_address']
+
+    @staticmethod
+    def address_in_paris(address):
+        res = address
+        if address != None:
+            if "paris" not in address.lower():
+                res += " Paris"
+        return res
+
 
     def __repr__(self):
         res = ""
