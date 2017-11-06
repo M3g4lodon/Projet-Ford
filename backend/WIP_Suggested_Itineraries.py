@@ -96,7 +96,7 @@ def Suggested_Itineraries(user, itinerary):
 
 
     weather = preferences_with_weather(datetime.date.today())
-    suggested_itineraries.append({'weather': weather)
+    suggested_itineraries.append({'weather': weather})
 
     return suggested_itineraries
 
