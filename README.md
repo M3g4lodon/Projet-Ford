@@ -15,7 +15,7 @@ Puis rendez vous sur http://127.0.0.1:5000/ avec votre navigateur préféré
 NB: nouvelle structure
 - static: ensemble des javascripts, css  
 - templates: page Home.html  
-- code: code fini à inclure dans le package final  
+- backend: code fini à inclure dans le package final  
 - app.py: serveur qui a besoin d'etre tout seul  
 - README: explications  
 
