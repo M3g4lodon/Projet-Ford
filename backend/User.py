@@ -90,28 +90,28 @@ class User:
         self._preferences = value
 
     def set_preferences(self):
-        liste_base = list(User.__TYPES[self._type])
+        preferences = list(User.__TYPES[self._type])
         if self.type == "Personnalisé":
             print("Classez par ordre de préférence les modes de transport que vous souhaitez utiliser parmi les "
                   "suivants:\ntransit, walking, velib, autolib, driving")
             i = 0
             while i < 5:
                 choix = str(input('choix [{}]: '.format(i + 1))).lower()
-                while choix not in User.__TYPES['Défaut'] or choix in liste_base:
+                while choix not in User.__TYPES['Défaut'] or choix in preferences:
                     print(
                         "Désolé le mode de transport demandé n'est pas référencé ou a déjà été choisi. \nVous pouvez "
                         "choisir entre:transit, walking, velib, autolib, driving")
                     choix = str(input('choix [{}]: '.format(i + 1))).lower()
-                liste_base.append(choix)
+                preferences.append(choix)
                 i += 1
 
         if self.driving_license:
-            if 'autolib' in liste_base:
-                liste_base.remove('autolib')
+            if 'autolib' in preferences:
+                preferences.remove('autolib')
 
-        return liste_base
+        return preferences
 
-    def preferences_with_weather(self, date):
+    def weather(self, date):
         # 5 days forecast incl. temperature, weather,...
         url = "https://query.yahooapis.com/v1/public/yql"
         param = "q=select%20*%20from%20weather.forecast%20where%20woeid%20%3D615702%20and%20u%3D'c'&format=json" \
