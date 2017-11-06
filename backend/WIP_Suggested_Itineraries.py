@@ -5,6 +5,7 @@
 # TODO setters et getters
 # TODO rajouter des info comme le prix
 # TODO faire plus de tests pour voir si tout fonctionne
+
 import datetime
 
 from backend.Itinerary import Itinerary
@@ -19,10 +20,7 @@ from backend.Place import Place
 from backend.User import User
 
 
-
-
 def Suggested_Itineraries(user, itinerary):
-
     if isinstance(user, User):
         pass
     else:
@@ -38,7 +36,6 @@ def Suggested_Itineraries(user, itinerary):
     number_of_option = 0
 
     for option in user.preferences:
-
 
         if option == 'transit':
             transit_option = Transit(origin=itinerary.origin, destination=itinerary.destination)
@@ -94,9 +91,8 @@ def Suggested_Itineraries(user, itinerary):
             # on utilise le polyline driving ici pour uber
             suggested_itineraries[option]['polyline'] = driving_option.total_polyline
 
-
-    weather = preferences_with_weather(datetime.date.today())
-    suggested_itineraries.append({'weather': weather)
+    weather = user.preferences_with_weather(datetime.date.today())
+    suggested_itineraries.append({'weather': weather[0]})
 
     return suggested_itineraries
 
