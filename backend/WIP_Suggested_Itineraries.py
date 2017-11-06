@@ -15,8 +15,7 @@ from Itinerary_Uber import Uber
 from Itinerary_Velib import Velib
 from Itinerary_Walking import Walking
 from Place import Place
-from User import User
-from WIP_meteo_yahoo import meteo_jour
+from User import Use
 import datetime
 
 
@@ -95,7 +94,7 @@ def Suggested_Itineraries(user, itinerary):
             suggested_itineraries[option]['polyline'] = driving_option.total_polyline
 
 
-    weather = preferences_with_weather(datetime.date.today())
+    weather = user.preferences_with_weather(datetime.date.today())
     suggested_itineraries.append({'weather': weather})
 
     return suggested_itineraries
