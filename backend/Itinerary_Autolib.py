@@ -6,11 +6,11 @@ from datetime import timedelta
 
 import requests
 
-from Itinerary import BadRequest
-from Itinerary import Itinerary
-from Itinerary_Driving import Driving
-from Itinerary_Walking import Walking
-from Place import Place
+from backend.Itinerary import BadRequest
+from backend.Itinerary import Itinerary
+from backend.Itinerary_Driving import Driving
+from backend.Itinerary_Walking import Walking
+from backend.Place import Place
 
 
 class Autolib(Itinerary):

@@ -4,10 +4,10 @@
 
 import requests
 
-from Itinerary import BadRequest
-from Itinerary import Itinerary
-from Itinerary import QueryLimit
-from Place import Place
+from backend.Itinerary import BadRequest
+from backend.Itinerary import Itinerary
+from backend.Itinerary import QueryLimit
+from backend.Place import Place
 
 
 class Transit(Itinerary):

@@ -6,9 +6,9 @@ import math
 
 import requests
 
-from Itinerary import BadRequest
-from Itinerary import Itinerary
-from Place import Place
+from backend.Itinerary import BadRequest
+from backend.Itinerary import Itinerary
+from backend.Place import Place
 
 
 class Uber(Itinerary):

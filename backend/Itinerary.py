@@ -4,7 +4,7 @@
 import math
 from datetime import datetime
 
-from Place import Place
+from backend.Place import Place
 
 
 class Itinerary:

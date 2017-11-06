@@ -5,19 +5,19 @@
 # TODO setters et getters
 # TODO rajouter des info comme le prix
 # TODO faire plus de tests pour voir si tout fonctionne
-
-from Itinerary import Itinerary
-from Itinerary_Autolib import Autolib
-from Itinerary_Bicycling import Bicycling
-from Itinerary_Driving import Driving
-from Itinerary_Transit import Transit
-from Itinerary_Uber import Uber
-from Itinerary_Velib import Velib
-from Itinerary_Walking import Walking
-from Place import Place
-from User import User
-from WIP_meteo_yahoo import meteo_jour
 import datetime
+
+from backend.Itinerary import Itinerary
+from backend.Itinerary_Autolib import Autolib
+from backend.Itinerary_Bicycling import Bicycling
+from backend.Itinerary_Driving import Driving
+from backend.Itinerary_Transit import Transit
+from backend.Itinerary_Uber import Uber
+from backend.Itinerary_Velib import Velib
+from backend.Itinerary_Walking import Walking
+from backend.Place import Place
+from backend.User import User
+
 
 
 

@@ -6,11 +6,11 @@ from datetime import timedelta
 
 import requests
 
-from Itinerary import BadRequest
-from Itinerary import Itinerary
-from Itinerary_Bicycling import Bicycling
-from Itinerary_Walking import Walking
-from Place import Place
+from backend.Itinerary import BadRequest
+from backend.Itinerary import Itinerary
+from backend.Itinerary_Bicycling import Bicycling
+from backend.Itinerary_Walking import Walking
+from backend.Place import Place
 
 
 class Velib(Itinerary):
