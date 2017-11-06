@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from unittest import TestCase
 from random import uniform
 from datetime import datetime
