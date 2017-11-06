@@ -1,18 +1,22 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 import datetime
 import requests
 
 
 class User:
-    """Désigne un utilisateur du service, avec son type et son historique des recherches d'itinéraires"""
+    """Specifies a user, his type and his itinerary search history."""
 
     __user_id = 1
-    __TYPES = {"Défaut": ["transit", "walking", "velib", "autolib", "driving", "uber"],
-               "PMR": ["bus", "walking", "autolib", "driving", "uber"],
-               "Touriste": ["bus", "velib", "transit", "walking", "uber"],
-               "Cadre": ["driving", "walking", "uber"],
-               "Personnalisé": []}  # Liste des types d'utilisateur possibles
+    __TYPES = {"Default": ["transit", "walking", "velib", "autolib", "driving", "uber"],
+               "HANDI": ["bus", "walking", "autolib", "driving", "uber"],
+               "Tourist": ["bus", "velib", "transit", "walking", "uber"],
+               "Business": ["driving", "walking", "uber"],
+               "Customized ": []}  # Liste des types d'utilisateur possibles
 
-    def __init__(self, user_type="Défaut", driving_license=False):
+    def __init__(self, user_type="Default", driving_license=False):
         self._id = User.__user_id
         User.__user_id += 1
 
@@ -36,9 +40,9 @@ class User:
         if value in User.__TYPES.keys():
             self._type = value.keys()
         elif isinstance(value, str):
-            raise TypeError("Est attendue une chaine de caractère pour le type.")
+            raise TypeError("Was excpeted a chain of characters for the type.")
         else:
-            raise ValueError("La valeur en entrée n'est pas définie comme type possible.")
+            raise ValueError("The given value is not a known possible type.")
 
     @property
     def driving_license(self):
@@ -49,7 +53,7 @@ class User:
         if isinstance(value, bool):
             self._driving_license = value
         else:
-            raise TypeError("Est attendu un booléen pour la détente ou non du permis.")
+            raise TypeError("Was expecting a boolean for the Driver License.")
 
     @property
     def weather(self):
@@ -60,7 +64,7 @@ class User:
         if isinstance(value, bool):
             self._weather = value
         else:
-            raise TypeError("Est attendu un booléen pour la météo.")
+            raise TypeError("Was expecting a boolean for the weather.")
 
     @property
     def loaded(self):
@@ -71,7 +75,7 @@ class User:
         if isinstance(value, bool):
             self._loaded = value
         else:
-            raise TypeError("Est attendu un booléen pour savoir si la personne est chargé ou non.")
+            raise TypeError("Was expecting a boolean to know if the person is loaded or not.")
 
     @property
     def search_history(self):
@@ -90,6 +94,7 @@ class User:
         self._preferences = value
 
     def set_preferences(self):
+<<<<<<< HEAD:backend/User.py
         preferences = list(User.__TYPES[self._type])
         if self.type == "Personnalisé":
             print("Classez par ordre de préférence les modes de transport que vous souhaitez utiliser parmi les "
@@ -98,9 +103,18 @@ class User:
             while i < 5:
                 choix = str(input('choix [{}]: '.format(i + 1))).lower()
                 while choix not in User.__TYPES['Défaut'] or choix in preferences:
+=======
+        liste_base = list(User.__TYPES[self._type])
+        if self.type == "Customized":
+            print("Class by choice preference transport modes you wish to use among the following options :\ntransit, walking, velib, autolib, driving")
+            i = 0
+            while i < 5:
+                choix = str(input('Choice Number [{}]: '.format(i + 1))).lower()
+                while choix not in User.__TYPES['Default'] or choix in liste_base:
+>>>>>>> bdf3addc44af5317ba933cf7076acde05e9df8a2:code/User.py
                     print(
-                        "Désolé le mode de transport demandé n'est pas référencé ou a déjà été choisi. \nVous pouvez "
-                        "choisir entre:transit, walking, velib, autolib, driving")
+                        "Sorry, the asked transport mode isn't referenced or has already been selected. \nYou can select "
+                        "between: transit, walking, velib, autolib, driving")
                     choix = str(input('choix [{}]: '.format(i + 1))).lower()
                 preferences.append(choix)
                 i += 1
@@ -129,12 +143,12 @@ class User:
                 texte = forecast['text']
                 max_temp = forecast['high']
                 min_temp = forecast['low']
-                info = "Le temps sera: {}, la température comprise entre {} et {}°C.".format(texte, min_temp, max_temp)
+                info = "The weather will be: {}, with a high of {}°C and a low of {}°C.".format(texte, max_temp, min_temp)
 
                 if 19 <= code <= 34 or code == 36:
-                    resultat = "Tous les moyens de transport sont disponibles ! " + info
+                    resultat = "All available transport modes are good! " + info
                 else:
-                    resultat = "\nUtilisez les moyens de transport couverts. " + info
+                    resultat = "\nUse rain-free transport modes. " + info
                     pref = list(self.preferences)
                     if 'velib' in pref:
                         pref.remove('velib')
@@ -165,16 +179,16 @@ class User:
     # manque une fonction pour faire une recherche
 
     def __str__(self):
-        return "\nUtilisateur n°{}, de type {}. Son historique comporte {} recherche(s).\n".format(self.id, self.type,len(self.search_history))
+        return "\nUser Nb {}, type {}. His search history is comprised of {} search(s).\n".format(self.id, self.type,len(self.search_history))
 
 
 if __name__ == "__main__":
     """Script de test de la bonne construction des classes"""
 
     # Test des utilisateurs
-    charles = User("Touriste", False)
+    charles = User("Tourist", False)
     print(charles)
 
-    mathieu = User("Personnalisé", True)
+    mathieu = User("Customized", True)
     print(mathieu.preferences)
     print(mathieu)

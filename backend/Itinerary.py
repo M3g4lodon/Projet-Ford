@@ -1,16 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import math
 from datetime import datetime
 
 from Place import Place
 
 
-# TODO Prise en compte de l'ordre de préférence sur Autolib/velib (itinerary_index)
-# TODO Préférences
-# TODO intégration de la météo
-# TODO Routine de test d'itinéraire à Paris
-
 class Itinerary:
-    """Désigne un trajet entre deux points spécifiés dans la recherche d'itinéraires"""
+    """Gives a route between two specified points in the itinerary search."""
 
     __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib", "transit", "bicycling"]
 
@@ -31,40 +29,42 @@ class Itinerary:
         self._id = Itinerary.__route_id
         Itinerary.__route_id += 1
 
+        #Vérification que les points de départ et d'arrivée sont des objets accetapbles.
         if isinstance(origin, Place):
             self._origin = origin
         else:
-            raise TypeError("L'origine doit être un objet Place")
+            raise TypeError("The origin variable should be an object from the class Place.")
 
         if isinstance(destination, Place):
             self._destination = destination
         else:
-            raise TypeError("La destination doit être un objet Place")
+            raise TypeError("The destination variable should be an object from the class Place.")
 
-        # Par défaut, la date prise pour la recherche d'itinéraire est "Maintenant"
+        # Date: par défaut, la recherche d'itinéraire est "Maintenant"
         if date is None:
             self._date = datetime.now()
         elif isinstance(date, datetime):
             self._date = date
         else:
-            raise TypeError("La valeur attendue de la date doit être de type datetime.")
+            raise TypeError("The variable should be the same type as datetime in order to define the search date.")
 
+        # Vérification que le mode de transport est le bon
         if transit_mode_type in Itinerary.__TRANSIT_MODE_TYPES or transit_mode_type is None:
             self._transit_mode_type = transit_mode_type
         elif isinstance(transit_mode_type, str):
             raise ValueError(
-                "La valeur du type de transport en commun doit faire partie de la liste des valeurs possibles")
+                "The transit mode type should be part of the possible values available.")
         else:
             raise TypeError(
-                "La valeur d'un type de transport en commun doit être une chaine de caractères parmi la liste des "
-                "valeurs possible.")
+                "The transit mode type should be a chain of characters, part of the possible values available.")
 
+        # Vérification du numéro de l'itinéraire
         if isinstance(itinerary_index, int):
             self._itinerary_index = itinerary_index
         else:
-            raise TypeError("Un entier est attendu pour l'indice de l'itinéraire")
+            raise TypeError("Expected an integer for the index itinerary.")
 
-        # Valeur par défaut
+        # Valeur par défaut de différents attributs
         self._transport_mode = ""
         self._total_duration = 0
         self._walking_duration = 0
@@ -78,6 +78,8 @@ class Itinerary:
         self._total_polyline = ""
         self._price = None
 
+
+    #
     @property
     def id(self):
         return self._id
@@ -91,7 +93,7 @@ class Itinerary:
         if isinstance(value, Place):
             self._origin = value
         else:
-            raise TypeError("Une variable de type Place est attendue pour désigner l'origine.")
+            raise TypeError("The origin variable should be an object from the class Place.")
 
     @property
     def destination(self):
@@ -102,7 +104,8 @@ class Itinerary:
         if isinstance(value, Place):
             self._destination = value
         else:
-            raise TypeError("Une variable de type Place est attendue pour désigner la destination.")
+            raise TypeError("The destination variable should be an object from the class Place.")
+
 
     @property
     def transport_mode(self):
@@ -113,9 +116,9 @@ class Itinerary:
         if value in Itinerary.__TRANSPORT_MODES:
             self._transport_mode = value
         elif not isinstance(value, str):
-            raise TypeError("Est attendue une chaine de caractère pour le mode de transport.")
+            raise TypeError("Was expecting a chain of characters for the transport mode.")
         else:
-            raise ValueError("La valeur en entrée n'est pas un type de transport possible.")
+            raise ValueError("The value entered is not an available transport mode.")
 
     @property
     def date(self):
@@ -126,7 +129,7 @@ class Itinerary:
         if isinstance(value, datetime):
             self._date = value
         else:
-            raise TypeError("Une variable de type datetime est attendue pour désigner la date de la recherche.")
+            raise TypeError("The variable should be the same type as datetime in order to define the search date.")
 
     @property
     def transit_mode_type(self):
@@ -137,9 +140,9 @@ class Itinerary:
         if value in Itinerary.__TRANSIT_MODE_TYPES :
             self._transit_mode_type = value
         elif not isinstance(value, str):
-            raise TypeError("Est attendue une chaine de caractère pour le type de mode de transport.")
+            raise TypeError("Was expecting a chain of characters for the transport mode type.")
         else:
-            raise ValueError("La valeur en entrée n'est pas un type de transport possible.")
+            raise ValueError("The value entered is not an available transport mode type.")
 
     @property
     def itinerary_index(self):
@@ -161,7 +164,7 @@ class Itinerary:
         if isinstance(value, int):
             self._total_duration = value
         else:
-            raise TypeError("Une durée s'exprime en entier (Nombre de secondes)")
+            raise TypeError("A duration is an integer (in seconds).")
 
     @property
     def walking_duration(self):
@@ -172,7 +175,7 @@ class Itinerary:
         if isinstance(value, int):
             self._walking_duration = value
         else:
-            raise TypeError("Une durée s'exprime en entier (Nombre de secondes)")
+            raise TypeError("A duration is an integer (in seconds).")
 
     @property
     def walking_distance(self):
@@ -183,7 +186,7 @@ class Itinerary:
         if isinstance(value, int):
             self._walking_distance = value
         else:
-            raise TypeError("Une distance s'exprime en entier (Nombre de mètres)")
+            raise TypeError("A distance is an integer (in meters).")
 
     @property
     def bicycling_duration(self):
@@ -194,7 +197,7 @@ class Itinerary:
         if isinstance(value, int):
             self._bicycling_duration = value
         else:
-            raise TypeError("Une durée s'exprime en entier (Nombre de secondes)")
+            raise TypeError("A duration is an integer (in seconds).")
 
     @property
     def bicycling_distance(self):
@@ -205,7 +208,7 @@ class Itinerary:
         if isinstance(value, int):
             self._bicycling_distance = value
         else:
-            raise TypeError("Une distance s'exprime en entier (Nombre de mètres)")
+            raise TypeError("A distance is an integer (in meters).")
 
     @property
     def transit_duration(self):
@@ -216,7 +219,7 @@ class Itinerary:
         if isinstance(value, int):
             self._transit_duration = value
         else:
-            raise TypeError("Une durée s'exprime en entier (Nombre de secondes)")
+            raise TypeError("A duration is an integer (in seconds).")
 
     @property
     def driving_duration(self):
@@ -227,7 +230,7 @@ class Itinerary:
         if isinstance(value, int):
             self._driving_duration = value
         else:
-            raise TypeError("Une durée s'exprime en entier (Nombre de secondes)")
+            raise TypeError("A duration is an integer (in seconds).")
 
     @property
     def driving_distance(self):
@@ -238,7 +241,7 @@ class Itinerary:
         if isinstance(value, int):
             self._driving_distance = value
         else:
-            raise TypeError("Une distance s'exprime en entier (Nombre de mètres)")
+            raise TypeError("A distance is an integer (in meters).")
 
     @property
     def total_polyline(self):
@@ -249,7 +252,7 @@ class Itinerary:
         if isinstance(value, str):
             self._total_polyline = value
         else:
-            raise TypeError("Une polyline est une chaine de caractère")
+            raise TypeError("A polyline is a chain of characters.")
 
     @property
     def information_legs(self):
@@ -260,7 +263,7 @@ class Itinerary:
         if isinstance(value, list):
             self._information_legs = value
         else:
-            raise TypeError("Une distance s'exprime en entier (Nombre de mètres)")
+            raise TypeError("A distance is an integer (in meters).")
 
     @property
     def price(self):
@@ -271,11 +274,13 @@ class Itinerary:
         self._price = value
 
     def __str__(self):
-        res = "Itinéraire de {} à {}, ".format(self.origin, self.destination)
-        res += " en utilisant le mode de transport suivant : {}, le{}.".format(self._transport_mode, self.date)
+        '''Return an overview of your trip with must-know details.'''
+        res = "Itinerary departs from {} and arrives at {}, ".format(self.origin, self.destination)
+        res += " using the following transport mode : {}, on the {}.".format(self._transport_mode, self.date)
         return res
 
     def __repr__(self):
+        '''Returns a detailed summary of your trip.'''
         res = ""
         res += "Your itinerary will take place in  {} step(s) :".format(len(self.information_legs))
 

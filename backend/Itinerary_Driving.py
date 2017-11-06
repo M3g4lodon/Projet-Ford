@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 import requests
 
 from Itinerary import BadRequest
@@ -18,12 +22,13 @@ class Driving(Itinerary):
         url_request += "&origin=" + str(self.origin.lat) + "," + str(self.origin.lng)
         url_request += "&destination=" + str(self.destination.lat) + "," + str(self.destination.lng)
         r = requests.get(url_request)
+
         if r.status_code != 200:
             raise BadRequest(r.status_code)
         else:
             raw_data = r.json()
             if raw_data['status'] == "OVER_QUERY_LIMIT":
-                raise QueryLimit("Can't retieve any data from API (Walking)")
+                raise QueryLimit("Can't retieve any data from API (Driving)")
             else:
                 # on récupère les informations concernant les différentes étapes
                 steps = raw_data['routes'][self.itinerary_index]['legs'][0]['steps']

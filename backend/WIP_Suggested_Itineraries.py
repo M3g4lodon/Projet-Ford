@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 # TODO setters et getters
 # TODO rajouter des info comme le prix
 # TODO faire plus de tests pour voir si tout fonctionne
@@ -13,6 +17,8 @@ from Itinerary_Walking import Walking
 from Place import Place
 from User import User
 from WIP_meteo_yahoo import meteo_jour
+import datetime
+
 
 
 def Suggested_Itineraries(user, itinerary):
@@ -20,12 +26,12 @@ def Suggested_Itineraries(user, itinerary):
     if isinstance(user, User):
         pass
     else:
-        raise TypeError("L'utilisateur doit être un objet User")
+        raise TypeError("The destination variable should be an object from the class Place.")
 
     if isinstance(itinerary, Itinerary):
         pass
     else:
-        raise TypeError("L'origine doit être un objet Place")
+        raise TypeError("The origin variable should be an object from the class Place.")
 
     suggested_options = []
     suggested_itineraries = []
@@ -33,7 +39,7 @@ def Suggested_Itineraries(user, itinerary):
 
     for option in user.preferences:
 
-        # dans nos autres codes, on se limite à 3 propositions de trajet... Je prends tout ici, mettre un while <3 si besoin
+
         if option == 'transit':
             transit_option = Transit(origin=itinerary.origin, destination=itinerary.destination)
             suggested_options.append(['transit', transit_option])
@@ -88,10 +94,11 @@ def Suggested_Itineraries(user, itinerary):
             # on utilise le polyline driving ici pour uber
             suggested_itineraries[option]['polyline'] = driving_option.total_polyline
 
-    meteo = meteo_jour(user)
-    suggested_itineraries.append({'meteo': meteo})
 
-    return print(suggested_itineraries)
+    weather = preferences_with_weather(datetime.date.today())
+    suggested_itineraries.append({'weather': weather)
+
+    return suggested_itineraries
 
 
 if __name__ == "__main__":

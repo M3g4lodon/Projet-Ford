@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 import math
 
 import requests
@@ -20,13 +24,12 @@ class Uber(Itinerary):
             self._uber_type = uber_type
         elif isinstance(uber_type, str):
             raise ValueError(
-                "La valeur du type d'uber doit faire partie de la liste des valeurs possibles")
+                "The uber type must be a part of the possible uber vehicle options")
         elif uber_type is None:
             self._uber_type = "uberx"
         else:
             raise TypeError(
-                "La valeur d'un type d'uber doit être une chaine de caractères parmi la liste des "
-                "valeurs possible.")
+                "The uber type must be a chain of characters among the possible uber vehicle options available.")
 
         self._options_uber = []
         self._uber_wait_duration = 0
@@ -36,17 +39,20 @@ class Uber(Itinerary):
         # Code Spécifique à l'API UBER
         headers = {'Authorization': 'Token 1QTK0iskAoX7vFZ3Ir1j_NdqnADK7zXAF4GcaRLe', 'Accept-Language': 'en_US',
                    "Content-Type": "application/json"}
+        #PRICE API from Uber to get Price information
         url_request_price = Uber.__URL_UBER_PRICE
         url_request_price += 'start_latitude=' + str(self.origin.lat) + '&start_longitude=' + str(
             self.origin.lng) + '&end_latitude=' + str(self.destination.lat) + '&end_longitude=' + str(
             self.destination.lng)
+        r_price = requests.get(url=url_request_price, headers=headers)
+        
+        #TIME API from Uber to get Time information
         url_request_time = Uber.__URL_UBER_TIME
         url_request_time += 'start_latitude=' + str(self.origin.lat) + '&start_longitude=' + str(
             self.origin.lng) + '&end_latitude=' + str(self.destination.lat) + '&end_longitude=' + str(
             self.destination.lng)
-
-        r_price = requests.get(url=url_request_price, headers=headers)
         r_time = requests.get(url=url_request_time, headers=headers)
+
         if r_price.status_code != 200 or r_time.status_code != 200:
             raise BadRequest()
         else:
@@ -58,7 +64,7 @@ class Uber(Itinerary):
 
             # les estimations temps et prix ne sont pas toujours identiques.
             # On veut prendre l'intersection des deux.
-            # D'où la disjonction de cas un peu moche...
+            # D'où la disjonction de cas ...
 
             if len(options_price) <= len(options_time):
 
@@ -79,7 +85,7 @@ class Uber(Itinerary):
                         self._uber_travel_duration = self._options_uber[uber_option]['duration']
                         self.total_duration = self._uber_wait_duration + self._uber_travel_duration
                         self.driving_distance = int(self._options_uber[uber_option][
-                                                        'distance'] * 1610)  # l'appli renvoie des miles et non des km
+                                                        'distance'] * 1610)  # l'API renvoie des miles et non des km
 
             else:
                 for uber_option, option in enumerate(options_time):
@@ -100,7 +106,7 @@ class Uber(Itinerary):
                         self.total_duration = self._uber_wait_duration + self._uber_travel_duration
                         self.driving_distance = int(float(self._options_uber[uber_option][
                                                               'distance']) * 1610)
-                        # l'appli renvoie des miles et non des km
+                        # l'API renvoie des miles et non des km
 
             if self._uber_type not in self._available_options:
                 TypeError(

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 #Paris WOEID code is 615702 (documentation de l'API: https://developer.yahoo.com/weather/documentation.html)
 
 import requests

@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 from datetime import timedelta
 
 import requests
@@ -20,7 +24,7 @@ class Velib(Itinerary):
         Itinerary.__init__(self, origin, destination, date, transit_mode_type, itinerary_index)
         self.transport_mode = "velib"
         #prix velib de base - beaucoup de segmentation clients pour les tarifs...
-        self.price = "Pour 1,70€, le ticket 1 jour donne accès pendant 24h au service Vélib' avec les 30 premières minutes offertes à chaque déplacement. Au-delà de la première demi-heure, les tarifs de location s’appliquent"
+        self.price = "For 1,70€, the 1 day ticket gives you access to Velib' for 24h with the first 30min free of charge. Additional fares apply afterwards."
         # Station velib d'origine
         stop = True
         search_size = 1

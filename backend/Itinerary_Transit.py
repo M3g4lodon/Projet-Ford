@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 import requests
 
 from Itinerary import BadRequest
@@ -29,7 +33,7 @@ class Transit(Itinerary):
         else:
             raw_data = r.json()
             if raw_data['status'] == "OVER_QUERY_LIMIT":
-                raise QueryLimit("Can't retieve any data from API (Walking)")
+                raise QueryLimit("Can't retieve any data from API (Transit)")
             else:
                 steps = raw_data['routes'][self.itinerary_index]['legs'][0]['steps']
 
