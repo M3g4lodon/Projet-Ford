@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # Entry file to the server
 # To start the server, run the program, then open on your browser: http://localhost:5000/
 
@@ -23,4 +26,3 @@ def itinerary_search():
 
 if __name__=='__main__':
     app.run(debug=True)
-

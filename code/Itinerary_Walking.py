@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 import requests
 
 from Itinerary import BadRequest
@@ -35,7 +39,7 @@ class Walking(Itinerary):
                 self.walking_distance = 0
                 self.walking_duration = 0
 
-                self.information_legs = []  # Notre liste stockant nos étapes de trajet
+                self.information_legs = []  # Notre information_legs liste stockant nos étapes de trajet
 
                 # Parcours des étapes trouvées de notre trajet pour remplir
                 # notre liste de stockage self.information_legs

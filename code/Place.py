@@ -1,8 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 import requests
 
 
 class Place:
-    """Désigne un lieu géographique"""
+    """Specifies a geographical location"""
 
     __URL_API_GEOCODE = "https://maps.googleapis.com/maps/api/geocode/json?&key=AIzaSyDpVNzFcwgFfPJOK25P9NlMBL-YEe8bSow"
 
@@ -35,7 +39,7 @@ class Place:
         if isinstance(value, float):
             self._lat = value
         else:
-            raise TypeError("Un flottant est attendu pour la latitude")
+            raise TypeError("Expected a float for latitude.")
 
     @property
     def lng(self):
@@ -48,17 +52,17 @@ class Place:
         if isinstance(value, float):
             self._lng = value
         else:
-            raise TypeError("Un flottant est attendu pour la longitude")
+            raise TypeError("Expected a float for longitude.")
 
     def lat_lng_from_address(self):
-        """Calcule la latitude et la longitude de l'adresse d'origine"""
+        """Computes the latitude and the longitude of the address' origin."""
         url_request = Place.__URL_API_GEOCODE + "&address=" + self.address
         raw_data = requests.get(url_request).json()
         self.lat = raw_data['results'][0]['geometry']['location']['lat']
         self.lng = raw_data['results'][0]['geometry']['location']['lng']
 
     def address_from_lat_lng(self):
-        """calcule l'adresse associé à une latitude et une longitude"""
+        """Computes the address associated with the latitude and longitude."""
         url_request = Place.__URL_API_GEOCODE + "&latlng=" + str(self.lat) + "," + str(self.lng)
         raw_data = requests.get(url_request).json()
         self.address = raw_data['results'][0]['formatted_address']

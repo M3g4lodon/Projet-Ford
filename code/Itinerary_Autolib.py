@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 from datetime import timedelta
 
 import requests
@@ -16,8 +20,11 @@ class Autolib(Itinerary):
 
     def __init__(self, origin, destination, date=None, transit_mode_type=None, itinerary_index=0):
         Itinerary.__init__(self, origin, destination, date, transit_mode_type, itinerary_index)
+
         self.transport_mode = "autolib"
-        self.price = "Pour 10€/mois vous disposez d’une voiture 24H/7J, et de la location au meilleur prix. + +0,23€/ minute soit 4,66€ pour 20 minutes d’utilisation. Voir site pour détails sur d'autres abonnements"
+
+        #Prix indiqué sur le site autolib, indicatif
+        self.price = "For 10€/month you have access to a car 24/7, and the rent available at the best price. +0,23€/ minute. Head to the Autolib website for more information."
 
 
         # Station autolib d'origine
