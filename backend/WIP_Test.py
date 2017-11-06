@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from unittest import TestCase
+from datetime import datetime, timedelta
 from random import uniform
-from datetime import datetime
+from unittest import TestCase
 
-from backend.Place import Place
 from backend.Itinerary import Itinerary
 from backend.Itinerary_Autolib import Autolib
 from backend.Itinerary_Bicycling import Bicycling
@@ -14,6 +13,7 @@ from backend.Itinerary_Transit import Transit
 from backend.Itinerary_Uber import Uber
 from backend.Itinerary_Velib import Velib
 from backend.Itinerary_Walking import Walking
+from backend.Place import Place
 
 
 def random_place_in_paris():
@@ -40,10 +40,10 @@ class Test(TestCase):
     def test_itinerary_date(self):
         origin = random_place_in_paris()
         destination = random_place_in_paris()
-        itinerary = Itinerary(origin=origin, destination=destination,date=dat)
-        self.assertEqual(itinerary.date.date(), datetime.now().date())
-        itinerary = Itinerary(origin=origin, destination=destination)
-        self.assertAlmostEqual(itinerary.date,datetime.now())
+        itinerary = Itinerary(origin=origin, destination=destination, date=datetime.now() + timedelta(days=1))
+        self.assertEqual(itinerary.date.date(), datetime.now() + timedelta(days=1))
+        itinerary1 = Itinerary(origin=origin, destination=destination)
+        self.assertAlmostEqual(itinerary1.date, datetime.now())
 
     def test_bicycling(self):
         origin = random_place_in_paris()
