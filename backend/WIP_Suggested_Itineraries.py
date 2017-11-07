@@ -83,7 +83,7 @@ def Suggested_Itineraries(user, itinerary):
             suggested_itineraries[option]['distance'] = transport_option.driving_distance
         if transport_option is 'walking':
             suggested_itineraries[option]['distance'] = transport_option.walking_distance
-        if transit_option is 'bicycling':
+        if transport_option is 'bicycling':
             suggested_itineraries[option]['distance'] = transport_option.bicycling_distance
 
         if transport_option is 'uber':
