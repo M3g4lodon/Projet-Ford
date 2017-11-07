@@ -83,4 +83,4 @@ class Test(TestCase):
 
 
 if __name__ == "__main__":
-    pass
+    unittest.main()
