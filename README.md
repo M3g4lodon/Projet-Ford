@@ -1,11 +1,11 @@
-# Projet-Ford
+# Projet-Ford (S3): Comment y aller?
 
 ## Installation
 Version Python 3.+
 
 Importer la bibliothèque Flask sous Python `pip install Flask`
 
-Navigateur possible pour l'interface Graphique : Mozilla Firefox 56
+Navigateur sur lequel le travail a été testé: Mozilla Firefox 56
 
 ## Démarrage
 Lancer app.py 
@@ -22,9 +22,16 @@ NB: nouvelle structure
 - WIP: fichiers codes à trier ou en travaux  
 
 
-## Présentation
+## Présentation et Vision du Projet
+
+Groupe: Python 05
+Membres: Mathieu Series, Charles Jacquet et Pierre Monsel
+
+Notre projet répond à la problématique posée par l'énoncé S3. Nous calculons et affichons des itinéraires pour des utilisateurs. Chaque utilisateur peut définir ses propres préférences et les trajets proposés seront mis à jour. Nous souhaitions une interface pratique, lisible et fonctionnelle qui puissent au mieux traduire le travail effectué en backend.
+L'utilisateur peut choisir d'obtenir des trajets pour des transports en commun (bus et métro), la marche, la conduite, le vélib' ou l'autolib',le vélo ou un taxi. Les préférences utilisateurs (prédéfinies ou personnalisées) permettent d'affiner ce choix de trajet et afficher les itinéraires pertinents. 
+
 ### Problème posé
-### Notre vision
+
 
 ## Partie "Back-end" de recherche d'itinéraires
 ### API utilisé
