@@ -43,12 +43,10 @@ $(function() {
 
 
 function FormName(e) {
-  $(document).ready(function() {
     var Name = $("#Name").val();
     var FirstName = $("#FirstName").val();
-    var node = $("#Authentification");
+    var node = $("#Utilisateur");
     node.replaceWith($("<p>").text("Bonjour " + FirstName+ " " + Name));
-  })
 }
 
 function GetItineraires() {
@@ -170,9 +168,10 @@ function PrintItinerariesOnMap(suggested_itineraries) {
   map.setCenter(newCenter);
 }
 
-$(document).ready(TypeUtilisateur);
 $(document).ready(function() {
   $('#Authentification').submit(function(e) {
     e.preventDefault();
+    FormName();
   });
 })
+$(window).load(TypeUtilisateur)

@@ -31,14 +31,14 @@ footer {
   color: white;
   padding-top: 15px;
 }
-    
+
 /* On small screens, set height to 'auto' for sidenav and grid */
 @media screen and (max-width: 767px) {
   .sidenav {
         height: auto;
         padding: 15px;
       }
-  .row.content {height:auto;} 
+  .row.content {height:auto;}
 }
 
 
@@ -48,4 +48,8 @@ footer {
   width: 100%;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+#Utilisateur{
+  min-height: 200px;
 }
