@@ -18,10 +18,10 @@ from backend.Place import Place
 
 def random_place_in_paris():
     """return a random location in Paris"""
-    MAX_LAT = 48.90
-    MIN_LAT = 48.80
-    MAX_LNG = 2.41
-    MIN_LNG = 2.22
+    MAX_LAT = 48.87
+    MIN_LAT = 48.84
+    MAX_LNG = 2.295
+    MIN_LNG = 2.285
 
     rand_lat = uniform(MIN_LAT, MAX_LAT)
     rand_lng = uniform(MIN_LNG, MAX_LNG)

@@ -4,17 +4,44 @@
 
 import requests
 
+
 class Place:
     """Specifies a geographical location"""
 
     __URL_API_GEOCODE = "https://maps.googleapis.com/maps/api/geocode/json?&key=AIzaSyDpVNzFcwgFfPJOK25P9NlMBL-YEe8bSow"
+    __MAX_LAT = 48.90
+    __MIN_LAT = 48.80
+    __MAX_LNG = 2.41
+    __MIN_LNG = 2.22
 
     def __init__(self, address=None, lat=None, lng=None):
         # Cas où le lieu est ma spécifié
         if address is None and (lat is None or lng is None):
             self._address = "Paris, France"
         self._address = Place.address_in_paris(address)
-        self._lat = lat
+
+        if lat is not None:
+            if isinstance(lat, float):
+                if Place.__MIN_LAT < lat < Place.__MAX_LAT:
+                    self._lat = lat
+                else:
+                    raise BadLocation
+            else:
+                raise TypeError("A float number is expected for the latitude.")
+        else:
+            self._lat = None
+
+        if lng is not None:
+            if isinstance(lng, float):
+                if Place.__MIN_LNG < lng < Place.__MAX_LNG:
+                    self._lng = lng
+                else:
+                    raise BadLocation
+            else:
+                raise TypeError("A float number is expected for the longitude.")
+        else:
+            self._lng = None
+
         self._lng = lng
 
     @property
@@ -69,11 +96,10 @@ class Place:
     @staticmethod
     def address_in_paris(address):
         res = address
-        if address != None:
+        if address is not None:
             if "paris" not in address.lower():
                 res += " Paris"
         return res
-
 
     def __repr__(self):
         res = ""
@@ -85,6 +111,11 @@ class Place:
 
     def __str__(self):
         return self.address
+
+
+class BadLocation(Exception):
+    """The point you entered is not in Paris."""
+    pass
 
 
 if __name__ == "__main__":
