@@ -4,7 +4,7 @@
 # Entry file to the server
 # To start the server, run the program, then open on your browser: http://localhost:5000/
 
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, jsonify
 
 from backend.Itinerary import Itinerary
 from backend.Place import Place
@@ -22,9 +22,21 @@ def function():
 @app.route('/itineraire')
 def itinerary_search():
     TypeUser = request.args.get('TypeUser', 'Défaut')
-    P_Permis = request.args.get('P_Permis', "false")
-    P_Meteo = request.args.get('P_Meteo', "true")
-    P_Charge = request.args.get('P_Charge', "false")
+    P_Permis = request.args.get('P_Permis', False)
+    if P_Permis == "true":
+        P_Permis=True
+    else:
+        P_Permis=False
+    P_Meteo = request.args.get('P_Meteo', True)
+    if P_Meteo == "true":
+        P_Meteo=True
+    else:
+        P_Meteo=False
+    P_Charge = request.args.get('P_Charge', False)
+    if P_Charge == "true":
+        P_Charge=True
+    else:
+        P_Charge=False
 
     org = request.args.get('origine', "Champs de Mars")
     dest = request.args.get('destination', "Place de la Nation")
@@ -37,9 +49,11 @@ def itinerary_search():
     destination = Place(dest)
     iti = Itinerary(origin=origin, destination=destination)
     Utilisateur = User(TypeUser, driving_license=P_Permis, weather=P_Meteo, loaded=P_Charge)
-    print(Suggested_Itineraries(Utilisateur, iti))
+    resultat=Suggested_Itineraries(Utilisateur, iti)
 
-    return Response(status=200)
+    print(resultat)
+
+    return jsonify({"count": len(resultat), "resultat": resultat})
 
 
 if __name__ == '__main__':
