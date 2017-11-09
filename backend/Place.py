@@ -122,7 +122,7 @@ if __name__ == "__main__":
     """Script de test de la bonne construction des classes"""
 
     # Test des lieux
-    paris = Place(address="Paris")
+    paris = Place(address="bastille")
     print(paris)
     print("Pré-demande de coordonnées : " + str(paris))
     paris.lat_lng_from_address()

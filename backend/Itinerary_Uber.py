@@ -8,6 +8,7 @@ import requests
 
 from backend.Itinerary import BadRequest
 from backend.Itinerary import Itinerary
+from backend.Itinerary_Driving import Driving
 from backend.Place import Place
 
 
@@ -18,7 +19,7 @@ class Uber(Itinerary):
 
     def __init__(self, origin, destination, date=None, uber_type=None, transit_mode_type=None, itinerary_index=0):
         Itinerary.__init__(self, origin, destination, date, transit_mode_type, itinerary_index)
-        self.transit_mode = "uber"
+        self.transport_mode = "uber"
 
         if uber_type in Uber.__UBER_MODE_TYPES:
             self._uber_type = uber_type
@@ -107,7 +108,8 @@ class Uber(Itinerary):
                         self.driving_distance = int(float(self._options_uber[uber_option][
                                                               'distance']) * 1610)
                         # l'API renvoie des miles et non des km
-
+                self.total_polyline = Driving(origin, destination, date, transit_mode_type,
+                                              itinerary_index).total_polyline
             if self._uber_type not in self._available_options:
                 TypeError(
                     "The Uber option you selected isn't available. Please select another option or try again later.")

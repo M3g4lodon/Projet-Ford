@@ -34,7 +34,7 @@ class Driving(Itinerary):
                 steps = raw_data['routes'][self.itinerary_index]['legs'][0]['steps']
 
                 self.total_duration = raw_data['routes'][self.itinerary_index]['legs'][0]['duration']['value']
-                self.total_polyline = raw_data['routes'][self.itinerary_index]['overview_polyline']['points']
+                self.total_polyline = [raw_data['routes'][self.itinerary_index]['overview_polyline']['points']]
 
                 self.walking_distance = 0
                 self.walking_duration = 0

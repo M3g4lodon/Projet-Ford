@@ -124,8 +124,8 @@ class Autolib(Itinerary):
         self.driving_duration = autolib.driving_duration
         self.driving_distance = autolib.driving_distance
         self.total_polyline = fastest_path_origin.total_polyline \
-                              + "\\" + autolib.total_polyline \
-                              + "\\" + fastest_path_destination.total_polyline
+                              + autolib.total_polyline \
+                              + fastest_path_destination.total_polyline
         self.information_legs = fastest_path_origin.information_legs \
                                 + autolib.information_legs \
                                 + fastest_path_destination.information_legs

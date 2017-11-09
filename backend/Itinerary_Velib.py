@@ -116,9 +116,8 @@ class Velib(Itinerary):
                                 + fastest_path_destination.transit_duration
         self.velib_duration = velib.bicycling_duration
         self.velib_distance = velib.bicycling_distance
-        self.total_polyline = fastest_path_origin.total_polyline \
-                              + "\\" + velib.total_polyline \
-                              + "\\" + fastest_path_destination.total_polyline
+        self.total_polyline = fastest_path_origin.total_polyline + velib.total_polyline \
+                              + fastest_path_destination.total_polyline
         self.information_legs = fastest_path_origin.information_legs \
                                 + velib.information_legs \
                                 + fastest_path_destination.information_legs

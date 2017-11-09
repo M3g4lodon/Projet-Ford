@@ -53,7 +53,7 @@ def itinerary_search():
 
     print(resultat)
 
-    return jsonify({"count": len(resultat), "resultat": resultat})
+    return jsonify(resultat)
 
 
 if __name__ == '__main__':

@@ -10,7 +10,7 @@ from backend.Place import Place
 class Itinerary:
     """Gives a route between two specified points in the itinerary search."""
 
-    __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib", "transit", "bicycling"]
+    __TRANSPORT_MODES = ["walking", "driving", "velib", "autolib", "transit", "bicycling", "uber"]
 
     __TRANSIT_MODE_TYPES = ["bus", "subway", "train", "tram", "rail", "bus|rail"]
     # Liste des modes de transport possibles
@@ -75,7 +75,7 @@ class Itinerary:
         self._driving_distance = 0
         self._transit_duration = 0
         self._information_legs = []
-        self._total_polyline = ""
+        self._total_polyline = []
         self._price = None
 
     #
@@ -247,10 +247,10 @@ class Itinerary:
 
     @total_polyline.setter
     def total_polyline(self, value):
-        if isinstance(value, str):
+        if isinstance(value, list):
             self._total_polyline = value
         else:
-            raise TypeError("A polyline is a chain of characters.")
+            raise TypeError("A polyline is a list of strings.")
 
     @property
     def information_legs(self):

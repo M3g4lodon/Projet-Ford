@@ -50,26 +50,27 @@ function FormName(e) {
 }
 
 
-function DisplayInfo(data){
-    console.log(data.resultat);
+function DisplayInfo(data) {
+  console.log(data);
 
-    $("#LoadingGIF").remove()
+  $("#LoadingGIF").remove();
 
-    if (data.resultat.length == 5) {$("#meteo").text("Météo aujourd'hui: "+data.resultat[4]["weather"])};
+  $("#meteo").text("Météo aujourd'hui: " + data.weather);
 
-    $("#intro_itineraire").html("Voici les 3 itinéraires que notre algorithme a choisi avec amour pour aller à "
-        + data.resultat[0]['destination']['address']
-        +". Pour information, voici une idée d'un trajet avec Uber:<br> "
-        +data.resultat[3]["instructions"]);
+  /*$("#intro_itineraire").html("Voici les 3 itinéraires que notre algorithme a choisi avec amour pour aller à "
+      + data.destination.address]
+      +". Pour information, voici une idée d'un trajet avec Uber:<br> "
+      +data.results[3]["instructions"]);
+  */
+  $("#TransMod1").html(data.results[0]['transport_type']);
+  $("#contenu1").html(data.results[0]['instructions']);
 
-    $("#TransMod1").html(data.resultat[0]['transport_type']);
-    $("#contenu1").html(data.resultat[0]['instructions']);
+  $("#TransMod2").html(data.results[1]['transport_type']);
+  $("#contenu2").html(data.results[1]['instructions']);
 
-    $("#TransMod2").html(data.resultat[1]['transport_type']);
-    $("#contenu2").html(data.resultat[1]['instructions']);
-
-    $("#TransMod3").html(data.resultat[2]['transport_type']);
-    $("#contenu3").html(data.resultat[2]['instructions']);
+  $("#TransMod3").html(data.results[2]['transport_type']);
+  $("#contenu3").html(data.results[2]['instructions']);
+  PrintItinerariesOnMap(data);
 }
 
 function GetItineraires() {
@@ -133,37 +134,43 @@ function initMap() {
 
 // Affiche les 3 itinéraires sur la carte, ainsi que le départ et l'arrivée
 function PrintItinerariesOnMap(suggested_itineraries) {
-  var polyline_encoded_1 = suggested_itineraries.results[0].polyline_encoded
-  var polyline_decoded_1 = google.maps.geometry.encoding.decodePath(polyline_encoded_1);
-  var itinerary_1 = new google.maps.Polyline({
-    path: polyline_decoded_1,
-    geodesic: true,
-    strokeColor: '#283EA4',
-    strokeOpacity: 1.0,
-    strokeWeight: 2.5,
-    map: map
+
+  var polylines_encoded_0 = suggested_itineraries.results[0].polyline_encoded
+  polylines_encoded_0.forEach(function(polyline) {
+    var polyline_decoded = google.maps.geometry.encoding.decodePath(polyline);
+    var itinerary = new google.maps.Polyline({
+      path: polyline_decoded,
+      geodesic: true,
+      strokeColor: '#283EA4',
+      strokeOpacity: 1.0,
+      strokeWeight: 2.5,
+      map: map
+    });
   });
 
-  var polyline_encoded_2 = suggested_itineraries.results[1].polyline_encoded
-  var polyline_decoded_2 = google.maps.geometry.encoding.decodePath(polyline_encoded_2);
-  var itinerary_2 = new google.maps.Polyline({
-    path: polyline_decoded_2,
-    geodesic: true,
-    strokeColor: '#286090',
-    strokeOpacity: 1.0,
-    strokeWeight: 2,
-    map: map
+  var polylines_encoded_1 = suggested_itineraries.results[1].polyline_encoded
+  polylines_encoded_1.forEach(function(polyline) {
+    var polyline_decoded = google.maps.geometry.encoding.decodePath(polyline);
+    var itinerary = new google.maps.Polyline({
+      path: polyline_decoded,
+      geodesic: true,
+      strokeColor: '#BBBBBB',
+      strokeOpacity: 1.0,
+      strokeWeight: 2.5,
+      map: map
+    });
   });
-
-  var polyline_encoded_3 = suggested_itineraries.results[2].polyline_encoded
-  var polyline_decoded_3 = google.maps.geometry.encoding.decodePath(polyline_encoded_3);
-  var itinerary_3 = new google.maps.Polyline({
-    path: polyline_decoded_3,
-    geodesic: true,
-    strokeColor: '#286090',
-    strokeOpacity: 1.0,
-    strokeWeight: 2,
-    map: map
+  var polylines_encoded_2 = suggested_itineraries.results[2].polyline_encoded
+  polylines_encoded_2.forEach(function(polyline) {
+    var polyline_decoded = google.maps.geometry.encoding.decodePath(polyline);
+    var itinerary = new google.maps.Polyline({
+      path: polyline_decoded,
+      geodesic: true,
+      strokeColor: 'CCCCCC',
+      strokeOpacity: 1.0,
+      strokeWeight: 2.5,
+      map: map
+    });
   });
 
 
