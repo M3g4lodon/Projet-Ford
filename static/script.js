@@ -1,13 +1,13 @@
 "use script";
 
-const ROOT = "http://localhost:5000/" /* idealement on utilise ça: window.location.href, mais ça marche pas */
+const ROOT = "http://127.0.0.1:5000/" /* idealement on utilise ça: window.location.href, mais ça marche pas */
 
 
 function TypeUtilisateur() {
   $(".dropdown-menu li a").click(function() {
-    var selText = $(this).text()
-    $(this).parents('.btn-group').find('.dropdown-toggle').html(selText + ' <span class="caret"></span>');
-    preferences.type = selText
+    var selText = $(this).text();
+    $(this).parents('.btn-group').find('.dropdown-toggle').html(selText + '<span class="caret"></span>');
+    preferences.type = selText;
     console.log("type set to: " + preferences.type)
   });
 }
@@ -16,29 +16,29 @@ var preferences = {
   P_Permis: "false",
   P_Meteo: "true",
   P_Charge: "false"
-}
+};
 
 $(function() {
   $('#P_Permis').change(function() {
-    var state = $(this).prop('checked')
-    preferences.P_Permis = state
+    var state = $(this).prop('checked');
+    preferences.P_Permis = state;
     console.log("permis set to: " + state)
   })
-})
+});
 $(function() {
   $('#P_Meteo').change(function() {
-    var state = $(this).prop('checked')
-    preferences.P_Meteo = state
+    var state = $(this).prop('checked');
+    preferences.P_Meteo = state;
     console.log("meteo set to: " + state)
   })
-})
+});
 $(function() {
   $('#P_Charge').change(function() {
-    var state = $(this).prop('checked')
-    preferences.P_Charge = state
+    var state = $(this).prop('checked');
+    preferences.P_Charge = state;
     console.log("charge set to: " + state)
   })
-})
+});
 
 
 
@@ -49,7 +49,31 @@ function FormName(e) {
   node.replaceWith($("<p>").text("Bonjour " + FirstName + " " + Name));
 }
 
+
+function DisplayInfo(data){
+    console.log(data.resultat);
+
+    $("#LoadingGIF").remove()
+
+    if (data.resultat.length == 5) {$("#meteo").text("Météo aujourd'hui: "+data.resultat[4]["weather"])};
+
+    $("#intro_itineraire").html("Voici les 3 itinéraires que notre algorithme a choisi avec amour pour aller à "
+        + data.resultat[0]['destination']['address']
+        +". Pour information, voici une idée d'un trajet avec Uber:<br> "
+        +data.resultat[3]["instructions"]);
+
+    $("#TransMod1").html(data.resultat[0]['transport_type']);
+    $("#contenu1").html(data.resultat[0]['instructions']);
+
+    $("#TransMod2").html(data.resultat[1]['transport_type']);
+    $("#contenu2").html(data.resultat[1]['instructions']);
+
+    $("#TransMod3").html(data.resultat[2]['transport_type']);
+    $("#contenu3").html(data.resultat[2]['instructions']);
+}
+
 function GetItineraires() {
+  $("#loading").prepend('<img id="LoadingGIF" src="/static/loading.gif" />');
   $.ajax({
     url: ROOT + 'itineraire',
     data: {
@@ -60,10 +84,7 @@ function GetItineraires() {
       origine: $('#origine').val(),
       destination: $('#destination').val()
     },
-    success: function(data) {
-      console.log(data);
-      $("#intro_itineraire").html("Basé sur vos préférences, nous avons calculé 3 trajets afin de vous rendre à ")
-    },
+    success: DisplayInfo,
     dataType: "json"
   })
 }
@@ -175,5 +196,5 @@ $(document).ready(function() {
     e.preventDefault();
     FormName();
   });
-})
-$(window).load(TypeUtilisateur)
+});
+$(document).ready(TypeUtilisateur);
