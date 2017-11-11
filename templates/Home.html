@@ -128,7 +128,7 @@
 						</div>
 						<div class="form-group">
 						    <div class="col-sm-offset-5 col-sm-11">
-						      <button type="submit" class="btn btn-default" onclick="GetItineraires();return false;">Rechercher</button>
+						      <button type="submit" class="btn btn-default" onclick="GetItineraires(); return false" id="SearchButton">Rechercher</button>
                             </div>
                             <div class="col-sm-offset-5 col-sm-11" id="loading">
                             </div>
@@ -149,15 +149,15 @@
 
 					<div class="tab-content">
 					    <div id="trajet1" class="tab-pane fade in active" style="overflow:auto; height:300px;">
-					      <h3>Trajet 1 - mode de transport: <span id="TransMod1"></span></h3>
+					      <h3 style="color:forestgreen">Trajet 1 - mode de transport: <span id="TransMod1"></span></h3>
 					      <p> <span id="contenu1"></span> </p>
 					    </div>
 					    <div id="trajet2" class="tab-pane fade" style="overflow:auto; height:300px;">
-					      <h3>Trajet 2 - mode de transport: <span id="TransMod2"></span></h3>
+					      <h3 style="color:darkred">Trajet 2 - mode de transport: <span id="TransMod2"></span></h3>
 					      <p> <span id="contenu2"> </span></p>
 					    </div>
 					    <div id="trajet3" class="tab-pane fade" style="overflow:auto; height:300px;">
-					      <h3>Trajet 3 - mode de transport: <span id="TransMod3"></span></h3>
+					      <h3 style="color:darkblue">Trajet 3 - mode de transport: <span id="TransMod3"></span></h3>
 					      <p> <span id="contenu3"></span> </p>
 					    </div>
 					</div>
