@@ -2,7 +2,6 @@
 
 const ROOT = "http://127.0.0.1:5000/" /* idealement on utilise ça: window.location.href, mais ça marche pas */
 
-
 function TypeUtilisateur() {
   $(".dropdown-menu li a").click(function() {
     var selText = $(this).text();
@@ -54,6 +53,7 @@ function DisplayInfo(data) {
   console.log(data);
 
   $("#LoadingGIF").remove();
+  $('#SearchButton').prop('disabled', false);
 
   $("#meteo").text("Météo aujourd'hui: " + data.weather);
 
@@ -74,6 +74,7 @@ function DisplayInfo(data) {
 }
 
 function GetItineraires() {
+  $('#SearchButton').prop('disabled', true);
   $("#loading").prepend('<img id="LoadingGIF" src="/static/loading.gif" />');
   $.ajax({
     url: ROOT + 'itineraire',
@@ -141,7 +142,7 @@ function PrintItinerariesOnMap(suggested_itineraries) {
     var itinerary = new google.maps.Polyline({
       path: polyline_decoded,
       geodesic: true,
-      strokeColor: '#283EA4',
+      strokeColor: '#228b22',
       strokeOpacity: 1.0,
       strokeWeight: 2.5,
       map: map
@@ -154,7 +155,7 @@ function PrintItinerariesOnMap(suggested_itineraries) {
     var itinerary = new google.maps.Polyline({
       path: polyline_decoded,
       geodesic: true,
-      strokeColor: '#BBBBBB',
+      strokeColor: '#8b0000',
       strokeOpacity: 1.0,
       strokeWeight: 2.5,
       map: map
@@ -166,7 +167,7 @@ function PrintItinerariesOnMap(suggested_itineraries) {
     var itinerary = new google.maps.Polyline({
       path: polyline_decoded,
       geodesic: true,
-      strokeColor: 'CCCCCC',
+      strokeColor: '#00008b',
       strokeOpacity: 1.0,
       strokeWeight: 2.5,
       map: map
