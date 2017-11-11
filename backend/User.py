@@ -5,7 +5,7 @@ import datetime
 import requests
 
 
-class User:
+class User(object):
     """Désigne un utilisateur du service, avec son type et son historique des recherches d'itinéraires"""
 
     __user_id = 1
@@ -15,16 +15,16 @@ class User:
                "Cadre": ["driving", "walking", "uber"],
                "Personnalisé": []}  # Liste des types d'utilisateur possibles
 
-    def __init__(self, user_type="Défaut", driving_license=False, weather=True, loaded=False):
+    def __init__(self, user_type='Défaut', driving_license='False', weather='True', loaded='False'):
         self._id = User.__user_id
         User.__user_id += 1
 
-        self._type = user_type
-        self._driving_license = driving_license
-        self._weather = weather
-        self._loaded = loaded
+        self._type = self.type = user_type
+        self._preferences = list(User.__TYPES[self._type])
+        self._driving_license = self.driving_license = driving_license
+        self._weather = self.weather = weather
+        self._loaded = self.loaded = loaded
         self._search_history = []
-        self._preferences = self.set_preferences()
 
     @property
     def id(self):
@@ -36,8 +36,8 @@ class User:
 
     @type.setter
     def type(self, value):
-        if value in User.__TYPES.keys():
-            self._type = value.keys()
+        if value in list(User.__TYPES.keys()):
+            self._type = value
         elif isinstance(value, str):
             raise TypeError("Est attendue une chaine de caractère pour le type.")
         else:
@@ -100,6 +100,7 @@ class User:
     def search_history(self, value):
         self._search_history = value
 
+
     @property
     def preferences(self):
         return self._preferences
@@ -108,29 +109,6 @@ class User:
     def preferences(self, value):
         self._preferences = value
 
-    def set_preferences(self):
-        preferences = list(User.__TYPES[self._type])
-        if self.type == "Personnalisé":
-            print("Classez par ordre de préférence les modes de transport que vous souhaitez utiliser parmi les "
-                  "suivants:\ntransit, walking, velib, autolib, driving")
-            i = 0
-            while i < 5:
-                choix = str(input('choix [{}]: '.format(i + 1))).lower()
-                while choix not in User.__TYPES['Défaut'] or choix in preferences:
-                    print(
-                        "Désolé le mode de transport demandé n'est pas référencé ou a déjà été choisi. \nVous pouvez "
-                        "choisir entre:transit, walking, velib, autolib, driving")
-                    choix = str(input('choix [{}]: '.format(i + 1))).lower()
-                preferences.append(choix)
-                i += 1
-
-        if self.driving_license == False:
-            if 'autolib' in preferences:
-                preferences.remove('autolib')
-            if 'driving' in preferences:
-                preferences.remove('driving')
-
-        return preferences
 
     def preferences_with_weather(self, date):
         # 5 days forecast incl. temperature, weather,...
@@ -179,20 +157,16 @@ class User:
 
         self._preferences = pref
 
-    # manque une fonction pour faire une recherche
 
     def __str__(self):
-        return "\nUtilisateur n°{}, de type {}. Son historique comporte {} recherche(s).\n".format(self.id, self.type,len(self.search_history))
+        return "\nUtilisateur n°{}, de type {}.\n".format(self.id, self.type,len(self.search_history))
 
 
 if __name__ == "__main__":
     """Script de test de la bonne construction des classes"""
 
     # Test des utilisateurs
-    charles = User("Touriste", False)
-    print(charles)
+    charles = User("PMR",True,False,False)
+    print(charles.preferences)
 
-    mathieu = User("Personnalisé", True)
-    print(mathieu.preferences)
-    print(mathieu)
 
