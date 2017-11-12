@@ -57,21 +57,23 @@ function DisplayInfo(data) {
 
   $("#meteo").text("Météo aujourd'hui: " + data.weather);
 
-  /*$("#intro_itineraire").html("Voici les 3 itinéraires que notre algorithme a choisi avec amour pour aller à "
-      + data.destination.address]
-      +". Pour information, voici une idée d'un trajet avec Uber:<br> "
-      +data.results[3]["instructions"]);
-  */
-  for (var i=1;i<=data.results.length;i++){
-    $("#TransMod"+i).html(data.results[i-1]['transport_type']);
-    $("#contenu"+i).html(data.results[i-1]['instructions']);
+  for (var i = 1; i <= data.results.length; i++) {
+    $("#TransMod" + i).html(data.results[i - 1]['transport_type']);
+    $("#contenu" + i).html(data.results[i - 1]['instructions']);
   }
 
   PrintItinerariesOnMap(data);
 }
 
+function ErrorHandler(textStatus, errorThrown){
+  console.log("Erreur " + textStatus.responseText)
+  $("#LoadingGIF").remove();
+  $('#SearchButton').prop('disabled', false);
+  $("#error").prepend('<p id="errortext" style="color:red;"> Oops ! Notre programme n\'arrive pas à répondre à votre requête...</p>');
+}
 function GetItineraires() {
   $('#SearchButton').prop('disabled', true);
+  $("#errortext").remove();
   $("#loading").prepend('<img id="LoadingGIF" src="/static/loading.gif" />');
   $.ajax({
     url: ROOT + 'itineraire',
@@ -84,9 +86,7 @@ function GetItineraires() {
       destination: $('#destination').val()
     },
     success: DisplayInfo,
-    error: function(textStatus, errorThrown){
-      console.log("Erreur" +textStatus)
-    },
+    error: ErrorHandler,
     dataType: "json"
   })
 }
@@ -136,7 +136,7 @@ function initMap() {
 // Affiche les 3 itinéraires sur la carte, ainsi que le départ et l'arrivée
 function PrintItinerariesOnMap(suggested_itineraries) {
 
-  if (suggested_itineraries.results.length >0){
+  if (suggested_itineraries.results.length > 0) {
     var polylines_encoded_0 = suggested_itineraries.results[0].polyline_encoded
     polylines_encoded_0.forEach(function(polyline) {
       var polyline_decoded = google.maps.geometry.encoding.decodePath(polyline);
@@ -151,7 +151,7 @@ function PrintItinerariesOnMap(suggested_itineraries) {
     });
   }
 
-  if (suggested_itineraries.results.length >1){
+  if (suggested_itineraries.results.length > 1) {
     var polylines_encoded_1 = suggested_itineraries.results[1].polyline_encoded
     polylines_encoded_1.forEach(function(polyline) {
       var polyline_decoded = google.maps.geometry.encoding.decodePath(polyline);
@@ -166,7 +166,7 @@ function PrintItinerariesOnMap(suggested_itineraries) {
     });
   }
 
-  if (suggested_itineraries.results.length >2){
+  if (suggested_itineraries.results.length > 2) {
     var polylines_encoded_2 = suggested_itineraries.results[2].polyline_encoded
     polylines_encoded_2.forEach(function(polyline) {
       var polyline_decoded = google.maps.geometry.encoding.decodePath(polyline);
