@@ -62,14 +62,11 @@ function DisplayInfo(data) {
       +". Pour information, voici une idée d'un trajet avec Uber:<br> "
       +data.results[3]["instructions"]);
   */
-  $("#TransMod1").html(data.results[0]['transport_type']);
-  $("#contenu1").html(data.results[0]['instructions']);
+  for (var i=1;i<=data.results.length;i++){
+    $("#TransMod"+i).html(data.results[i-1]['transport_type']);
+    $("#contenu"+i).html(data.results[i-1]['instructions']);
+  }
 
-  $("#TransMod2").html(data.results[1]['transport_type']);
-  $("#contenu2").html(data.results[1]['instructions']);
-
-  $("#TransMod3").html(data.results[2]['transport_type']);
-  $("#contenu3").html(data.results[2]['instructions']);
   PrintItinerariesOnMap(data);
 }
 
@@ -87,6 +84,9 @@ function GetItineraires() {
       destination: $('#destination').val()
     },
     success: DisplayInfo,
+    error: function(textStatus, errorThrown){
+      console.log("Erreur" +textStatus)
+    },
     dataType: "json"
   })
 }
@@ -136,44 +136,50 @@ function initMap() {
 // Affiche les 3 itinéraires sur la carte, ainsi que le départ et l'arrivée
 function PrintItinerariesOnMap(suggested_itineraries) {
 
-  var polylines_encoded_0 = suggested_itineraries.results[0].polyline_encoded
-  polylines_encoded_0.forEach(function(polyline) {
-    var polyline_decoded = google.maps.geometry.encoding.decodePath(polyline);
-    var itinerary = new google.maps.Polyline({
-      path: polyline_decoded,
-      geodesic: true,
-      strokeColor: '#228b22',
-      strokeOpacity: 1.0,
-      strokeWeight: 2.5,
-      map: map
+  if (suggested_itineraries.results.length >0){
+    var polylines_encoded_0 = suggested_itineraries.results[0].polyline_encoded
+    polylines_encoded_0.forEach(function(polyline) {
+      var polyline_decoded = google.maps.geometry.encoding.decodePath(polyline);
+      var itinerary = new google.maps.Polyline({
+        path: polyline_decoded,
+        geodesic: true,
+        strokeColor: '#228b22',
+        strokeOpacity: 1.0,
+        strokeWeight: 2.5,
+        map: map
+      });
     });
-  });
+  }
 
-  var polylines_encoded_1 = suggested_itineraries.results[1].polyline_encoded
-  polylines_encoded_1.forEach(function(polyline) {
-    var polyline_decoded = google.maps.geometry.encoding.decodePath(polyline);
-    var itinerary = new google.maps.Polyline({
-      path: polyline_decoded,
-      geodesic: true,
-      strokeColor: '#8b0000',
-      strokeOpacity: 1.0,
-      strokeWeight: 2.5,
-      map: map
+  if (suggested_itineraries.results.length >1){
+    var polylines_encoded_1 = suggested_itineraries.results[1].polyline_encoded
+    polylines_encoded_1.forEach(function(polyline) {
+      var polyline_decoded = google.maps.geometry.encoding.decodePath(polyline);
+      var itinerary = new google.maps.Polyline({
+        path: polyline_decoded,
+        geodesic: true,
+        strokeColor: '#8b0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2.5,
+        map: map
+      });
     });
-  });
-  var polylines_encoded_2 = suggested_itineraries.results[2].polyline_encoded
-  polylines_encoded_2.forEach(function(polyline) {
-    var polyline_decoded = google.maps.geometry.encoding.decodePath(polyline);
-    var itinerary = new google.maps.Polyline({
-      path: polyline_decoded,
-      geodesic: true,
-      strokeColor: '#00008b',
-      strokeOpacity: 1.0,
-      strokeWeight: 2.5,
-      map: map
-    });
-  });
+  }
 
+  if (suggested_itineraries.results.length >2){
+    var polylines_encoded_2 = suggested_itineraries.results[2].polyline_encoded
+    polylines_encoded_2.forEach(function(polyline) {
+      var polyline_decoded = google.maps.geometry.encoding.decodePath(polyline);
+      var itinerary = new google.maps.Polyline({
+        path: polyline_decoded,
+        geodesic: true,
+        strokeColor: '#00008b',
+        strokeOpacity: 1.0,
+        strokeWeight: 2.5,
+        map: map
+      });
+    });
+  }
 
   var marker_origin = new google.maps.Marker({
     position: {
