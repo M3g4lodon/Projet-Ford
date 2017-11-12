@@ -9,7 +9,7 @@ from flask import Flask, render_template, request, jsonify, abort
 from backend.Itinerary import Itinerary
 from backend.Place import Place
 from backend.User import User
-from backend.WIP_Suggested_Itineraries import Suggested_Itineraries
+from backend.Suggested_Itineraries import Suggested_Itineraries
 
 app = Flask(__name__)
 
