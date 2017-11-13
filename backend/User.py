@@ -5,7 +5,7 @@ import datetime
 import requests
 
 
-class User(object):
+class User:
     """Désigne un utilisateur du service, avec son type et son historique des recherches d'itinéraires"""
 
     __user_id = 1
