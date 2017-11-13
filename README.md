@@ -25,7 +25,7 @@ NB: nouvelle structure
 ## Présentation et Vision du Projet
 
 Groupe: Python 05
-Membres: Mathieu Series, Charles Jacquet et Pierre Monsel
+Membres: Charles Jacquet, Pierre Monsel et Mathieu Seris. 
 
 Notre projet répond à la problématique posée par l'énoncé S3. Nous calculons et affichons des itinéraires pour des utilisateurs. Chaque utilisateur peut définir ses propres préférences et les trajets proposés seront mis à jour. Nous souhaitions une interface pratique, lisible et fonctionnelle qui puissent au mieux traduire le travail effectué en backend.
 L'utilisateur peut choisir d'obtenir des trajets pour des transports en commun (bus et métro), la marche, la conduite, le vélib' ou l'autolib',le vélo ou un taxi. Les préférences utilisateurs (prédéfinies ou personnalisées) permettent d'affiner ce choix de trajet et afficher les itinéraires pertinents. 
