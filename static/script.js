@@ -75,6 +75,7 @@ function GetItineraires() {
   $('#SearchButton').prop('disabled', true);
   $("#errortext").remove();
   $("#loading").prepend('<img id="LoadingGIF" src="/static/loading.gif" />');
+  initMap();
   $.ajax({
     url: ROOT + 'itineraire',
     data: {
