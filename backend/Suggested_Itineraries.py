@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 
 
-# TODO setters et getters
-# TODO rajouter des info comme le prix
-# TODO faire plus de tests pour voir si tout fonctionne
 
 import datetime
 
@@ -100,8 +97,8 @@ def Suggested_Itineraries(user, itinerary):
 
 if __name__ == "__main__":
     """Script de test"""
-    origin = Place("10 rue oswaldo cruz paris")
-    destination = Place("La villette paris")
+    origin = Place("8 avenue Adrien Hebrard")
+    destination = Place("nation")
     iti = Itinerary(origin=origin, destination=destination)
-    pierre = User('Touriste', True, True, True)
+    pierre = User('PMR', True, False, False)
     print(Suggested_Itineraries(pierre, iti))

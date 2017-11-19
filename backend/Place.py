@@ -11,7 +11,7 @@ class Place:
     __URL_API_GEOCODE = "https://maps.googleapis.com/maps/api/geocode/json?&key=AIzaSyDpVNzFcwgFfPJOK25P9NlMBL-YEe8bSow"
     __MAX_LAT = 48.90
     __MIN_LAT = 48.80
-    __MAX_LNG = 2.41
+    __MAX_LNG = 2.42
     __MIN_LNG = 2.22
 
     def __init__(self, address=None, lat=None, lng=None):
@@ -25,7 +25,7 @@ class Place:
                 if Place.__MIN_LAT < lat < Place.__MAX_LAT:
                     self._lat = lat
                 else:
-                    raise BadLocation
+                    raise ValueError("lat not in Paris limits", lat)
             else:
                 raise TypeError("A float number is expected for the latitude.")
         else:
@@ -36,7 +36,7 @@ class Place:
                 if Place.__MIN_LNG < lng < Place.__MAX_LNG:
                     self._lng = lng
                 else:
-                    raise BadLocation
+                    raise ValueError("lng not in Paris limit", lng)
             else:
                 raise TypeError("A float number is expected for the longitude.")
         else:
@@ -113,11 +113,6 @@ class Place:
         return self.address
 
 
-class BadLocation(Exception):
-    """The point you entered is not in Paris."""
-    pass
-
-
 if __name__ == "__main__":
     """Script de test de la bonne construction des classes"""
 
@@ -127,7 +122,7 @@ if __name__ == "__main__":
     print("Pré-demande de coordonnées : " + str(paris))
     paris.lat_lng_from_address()
     print("Post-demande de coordonnées : " + str(paris))
-    poissonnier = Place(lat=48.896614, lng=2.3522219)
+    poissonnier = Place(lat=48.896614, lng=2.5522219)
     print(poissonnier)
     poissonnier.address_from_lat_lng()
     print(poissonnier)
