@@ -284,7 +284,7 @@ class Itinerary:
 
         for leg_index, leg in enumerate(self.information_legs):
             res += "\n"
-            res += "Portion " + str(leg_index)
+            res += "Portion " + str(leg_index+1)
             if leg['transport_mode'] != 'TRANSIT':
                 res += ": You will be " + leg['transport_mode']
             else:
