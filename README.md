@@ -26,7 +26,7 @@ L'utilisateur peut choisir d'obtenir des trajets pour des transports en commun (
 Dans le dossier Backend :
 - **Place.py**, contient la classe Place, qui définit un endroit à Paris (par l'adresse ou la longitude/latitude)
 - **Itinerary.py** contient la classe Itinerary, notre classe itinéraire de base.
-- les fichiers de la forme **Itinerary\_xxx.py** contiennent les sous-classes d'Itinerary
+- les fichiers de la forme **Itinerary\_xxx.py** contiennent les sous-classes xxx d'Itinerary
 - **User.py** contient la classe User, qui définit un utilisateur, et enregistre ses préférences
 - **Suggested\_Itinerary.py** contient la classe éponyme pour proposer à un _utilisateur_ donné, pour un _itineraire_ choisi, des intéraires pertinents pour sa requête.
 - **Test.py** contient des tests unitaires sur l'ensemble des fichiers de backend.
