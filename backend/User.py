@@ -10,7 +10,7 @@ class User:
 
     __user_id = 1
     __TYPES = {"Défaut": ["transit", "walking", "velib", "autolib", "driving", "uber"],
-               "PMR": ["bus", "walking", "autolib", "driving", "uber"],
+               "PMR": ["bus", "autolib", "driving", "uber","walking"],
                "Touriste": ["bus", "velib", "transit", "walking", "uber"],
                "Cadre": ["driving", "walking", "uber"],
                "Personnalisé": []}  # Liste des types d'utilisateur possibles
